@@ -4,6 +4,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import Link from "next/link";
 import { FileText, Users, CreditCard, BarChart3, Plus, Check } from "lucide-react";
 import { ChartRadialGrid } from "@/components/acount/dashboard/chart-radial-grid";
+import { useState, useEffect } from "react";
 
 const quickAccess = [
     {
@@ -63,7 +64,13 @@ const quickAccess = [
     },
 ];
 
-function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
+function BentoItem({
+    item,
+    clientsCount,
+}: {
+    item: (typeof quickAccess)[0];
+    clientsCount?: string | null;
+}) {
     const Icon = item.icon;
     const isLarge = item.size === "large";
 
@@ -77,6 +84,10 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
     };
 
     const rgbColor = colorRgbMap[item.color] || "99, 102, 241";
+
+    // Usar clientsCount para el badge del card de clientes
+    const displayBadge =
+        item.id === "clients" && clientsCount ? { ...item.badge, value: clientsCount } : item.badge;
 
     return (
         <Link href={item.href}>
@@ -108,28 +119,21 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
                 >
                     {/* Sección izquierda - Ícono, título y descripción */}
                     <div className={`flex flex-col gap-3 ${isLarge ? "md:flex-1" : ""}`}>
-                        <div className="flex items-end w-full gap-3 relative">
-                            <div className="flex flex-col gap-2">
-                                <div className="flex items-center gap-4">
-                                    <Icon className="text-foreground h-5 w-5 mt-1" />
-                                    {item.badge && (
-                                        <div
-                                            className={`rounded-full text-xs font-semibold py-1 px-4 ${item.badge.color} shadow-md`}
-                                        >
-                                            <span className="opacity-70">{item.badge.label}</span>
-                                            <span className="ml-1 font-bold">
-                                                {item.badge.value}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <CardTitle className={isLarge ? "text-2xl" : "text-lg"}>
-                                    {item.title}
-                                </CardTitle>
-                            </div>
+                        <div className="flex items-start gap-3 relative">
+                            <Icon className="text-foreground h-5 w-5 mt-1" />
+                            <CardTitle className={isLarge ? "text-2xl" : "text-lg"}>
+                                {item.title}
+                            </CardTitle>
 
                             {/* Badge en la esquina superior derecha del title */}
+                            {displayBadge && (
+                                <div
+                                    className={`absolute -top-1 right-0 px-2.5 py-1 rounded-full text-xs font-semibold ${displayBadge.color} shadow-md ml-auto`}
+                                >
+                                    <span className="opacity-70">{displayBadge.label}</span>
+                                    <span className="ml-1 font-bold">{displayBadge.value}</span>
+                                </div>
+                            )}
                         </div>
 
                         {/* Descripción */}
@@ -138,7 +142,7 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
                         </CardDescription>
 
                         {/* Lista de características (solo para tarjetas pequeñas) */}
-                        {item.features && (
+                        {!isLarge && (
                             <div className="space-y-2 flex-1">
                                 {item.features.map((feature, idx) => (
                                     <div key={idx} className="flex items-center gap-2 text-sm">
@@ -152,7 +156,7 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
 
                     {/* Preview del gráfico para tarjeta grande - Responsive */}
                     {isLarge && (
-                        <div className="w-full md:hidden lg:block lg:flex-1  items-center justify-center py-4 md:py-0">
+                        <div className="w-full md:flex-1 flex items-center justify-center py-4 md:py-0">
                             <ChartRadialGrid />
                         </div>
                     )}
@@ -163,6 +167,15 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
 }
 
 export default function HomePage() {
+    const [clientsCount, setClientsCount] = useState<string | null>(null);
+
+    useEffect(() => {
+        const storedCount = localStorage.getItem("clientsCount");
+        if (storedCount) {
+            setClientsCount(storedCount);
+        }
+    }, []);
+
     return (
         <div className="flex max-h-max flex-col">
             <div className="flex flex-1 flex-col ">
@@ -203,7 +216,7 @@ export default function HomePage() {
 
                                 {/* Clientes - Mediano (50%) */}
                                 <div className="md:col-span-2">
-                                    <BentoItem item={quickAccess[4]} />
+                                    <BentoItem item={quickAccess[4]} clientsCount={clientsCount} />
                                 </div>
                             </div>
                         </div>
