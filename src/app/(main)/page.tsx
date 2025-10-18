@@ -231,6 +231,7 @@ function Footer() {
 }
 
 export default function LandingPage() {
+
   return (
     <div className="overflow-hidden">
       <Hero />
