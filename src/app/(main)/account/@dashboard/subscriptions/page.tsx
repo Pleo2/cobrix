@@ -1,33 +1,21 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import  data  from "./data.json";
+import { SubscriptionsTable } from "@/components/acount/suscriptions/subscriptions-table";
 
 export default function SubscriptionsPage() {
     return (
-        <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6">
+        <div className="flex max-h-max flex-col">
+            <div className="flex flex-1 flex-col ">
+                <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6"></div>
+                <div className="mx-auto w-full flex flex-col gap-6 max-w-7xl">
             <div className="flex flex-col gap-2">
                 <h2 className="text-3xl font-bold tracking-tight">Suscripciones</h2>
                 <p className="text-muted-foreground">
-                    Gestiona todas tus suscripciones y planes activos
+                    Gestiona y visualiza a todos tus clientes y sus planes.
                 </p>
             </div>
-
-            <Card>
-                <CardHeader>
-                    <div className="flex items-center justify-between">
-                        <CardTitle>Mis Suscripciones</CardTitle>
-                        <Button size="sm" className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            Nueva Suscripción
-                        </Button>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">No hay suscripciones registradas aún.</p>
-                </CardContent>
-            </Card>
+            <SubscriptionsTable data={data} />
+                </div>
+            </div>
         </div>
     );
 }
