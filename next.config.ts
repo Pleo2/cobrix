@@ -12,9 +12,7 @@ const nextConfig: NextConfig = {
     },
 
     // ============ Configuración de Compilación ============
-    swcMinify: true, // Usa SWC para minificación más rápida
     productionBrowserSourceMaps: false, // Desactiva source maps en producción
-    optimizeFonts: true,
 
     // ============ Configuración de Headers ============
     async headers() {
@@ -57,15 +55,6 @@ const nextConfig: NextConfig = {
         };
     },
 
-    // ============ Configuración de Webpack ============
-    webpack: (config, { dev }) => {
-        // Optimizaciones personalizadas de webpack
-        if (!dev) {
-            config.mode = "production";
-        }
-        return config;
-    },
-
     // ============ Configuración de TypeScript ============
     typescript: {
         tsconfigPath: "./tsconfig.json",
@@ -84,32 +73,6 @@ const nextConfig: NextConfig = {
 
     // ============ Configuración de React ============
     reactStrictMode: true,
-
-    // ============ Configuración de i18n (si es necesario) ============
-    // i18n: {
-    //     locales: ["es", "en"],
-    //     defaultLocale: "es",
-    // },
-
-    // ============ Configuración de Experimental ============
-    experimental: {
-        // Habilita optimizaciones experimentales de Next.js
-        isrMemoryCacheSize: 50 * 1024 * 1024, // 50MB para ISR cache
-        optimizePackageImports: {
-            "@dnd-kit/core": ["@dnd-kit/core"],
-            "@radix-ui/react-avatar": ["@radix-ui/react-avatar"],
-            "@radix-ui/react-checkbox": ["@radix-ui/react-checkbox"],
-            "@radix-ui/react-dialog": ["@radix-ui/react-dialog"],
-            "@radix-ui/react-dropdown-menu": ["@radix-ui/react-dropdown-menu"],
-            "@radix-ui/react-label": ["@radix-ui/react-label"],
-            "@radix-ui/react-select": ["@radix-ui/react-select"],
-            "@radix-ui/react-separator": ["@radix-ui/react-separator"],
-            "@radix-ui/react-toggle": ["@radix-ui/react-toggle"],
-            "@radix-ui/react-tooltip": ["@radix-ui/react-tooltip"],
-            "lucide-react": ["lucide-react"],
-            "@tabler/icons-react": ["@tabler/icons-react"],
-        },
-    },
 
     // ============ Configuración de Output ============
     output: "standalone", // Optimizado para despliegues en contenedores

@@ -59,12 +59,12 @@ export function SectionCards() {
                 <CardHeader>
                     <CardDescription>Nuevos Clientes</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-2xl">
-                        1,234
+                        25
                     </CardTitle>
                     <CardAction>
                         <Badge variant="outline">
-                            <IconTrendingDown />
-                            -20%
+                            <IconTrendingUp />
+                            +25%
                         </Badge>
                     </CardAction>
                 </CardHeader>
