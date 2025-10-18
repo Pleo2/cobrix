@@ -183,7 +183,7 @@ function CobrixLogo() {
         <Image
             src={
                 isDark
-                    ? "/Cobrix_b.svg"
+                    ? "/Cobrix_black_background.svg"
                     : "/Cobrix_white_background.svg"
             }
             alt="Cobrix Logo"
@@ -207,9 +207,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         >
                             <a href="#">
                                 <CobrixLogo />
-                                <span className="text-base font-semibold">
+                                {/* <span className="text-base font-semibold">
                                     Cobrix
-                                </span>
+                                </span> */}
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
