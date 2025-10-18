@@ -1,31 +1,60 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
+import { ClientsDataTable, clientSchema } from "@/components/acount/dashboard/clients-data-table";
+import { z } from "zod";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ClientsPage() {
-    return (
-        <div className="flex flex-col gap-6 py-6 md:py-8  max-w-7xl mx-auto w-full">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-bold tracking-tight">Clientes</h2>
-                <p className="text-muted-foreground">Gestiona todos tus clientes</p>
-            </div>
+    const router = useRouter();
+    const [clients, setClients] = useState<z.infer<typeof clientSchema>[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-            <Card>
-                <CardHeader>
-                    <div className="flex items-center justify-between">
-                        <CardTitle>Mis Clientes</CardTitle>
-                        <Button size="sm" className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            Nuevo Cliente
-                        </Button>
+    useEffect(() => {
+        // Obtener clientes del localStorage
+        const storedClients = JSON.parse(localStorage.getItem("clients") || "[]");
+        setClients(storedClients);
+
+        // Guardar el conteo
+        localStorage.setItem("clientsCount", storedClients.length.toString());
+
+        setIsLoading(false);
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6">
+                <div className="max-w-7xl mx-auto w-full">
+                    <p>Cargando clientes...</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6">
+            <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
+                <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-2">
+                        <h2 className="text-3xl font-bold tracking-tight">Clientes</h2>
+                        <p className="text-muted-foreground">
+                            Gestiona todos tus clientes registrados
+                        </p>
                     </div>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">No hay clientes registrados aún.</p>
-                </CardContent>
-            </Card>
+                    <Button
+                        size="sm"
+                        className="gap-2"
+                        onClick={() => router.push("/account/new-client")}
+                    >
+                        <Plus className="h-4 w-4" />
+                        Nuevo Cliente
+                    </Button>
+                </div>
+
+                <ClientsDataTable data={clients} />
+            </div>
         </div>
     );
 }
