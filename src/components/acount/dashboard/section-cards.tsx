@@ -82,7 +82,7 @@ export function SectionCards() {
                 <CardHeader>
                     <CardDescription>Cuentas Activas</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-2xl">
-                        2278
+                        278
                     </CardTitle>
                     <CardAction>
                         <Badge variant="outline">
