@@ -35,80 +35,80 @@ import {
 
 const data = {
     user: {
-        name: "shadcn",
-        email: "m@example.com",
+        name: "Usuario",
+        email: "usuario@ejemplo.com",
         avatar: "/avatars/shadcn.jpg"
     },
     navMain: [
         {
-            title: "Dashboard",
+            title: "Panel de Control",
             url: "#",
             icon: IconDashboard
         },
         {
-            title: "Lifecycle",
+            title: "Ciclo de Vida",
             url: "#",
             icon: IconListDetails
         },
         {
-            title: "Analytics",
+            title: "Análisis",
             url: "#",
             icon: IconChartBar
         },
         {
-            title: "Projects",
+            title: "Proyectos",
             url: "#",
             icon: IconFolder
         },
         {
-            title: "Team",
+            title: "Equipo",
             url: "#",
             icon: IconUsers
         }
     ],
     navClouds: [
         {
-            title: "Capture",
+            title: "Captura",
             icon: IconCamera,
             isActive: true,
             url: "#",
             items: [
                 {
-                    title: "Active Proposals",
+                    title: "Propuestas Activas",
                     url: "#"
                 },
                 {
-                    title: "Archived",
+                    title: "Archivado",
                     url: "#"
                 }
             ]
         },
         {
-            title: "Proposal",
+            title: "Propuesta",
             icon: IconFileDescription,
             url: "#",
             items: [
                 {
-                    title: "Active Proposals",
+                    title: "Propuestas Activas",
                     url: "#"
                 },
                 {
-                    title: "Archived",
+                    title: "Archivado",
                     url: "#"
                 }
             ]
         },
         {
-            title: "Prompts",
+            title: "Indicaciones",
             icon: IconFileAi,
             url: "#",
             items: [
                 {
-                    title: "Active Proposals",
+                    title: "Propuestas Activas",
                     url: "#"
                 },
                 {
-                    title: "Archived",
+                    title: "Archivado",
                     url: "#"
                 }
             ]
@@ -116,34 +116,34 @@ const data = {
     ],
     navSecondary: [
         {
-            title: "Settings",
+            title: "Configuración",
             url: "#",
             icon: IconSettings
         },
         {
-            title: "Get Help",
+            title: "Obtener Ayuda",
             url: "#",
             icon: IconHelp
         },
         {
-            title: "Search",
+            title: "Buscar",
             url: "#",
             icon: IconSearch
         }
     ],
     documents: [
         {
-            name: "Data Library",
+            name: "Biblioteca de Datos",
             url: "#",
             icon: IconDatabase
         },
         {
-            name: "Reports",
+            name: "Reportes",
             url: "#",
             icon: IconReport
         },
         {
-            name: "Word Assistant",
+            name: "Asistente de Documentos",
             url: "#",
             icon: IconFileWord
         }
