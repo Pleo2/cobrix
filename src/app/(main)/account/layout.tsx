@@ -1,17 +1,18 @@
-// import { retrieveCustomer } from "@lib/data/customer"
-// import AccountLayout from "@modules/account/templates/account-layout"
+import { SiteHeader } from "@/components/acount/dashboard/site-header";
 
 export default async function AccountPageLayout({
+    children,
     dashboard,
-    login
 }: {
-    dashboard?: React.ReactNode;
-    login?: React.ReactNode;
+    children?: React.ReactNode;
+    dashboard: React.ReactNode;
 }) {
-    // const customer = await retrieveCustomer().catch(() => null)
-
-    // Temporal: simular que hay usuario logueado para mostrar el dashboard
-    const customer = true;
-
-    return <>{customer ? dashboard : login}</>;
+    return (
+        <div className="flex h-screen flex-col">
+            <SiteHeader />
+            <div className="flex flex-1 flex-col overflow-auto">
+                <div className="@container/main flex flex-1 flex-col">{dashboard || children}</div>
+            </div>
+        </div>
+    );
 }
