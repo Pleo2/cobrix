@@ -65,7 +65,7 @@ export function ChartRadialGrid() {
                             content={<ChartTooltipContent hideLabel nameKey="method" />}
                         />
                         <PolarGrid gridType="circle" />
-                        <RadialBar dataKey="transactions" />
+                        <RadialBar dataKey="transactions" cornerRadius={10} />
                     </RadialBarChart>
                 </ChartContainer>
             </CardContent>
