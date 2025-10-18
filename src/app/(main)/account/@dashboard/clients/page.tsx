@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 
 export default function ClientsPage() {
     return (
-        <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6">
+        <div className="flex flex-col gap-6 py-6 md:py-8  max-w-7xl mx-auto w-full">
             <div className="flex flex-col gap-2">
                 <h2 className="text-3xl font-bold tracking-tight">Clientes</h2>
                 <p className="text-muted-foreground">Gestiona todos tus clientes</p>
