@@ -103,12 +103,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const schema = z.object({
     id: z.number(),
-    header: z.string(),
-    type: z.string(),
-    status: z.string(),
-    target: z.string(),
-    limit: z.string(),
-    reviewer: z.string()
+    referencia: z.string(),
+    cliente: z.string(),
+    concepto: z.string(),
+    monto: z.number(),
+    metodoPago: z.string(),
+    estado: z.string(),
+    fecha: z.string()
 });
 
 // Create a separate component for the drag handle
@@ -132,11 +133,6 @@ function DragHandle({ id }: { id: number }) {
 }
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
-    {
-        id: "drag",
-        header: () => null,
-        cell: ({ row }) => <DragHandle id={row.original.id} />
-    },
     {
         id: "select",
         header: ({ table }) => (
@@ -166,142 +162,83 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         enableHiding: false
     },
     {
-        accessorKey: "header",
-        header: "Encabezado",
-        cell: ({ row }) => {
-            return <TableCellViewer item={row.original} />;
-        },
+        accessorKey: "referencia",
+        header: "Referencia",
+        cell: ({ row }) => (
+            <div className="font-medium">
+                <TableCellViewer item={row.original} />
+            </div>
+        ),
         enableHiding: false
     },
     {
-        accessorKey: "type",
-        header: "Tipo de Sección",
+        accessorKey: "cliente",
+        header: "Cliente",
         cell: ({ row }) => (
-            <div className="w-32">
-                <Badge
-                    variant="outline"
-                    className="text-muted-foreground px-1.5"
-                >
-                    {row.original.type}
-                </Badge>
+            <div className="flex flex-col">
+                <span className="font-medium">{row.original.cliente}</span>
+                <span className="text-muted-foreground text-sm">
+                    {row.original.concepto}
+                </span>
             </div>
         )
     },
     {
-        accessorKey: "status",
-        header: "Estado",
+        accessorKey: "monto",
+        header: () => <div className="text-right">Monto</div>,
+        cell: ({ row }) => {
+            const formatted = new Intl.NumberFormat("es-VE", {
+                style: "currency",
+                currency: "USD"
+            }).format(row.original.monto);
+            return <div className="text-right font-medium">{formatted}</div>;
+        }
+    },
+    {
+        accessorKey: "metodoPago",
+        header: "Método",
         cell: ({ row }) => (
-            <Badge variant="outline" className="text-muted-foreground px-1.5">
-                {row.original.status === "Completado" ? (
-                    <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
-                ) : (
-                    <IconLoader />
-                )}
-                {row.original.status}
+            <Badge variant="outline" className="text-muted-foreground px-2">
+                {row.original.metodoPago}
             </Badge>
         )
     },
     {
-        accessorKey: "target",
-        header: () => <div className="w-full text-right">Objetivo</div>,
-        cell: ({ row }) => (
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    toast.promise(
-                        new Promise((resolve) => setTimeout(resolve, 1000)),
-                        {
-                            loading: `Guardando ${row.original.header}`,
-                            success: "Hecho",
-                            error: "Error"
-                        }
-                    );
-                }}
-            >
-                <Label
-                    htmlFor={`${row.original.id}-target`}
-                    className="sr-only"
-                >
-                    Objetivo
-                </Label>
-                <Input
-                    className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-                    defaultValue={row.original.target}
-                    id={`${row.original.id}-target`}
-                />
-            </form>
-        )
-    },
-    {
-        accessorKey: "limit",
-        header: () => <div className="w-full text-right">Límite</div>,
-        cell: ({ row }) => (
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    toast.promise(
-                        new Promise((resolve) => setTimeout(resolve, 1000)),
-                        {
-                            loading: `Guardando ${row.original.header}`,
-                            success: "Hecho",
-                            error: "Error"
-                        }
-                    );
-                }}
-            >
-                <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
-                    Límite
-                </Label>
-                <Input
-                    className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-                    defaultValue={row.original.limit}
-                    id={`${row.original.id}-limit`}
-                />
-            </form>
-        )
-    },
-    {
-        accessorKey: "reviewer",
-        header: "Revisor",
+        accessorKey: "estado",
+        header: "Estado",
         cell: ({ row }) => {
-            const isAssigned = row.original.reviewer !== "Asignar revisor";
-
-            if (isAssigned) {
-                return row.original.reviewer;
-            }
-
+            const isCompletado = row.original.estado === "Completado";
             return (
-                <>
-                    <Label
-                        htmlFor={`${row.original.id}-reviewer`}
-                        className="sr-only"
-                    >
-                        Revisor
-                    </Label>
-                    <Select>
-                        <SelectTrigger
-                            className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
-                            size="sm"
-                            id={`${row.original.id}-reviewer`}
-                        >
-                            <SelectValue placeholder="Asignar revisor" />
-                        </SelectTrigger>
-                        <SelectContent align="end">
-                            <SelectItem value="Eddie Lake">
-                                Eddie Lake
-                            </SelectItem>
-                            <SelectItem value="Jamik Tashpulatov">
-                                Jamik Tashpulatov
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </>
+                <Badge
+                    variant="outline"
+                    className={`px-2 ${
+                        isCompletado
+                            ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
+                            : "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
+                    }`}
+                >
+                    {isCompletado ? (
+                        <IconCircleCheckFilled className="mr-1 size-3" />
+                    ) : (
+                        <IconLoader className="mr-1 size-3" />
+                    )}
+                    {row.original.estado}
+                </Badge>
             );
         }
     },
     {
+        accessorKey: "fecha",
+        header: "Fecha",
+        cell: ({ row }) => (
+            <div className="text-muted-foreground text-sm">
+                {row.original.fecha}
+            </div>
+        )
+    },
+    {
         id: "actions",
-        cell: () => (
+        cell: ({ row }) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
@@ -313,14 +250,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
                         <span className="sr-only">Abrir menú</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem>Editar</DropdownMenuItem>
-                    <DropdownMenuItem>Hacer una copia</DropdownMenuItem>
-                    <DropdownMenuItem>Favorito</DropdownMenuItem>
+                <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem>Ver detalles</DropdownMenuItem>
+                    <DropdownMenuItem>Descargar comprobante</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive">
-                        Eliminar
-                    </DropdownMenuItem>
+                    <DropdownMenuItem>Contactar cliente</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         )
@@ -343,6 +277,18 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
                 transition: transition
             }}
         >
+            {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+            ))}
+        </TableRow>
+    );
+}
+
+function TransactionRow({ row }: { row: Row<z.infer<typeof schema>> }) {
+    return (
+        <TableRow data-state={row.getIsSelected() && "selected"}>
             {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -436,7 +382,7 @@ export function DataTable({
                     <SelectContent>
                         <SelectItem value="outline">Esquema</SelectItem>
                         <SelectItem value="past-performance">
-                            Rendimiento Pasado{" "}
+                            Movimientos{" "}
                             <Badge variant="secondary">3</Badge>
                         </SelectItem>
                         <SelectItem value="key-personnel">
@@ -448,16 +394,7 @@ export function DataTable({
                     </SelectContent>
                 </Select>
                 <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-                    <TabsTrigger value="outline">Esquema</TabsTrigger>
-                    <TabsTrigger value="past-performance">
-                        Rendimiento Pasado <Badge variant="secondary">3</Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="key-personnel">
-                        Personal Clave <Badge variant="secondary">2</Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="focus-documents">
-                        Documentos de Enfoque
-                    </TabsTrigger>
+                    <TabsTrigger value="outline">Transacciones</TabsTrigger>
                 </TabsList>
                 <div className="flex items-center gap-2">
                     <DropdownMenu>
@@ -495,10 +432,6 @@ export function DataTable({
                                 })}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="outline" size="sm">
-                        <IconPlus />
-                        <span className="hidden lg:inline">Añadir Sección</span>
-                    </Button>
                 </div>
             </div>
             <TabsContent
@@ -506,63 +439,47 @@ export function DataTable({
                 className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
             >
                 <div className="overflow-hidden rounded-lg border">
-                    <DndContext
-                        collisionDetection={closestCenter}
-                        modifiers={[restrictToVerticalAxis]}
-                        onDragEnd={handleDragEnd}
-                        sensors={sensors}
-                        id={sortableId}
-                    >
-                        <Table>
-                            <TableHeader className="bg-muted sticky top-0 z-10">
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <TableRow key={headerGroup.id}>
-                                        {headerGroup.headers.map((header) => {
-                                            return (
-                                                <TableHead
-                                                    key={header.id}
-                                                    colSpan={header.colSpan}
-                                                >
-                                                    {header.isPlaceholder
-                                                        ? null
-                                                        : flexRender(
-                                                              header.column
-                                                                  .columnDef
-                                                                  .header,
-                                                              header.getContext()
-                                                          )}
-                                                </TableHead>
-                                            );
-                                        })}
-                                    </TableRow>
-                                ))}
-                            </TableHeader>
-                            <TableBody className="**:data-[slot=table-cell]:first:w-8">
-                                {table.getRowModel().rows?.length ? (
-                                    <SortableContext
-                                        items={dataIds}
-                                        strategy={verticalListSortingStrategy}
+                    <Table>
+                        <TableHeader className="bg-muted sticky top-0 z-10">
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead
+                                                key={header.id}
+                                                colSpan={header.colSpan}
+                                            >
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                          header.column
+                                                              .columnDef
+                                                              .header,
+                                                          header.getContext()
+                                                      )}
+                                            </TableHead>
+                                        );
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TransactionRow key={row.id} row={row} />
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className="h-24 text-center"
                                     >
-                                        {table.getRowModel().rows.map((row) => (
-                                            <DraggableRow
-                                                key={row.id}
-                                                row={row}
-                                            />
-                                        ))}
-                                    </SortableContext>
-                                ) : (
-                                    <TableRow>
-                                        <TableCell
-                                            colSpan={columns.length}
-                                            className="h-24 text-center"
-                                        >
-                                            No hay resultados.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </DndContext>
+                                        No hay transacciones.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
                 </div>
                 <div className="flex items-center justify-between px-4">
                     <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
@@ -717,179 +634,85 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
             <DrawerTrigger asChild>
                 <Button
                     variant="link"
-                    className="text-foreground w-fit px-0 text-left"
+                    className="text-foreground w-fit px-0 text-left font-mono text-xs"
                 >
-                    {item.header}
+                    {item.referencia}
                 </Button>
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader className="gap-1">
-                    <DrawerTitle>{item.header}</DrawerTitle>
+                    <DrawerTitle>Detalles de Transacción</DrawerTitle>
                     <DrawerDescription>
-                        Mostrando visitantes totales de los últimos 6 meses
+                        {item.referencia}
                     </DrawerDescription>
                 </DrawerHeader>
                 <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
-                    {!isMobile && (
-                        <>
-                            <ChartContainer config={chartConfig}>
-                                <AreaChart
-                                    accessibilityLayer
-                                    data={chartData}
-                                    margin={{
-                                        left: 0,
-                                        right: 10
-                                    }}
-                                >
-                                    <CartesianGrid vertical={false} />
-                                    <XAxis
-                                        dataKey="month"
-                                        tickLine={false}
-                                        axisLine={false}
-                                        tickMargin={8}
-                                        tickFormatter={(value) =>
-                                            value.slice(0, 3)
-                                        }
-                                        hide
-                                    />
-                                    <ChartTooltip
-                                        cursor={false}
-                                        content={
-                                            <ChartTooltipContent indicator="dot" />
-                                        }
-                                    />
-                                    <Area
-                                        dataKey="mobile"
-                                        type="natural"
-                                        fill="var(--color-mobile)"
-                                        fillOpacity={0.6}
-                                        stroke="var(--color-mobile)"
-                                        stackId="a"
-                                    />
-                                    <Area
-                                        dataKey="desktop"
-                                        type="natural"
-                                        fill="var(--color-desktop)"
-                                        fillOpacity={0.4}
-                                        stroke="var(--color-desktop)"
-                                        stackId="a"
-                                    />
-                                </AreaChart>
-                            </ChartContainer>
+                    <div className="grid gap-4">
+                        <div className="flex flex-col gap-2 rounded-lg border p-4">
+                            <div className="text-muted-foreground text-xs font-medium">
+                                INFORMACIÓN DEL CLIENTE
+                            </div>
                             <Separator />
                             <div className="grid gap-2">
-                                <div className="flex gap-2 leading-none font-medium">
-                                    Tendencia ascendente en un 5.2% este mes{" "}
-                                    <IconTrendingUp className="size-4" />
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Cliente:</span>
+                                    <span className="font-medium">{item.cliente}</span>
                                 </div>
-                                <div className="text-muted-foreground">
-                                    Mostrando visitantes totales de los últimos
-                                    6 meses. Esto es solo texto aleatorio para
-                                    probar el diseño. Se extiende en múltiples
-                                    líneas y debería envolverse.
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Concepto:</span>
+                                    <span className="font-medium">{item.concepto}</span>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2 rounded-lg border p-4">
+                            <div className="text-muted-foreground text-xs font-medium">
+                                DETALLES DEL PAGO
                             </div>
                             <Separator />
-                        </>
-                    )}
-                    <form className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-3">
-                            <Label htmlFor="header">Encabezado</Label>
-                            <Input id="header" defaultValue={item.header} />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="flex flex-col gap-3">
-                                <Label htmlFor="type">Tipo</Label>
-                                <Select defaultValue={item.type}>
-                                    <SelectTrigger id="type" className="w-full">
-                                        <SelectValue placeholder="Seleccionar un tipo" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Tabla de Contenidos">
-                                            Tabla de Contenidos
-                                        </SelectItem>
-                                        <SelectItem value="Resumen Ejecutivo">
-                                            Resumen Ejecutivo
-                                        </SelectItem>
-                                        <SelectItem value="Enfoque Técnico">
-                                            Enfoque Técnico
-                                        </SelectItem>
-                                        <SelectItem value="Diseño">
-                                            Diseño
-                                        </SelectItem>
-                                        <SelectItem value="Capacidades">
-                                            Capacidades
-                                        </SelectItem>
-                                        <SelectItem value="Documentos de Enfoque">
-                                            Documentos de Enfoque
-                                        </SelectItem>
-                                        <SelectItem value="Narrativa">
-                                            Narrativa
-                                        </SelectItem>
-                                        <SelectItem value="Portada">
-                                            Portada
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="flex flex-col gap-3">
-                                <Label htmlFor="status">Estado</Label>
-                                <Select defaultValue={item.status}>
-                                    <SelectTrigger
-                                        id="status"
-                                        className="w-full"
+                            <div className="grid gap-2">
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Monto:</span>
+                                    <span className="text-lg font-bold">
+                                        {new Intl.NumberFormat("es-VE", {
+                                            style: "currency",
+                                            currency: "USD"
+                                        }).format(item.monto)}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Método de pago:</span>
+                                    <Badge variant="outline">{item.metodoPago}</Badge>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Estado:</span>
+                                    <Badge
+                                        variant="outline"
+                                        className={`${
+                                            item.estado === "Completado"
+                                                ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
+                                                : "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
+                                        }`}
                                     >
-                                        <SelectValue placeholder="Seleccionar un estado" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Completado">
-                                            Completado
-                                        </SelectItem>
-                                        <SelectItem value="En Progreso">
-                                            En Progreso
-                                        </SelectItem>
-                                        <SelectItem value="No Iniciado">
-                                            No Iniciado
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                        {item.estado}
+                                    </Badge>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Fecha:</span>
+                                    <span className="font-medium">{item.fecha}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Referencia:</span>
+                                    <span className="font-mono text-xs">{item.referencia}</span>
+                                </div>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="flex flex-col gap-3">
-                                <Label htmlFor="target">Objetivo</Label>
-                                <Input id="target" defaultValue={item.target} />
-                            </div>
-                            <div className="flex flex-col gap-3">
-                                <Label htmlFor="limit">Límite</Label>
-                                <Input id="limit" defaultValue={item.limit} />
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-3">
-                            <Label htmlFor="reviewer">Revisor</Label>
-                            <Select defaultValue={item.reviewer}>
-                                <SelectTrigger id="reviewer" className="w-full">
-                                    <SelectValue placeholder="Seleccionar un revisor" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="Eddie Lake">
-                                        Eddie Lake
-                                    </SelectItem>
-                                    <SelectItem value="Jamik Tashpulatov">
-                                        Jamik Tashpulatov
-                                    </SelectItem>
-                                    <SelectItem value="Emily Whalen">
-                                        Emily Whalen
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </form>
+                    </div>
                 </div>
                 <DrawerFooter>
-                    <Button>Enviar</Button>
+                    <Button>Descargar Comprobante</Button>
                     <DrawerClose asChild>
-                        <Button variant="outline">Hecho</Button>
+                        <Button variant="outline">Cerrar</Button>
                     </DrawerClose>
                 </DrawerFooter>
             </DrawerContent>
