@@ -1,0 +1,82 @@
+[
+  {
+    "id": "SUB001",
+    "clientName": "Ana Pérez",
+    "email": "ana.perez@email.com",
+    "plan": "Plan Premium",
+    "status": "Activo",
+    "nextPaymentDate": "2025-11-01"
+  },
+  {
+    "id": "SUB002",
+    "clientName": "Carlos García",
+    "email": "carlos.garcia@email.com",
+    "plan": "Plan Básico",
+    "status": "Activo",
+    "nextPaymentDate": "2025-11-05"
+  },
+  {
+    "id": "SUB003",
+    "clientName": "Laura Martínez",
+    "email": "laura.martinez@email.com",
+    "plan": "Plan Premium",
+    "status": "Cancelado",
+    "nextPaymentDate": null
+  },
+  {
+    "id": "SUB004",
+    "clientName": "Juan Rodríguez",
+    "email": "juan.rodriguez@email.com",
+    "plan": "Plan Básico",
+    "status": "En Apelación",
+    "nextPaymentDate": "2025-10-20"
+  },
+  {
+    "id": "SUB005",
+    "clientName": "Sofía López",
+    "email": "sofia.lopez@email.com",
+    "plan": "Plan Premium",
+    "status": "Activo",
+    "nextPaymentDate": "2025-11-15"
+  },
+  {
+    "id": "SUB006",
+    "clientName": "Miguel Hernández",
+    "email": "miguel.h@email.com",
+    "plan": "Plan Anual",
+    "status": "Activo",
+    "nextPaymentDate": "2026-09-01"
+  },
+  {
+    "id": "SUB007",
+    "clientName": "Isabel Gómez",
+    "email": "isabel.gomez@email.com",
+    "plan": "Plan Básico",
+    "status": "Cancelado",
+    "nextPaymentDate": null
+  },
+  {
+    "id": "SUB008",
+    "clientName": "David Sánchez",
+    "email": "david.sanchez@email.com",
+    "plan": "Plan Premium",
+    "status": "En Apelación",
+    "nextPaymentDate": "2025-10-22"
+  },
+  {
+    "id": "SUB009",
+    "clientName": "Elena Torres",
+    "email": "elena.torres@email.com",
+    "plan": "Plan Básico",
+    "status": "Activo",
+    "nextPaymentDate": "2025-11-25"
+  },
+  {
+    "id": "SUB010",
+    "clientName": "Francisco Romero",
+    "email": "francisco.r@email.com",
+    "plan": "Plan Premium",
+    "status": "Activo",
+    "nextPaymentDate": "2025-11-28"
+  }
+]
