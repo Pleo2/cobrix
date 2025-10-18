@@ -1,0 +1,18 @@
+{
+  "exchangeRates": {
+    "USD_TO_BS": 205.67,
+    "description": "Tasa de cambio 1 USD = 205.67 Bs"
+  },
+  "currencies": {
+    "USD": {
+      "symbol": "$",
+      "name": "Dólares Estadounidenses",
+      "code": "USD"
+    },
+    "BS": {
+      "symbol": "Bs.",
+      "name": "Bolívares",
+      "code": "BS"
+    }
+  }
+}
