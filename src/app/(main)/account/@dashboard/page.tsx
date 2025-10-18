@@ -3,6 +3,7 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { FileText, Users, CreditCard, BarChart3, Plus, Check } from "lucide-react";
+import { ChartRadialGrid } from "@/components/acount/dashboard/chart-radial-grid";
 
 const quickAccess = [
     {
@@ -89,59 +90,48 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
 
                 {/* Border accent en hover */}
                 <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-[inherit] border"
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-[inherit] border pb-0"
                     style={{
                         borderColor: `rgba(${rgbColor}, 0.3)`,
                     }}
                 />
 
                 <CardHeader
-                    className={`h-full flex flex-col justify-between gap-4 pb-4 relative z-10 ${
-                        isLarge ? "flex-row items-start" : ""
+                    className={`h-full flex flex-col justify-between gap-4 relative z-10 ${
+                        isLarge ? "md:flex-row md:items-start md:gap-6" : ""
                     }`}
                 >
-                    {/* Header con ícono y título */}
-                    <div
-                        className={`flex items-start justify-between gap-4 ${
-                            isLarge ? "flex-col flex-1" : ""
-                        }`}
-                    >
-                        <div className="flex-1">
-                            <Icon className="text-white h-5 w-5" />
+                    {/* Sección izquierda - Ícono, título y descripción */}
+                    <div className={`flex flex-col gap-3 ${isLarge ? "md:flex-1" : ""}`}>
+                        <div className="flex items-start gap-3">
+                            <Icon className="text-foreground h-5 w-5 mt-1" />
                             <CardTitle className={isLarge ? "text-2xl" : "text-lg"}>
                                 {item.title}
                             </CardTitle>
                         </div>
-                        {isLarge && (
-                            <div className="opacity-10 group-hover:opacity-20 transition-opacity duration-300 hidden">
-                                <Icon className="h-24 w-24" />
+
+                        {/* Descripción */}
+                        <CardDescription className="text-sm leading-relaxed">
+                            {item.description}
+                        </CardDescription>
+
+                        {/* Lista de características (solo para tarjetas pequeñas) */}
+                        {!isLarge && (
+                            <div className="space-y-2 flex-1">
+                                {item.features.map((feature, idx) => (
+                                    <div key={idx} className="flex items-center gap-2 text-sm">
+                                        <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                                        <span className="text-foreground">{feature}</span>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>
 
-                    {/* Descripción */}
-                    <div className={isLarge ? "flex-1" : ""}>
-                        <CardDescription className="text-sm leading-relaxed">
-                            {item.description}
-                        </CardDescription>
-                    </div>
-
-                    {/* Preview del gráfico para tarjeta grande */}
+                    {/* Preview del gráfico para tarjeta grande - Responsive */}
                     {isLarge && (
-                        <div className="flex-1 flex items-center justify-center min-h-[200px]">
-                            {/* Gráfico aquí */}
-                        </div>
-                    )}
-
-                    {/* Lista de características (solo para tarjetas pequeñas) */}
-                    {!isLarge && (
-                        <div className="space-y-2 flex-1">
-                            {item.features.map((feature, idx) => (
-                                <div key={idx} className="flex items-center gap-2 text-sm">
-                                    <Check className="h-4 w-4 text-primary flex-shrink-0" />
-                                    <span className="text-foreground">{feature}</span>
-                                </div>
-                            ))}
+                        <div className="w-full md:flex-1 flex items-center justify-center py-4 md:py-0">
+                            <ChartRadialGrid />
                         </div>
                     )}
                 </CardHeader>
