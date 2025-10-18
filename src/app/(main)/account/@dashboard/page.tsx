@@ -152,7 +152,7 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
 
                     {/* Preview del gráfico para tarjeta grande - Responsive */}
                     {isLarge && (
-                        <div className="w-full lg:flex-1 md:flex-none items-center justify-center py-4 md:py-0">
+                        <div className="w-full md:hidden lg:block lg:flex-1  items-center justify-center py-4 md:py-0">
                             <ChartRadialGrid />
                         </div>
                     )}

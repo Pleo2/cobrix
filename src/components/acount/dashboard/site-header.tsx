@@ -37,7 +37,7 @@ export function SiteHeader() {
     const showBackButton = pathname !== "/account" && pathname !== "/account/";
 
     return (
-        <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 hidden lg:block">
             <div className="max-w-7xl mx-auto w-full">
                 <div className="flex h-12 items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -49,7 +49,7 @@ export function SiteHeader() {
                                 </Button>
                             </Link>
                         )}
-                        <DropdownMenu >
+                        <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
