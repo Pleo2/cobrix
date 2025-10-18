@@ -15,6 +15,7 @@ const quickAccess = [
         color: "bg-indigo-500",
         size: "large",
         features: ["Gráficos en tiempo real", "Análisis detallado", "Exportar reportes"],
+        // badge: { label: "Hoy", value: "$3,260", color: "bg-indigo-100 text-indigo-700" },
     },
     {
         id: "new-client",
@@ -25,6 +26,7 @@ const quickAccess = [
         color: "bg-orange-500",
         size: "small",
         features: ["Formulario completo", "Validación automática"],
+        // badge: { label: "Nuevo", value: "+", color: "bg-orange-100 text-orange-700" },
     },
     {
         id: "subscriptions",
@@ -35,6 +37,7 @@ const quickAccess = [
         color: "bg-purple-500",
         size: "small",
         features: ["Planes personalizados", "Control total"],
+        badge: { label: "Activas", value: "8", color: "bg-purple-100 text-purple-700" },
     },
     {
         id: "invoices",
@@ -45,6 +48,7 @@ const quickAccess = [
         color: "bg-green-500",
         size: "small",
         features: ["Generación automática", "Historial completo"],
+        badge: { label: "Pendientes", value: "3", color: "bg-green-100 text-green-700" },
     },
     {
         id: "clients",
@@ -55,6 +59,7 @@ const quickAccess = [
         color: "bg-blue-500",
         size: "small",
         features: ["Base de datos centralizada", "Búsqueda rápida"],
+        badge: { label: "Total", value: "245", color: "bg-blue-100 text-blue-700" },
     },
 ];
 
@@ -103,11 +108,28 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
                 >
                     {/* Sección izquierda - Ícono, título y descripción */}
                     <div className={`flex flex-col gap-3 ${isLarge ? "md:flex-1" : ""}`}>
-                        <div className="flex items-start gap-3">
-                            <Icon className="text-foreground h-5 w-5 mt-1" />
-                            <CardTitle className={isLarge ? "text-2xl" : "text-lg"}>
-                                {item.title}
-                            </CardTitle>
+                        <div className="flex items-end w-full gap-3 relative">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center gap-4">
+                                    <Icon className="text-foreground h-5 w-5 mt-1" />
+                                    {item.badge && (
+                                        <div
+                                            className={`rounded-full text-xs font-semibold py-1 px-4 ${item.badge.color} shadow-md`}
+                                        >
+                                            <span className="opacity-70">{item.badge.label}</span>
+                                            <span className="ml-1 font-bold">
+                                                {item.badge.value}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <CardTitle className={isLarge ? "text-2xl" : "text-lg"}>
+                                    {item.title}
+                                </CardTitle>
+                            </div>
+
+                            {/* Badge en la esquina superior derecha del title */}
                         </div>
 
                         {/* Descripción */}
@@ -116,7 +138,7 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
                         </CardDescription>
 
                         {/* Lista de características (solo para tarjetas pequeñas) */}
-                        {!isLarge && (
+                        {item.features && (
                             <div className="space-y-2 flex-1">
                                 {item.features.map((feature, idx) => (
                                     <div key={idx} className="flex items-center gap-2 text-sm">
@@ -130,7 +152,7 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
 
                     {/* Preview del gráfico para tarjeta grande - Responsive */}
                     {isLarge && (
-                        <div className="w-full md:flex-1 flex items-center justify-center py-4 md:py-0">
+                        <div className="w-full lg:flex-1 md:flex-none items-center justify-center py-4 md:py-0">
                             <ChartRadialGrid />
                         </div>
                     )}
@@ -145,39 +167,45 @@ export default function HomePage() {
         <div className="flex max-h-max flex-col">
             <div className="flex flex-1 flex-col ">
                 <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6">
-                    <div className="flex flex-col gap-2">
-                        <h2 className="text-3xl font-bold tracking-tight">Bienvenido a Cobrix</h2>
-                        <p className="text-muted-foreground">
-                            Gestiona tus documentos, recibos, suscripciones y clientes en un solo
-                            lugar.
-                        </p>
-                    </div>
-
-                    {/* Bento Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(200px,auto)]">
-                        {/* Panel - Grande (ocupa 2 columnas y 2 filas = 50%) */}
-                        <div className="md:col-span-2 md:row-span-2">
-                            <BentoItem item={quickAccess[0]} />
+                    <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
+                        <div className="flex flex-col gap-2 text-center w-full">
+                            <h2 className="text-3xl font-bold tracking-tight">
+                                Bienvenido a Cobrix
+                            </h2>
+                            <p className="text-muted-foreground">
+                                Gestiona tus documentos, recibos, suscripciones y clientes en un
+                                solo lugar.
+                            </p>
                         </div>
 
-                        {/* Nuevo Cliente - Pequeño (25%) */}
-                        <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[1]} />
-                        </div>
+                        {/* Bento Grid */}
+                        <div className="w-full">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(200px,auto)]">
+                                {/* Panel - Grande (ocupa 2 columnas y 2 filas = 50%) */}
+                                <div className="md:col-span-2 md:row-span-2">
+                                    <BentoItem item={quickAccess[0]} />
+                                </div>
 
-                        {/* Suscripciones - Pequeño (25%) */}
-                        <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[2]} />
-                        </div>
+                                {/* Nuevo Cliente - Pequeño (25%) */}
+                                <div className="md:col-span-2">
+                                    <BentoItem item={quickAccess[1]} />
+                                </div>
 
-                        {/* Recibos - Mediano (50%) */}
-                        <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[3]} />
-                        </div>
+                                {/* Suscripciones - Pequeño (25%) */}
+                                <div className="md:col-span-2">
+                                    <BentoItem item={quickAccess[2]} />
+                                </div>
 
-                        {/* Clientes - Mediano (50%) */}
-                        <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[4]} />
+                                {/* Recibos - Mediano (50%) */}
+                                <div className="md:col-span-2">
+                                    <BentoItem item={quickAccess[3]} />
+                                </div>
+
+                                {/* Clientes - Mediano (50%) */}
+                                <div className="md:col-span-2">
+                                    <BentoItem item={quickAccess[4]} />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
