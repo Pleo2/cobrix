@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import {
   IconCamera,
   IconChartBar,
@@ -11,7 +12,6 @@ import {
   IconFileWord,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop,
   IconListDetails,
   IconReport,
   IconSearch,
@@ -19,10 +19,10 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents";
-import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
+import { NavDocuments } from "@/components/acount/dashboard/nav-documents";
+import { NavMain } from "@/components/acount/dashboard/nav-main";
+import { NavSecondary } from "@/components/acount/dashboard/nav-secondary";
+import { NavUser } from "@/components/acount/dashboard/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -150,6 +150,50 @@ const data = {
   ],
 };
 
+function CobrixLogo() {
+  const [isDark, setIsDark] = React.useState(false);
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+    // Detectar tema inicial
+    const isDarkMode = document.documentElement.classList.contains("dark");
+    setIsDark(isDarkMode);
+
+    // Observar cambios en el tema
+    const observer = new MutationObserver(() => {
+      const isDarkMode = document.documentElement.classList.contains("dark");
+      setIsDark(isDarkMode);
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (!isMounted) {
+    return <div className="h-8 w-8" />;
+  }
+
+  return (
+    <Image
+      src={
+        isDark
+          ? "/Cobrix_black_background.svg"
+          : "/Cobrix_white_background.svg"
+      }
+      alt="Cobrix Logo"
+      width={32}
+      height={32}
+      className="h-8 w-auto"
+      priority
+    />
+  );
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -161,8 +205,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <CobrixLogo />
+                <span className="text-base font-semibold">Cobrix</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
