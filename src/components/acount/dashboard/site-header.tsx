@@ -21,17 +21,49 @@ import {
     IconUserCircle,
     IconArrowLeft,
 } from "@tabler/icons-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-
-const userData = {
-    name: "Uptly",
-    email: "info@uptly.com",
-    avatar: "/public/",
-};
+import { useAuthStore } from "@/store/auth-store";
+import { useEffect } from "react";
 
 export function SiteHeader() {
     const pathname = usePathname();
+    const router = useRouter();
+    const empresa = useAuthStore((state) => state.empresa);
+    const logout = useAuthStore((state) => state.logout);
+    const initializeSession = useAuthStore((state) => state.initializeSession);
+
+    // Inicializar sesión al montar el componente
+    useEffect(() => {
+        initializeSession();
+        
+        // Debug: Verificar datos en localStorage
+        const registroEmpresa = localStorage.getItem('registroEmpresa');
+        console.log('📦 LocalStorage registroEmpresa:', registroEmpresa ? JSON.parse(registroEmpresa) : 'No existe');
+        console.log('🏢 Empresa en Zustand:', empresa);
+    }, [initializeSession, empresa]);
+
+    // Obtener iniciales del nombre de la empresa
+    const getInitials = (name: string) => {
+        return name
+            .split(" ")
+            .map((word) => word[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+    };
+
+    const handleLogout = () => {
+        logout();
+        router.push("/login");
+    };
+
+    const userData = {
+        name: empresa?.nombreEmpresa || "Empresa",
+        email: empresa?.correo || "correo@empresa.com",
+        avatar: "/public/",
+        initials: empresa?.nombreEmpresa ? getInitials(empresa.nombreEmpresa) : "EM",
+    };
 
     // Mostrar flecha en todas las páginas excepto en /account (la raíz)
     const showBackButton = pathname !== "/account" && pathname !== "/account/";
@@ -57,7 +89,7 @@ export function SiteHeader() {
                                 >
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage src={userData.avatar} alt={userData.name} />
-                                        <AvatarFallback className="rounded-lg">UP</AvatarFallback>
+                                        <AvatarFallback className="rounded-lg">{userData.initials}</AvatarFallback>
                                     </Avatar>
                                     <div className="hidden sm:grid text-left text-sm leading-tight">
                                         <span className="truncate font-medium">
@@ -83,7 +115,7 @@ export function SiteHeader() {
                                                 alt={userData.name}
                                             />
                                             <AvatarFallback className="rounded-lg">
-                                                JP
+                                                {userData.initials}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight">
@@ -112,7 +144,7 @@ export function SiteHeader() {
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleLogout}>
                                     <IconLogout className="mr-2 h-4 w-4" />
                                     Cerrar Sesión
                                 </DropdownMenuItem>
