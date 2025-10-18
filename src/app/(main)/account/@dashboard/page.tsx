@@ -4,6 +4,8 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { FileText, Users, CreditCard, BarChart3, Plus, Check } from "lucide-react";
+import { ChartRadialGrid } from "@/components/acount/dashboard/chart-radial-grid";
+import { useState, useEffect } from "react";
 
 const quickAccess = [
     {
@@ -60,7 +62,13 @@ const quickAccess = [
     },
 ];
 
-function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
+function BentoItem({
+    item,
+    clientsCount,
+}: {
+    item: (typeof quickAccess)[0];
+    clientsCount?: string | null;
+}) {
     const Icon = item.icon;
     const isLarge = item.size === "large";
 
@@ -74,6 +82,10 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
     };
 
     const rgbColor = colorRgbMap[item.color] || "99, 102, 241";
+
+    // Usar clientsCount para el badge del card de clientes
+    const displayBadge =
+        item.id === "clients" && clientsCount ? { ...item.badge, value: clientsCount } : item.badge;
 
     return (
         <Link href={item.href}>
@@ -101,47 +113,56 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
                     className={`h-full flex flex-col justify-between gap-4 pb-4 relative z-10 ${isLarge ? "flex-row items-start" : ""
                         }`}
                 >
-                    {/* Header con ícono y título */}
-                    <div
-                        className={`flex items-start justify-between gap-4 ${isLarge ? "flex-col flex-1" : ""
-                            }`}
-                    >
-                        <div className="flex-1">
-                            <Icon className="text-white h-5 w-5" />
+                    {/* Sección izquierda - Ícono, título y descripción */}
+                    <div className={`flex flex-col gap-3 ${isLarge ? "md:flex-1" : ""}`}>
+                        <div className="flex items-start gap-3 relative">
+                            <Icon className="text-foreground h-5 w-5 mt-1" />
                             <CardTitle className={isLarge ? "text-2xl" : "text-lg"}>
                                 {item.title}
                             </CardTitle>
+
+                            {/* Badge en la esquina superior derecha del title */}
+                            {displayBadge && (
+                                <div
+                                    className={`absolute -top-1 right-0 px-2.5 py-1 rounded-full text-xs font-semibold ${displayBadge.color} shadow-md ml-auto`}
+                                >
+                                    <span className="opacity-70">{displayBadge.label}</span>
+                                    <span className="ml-1 font-bold">{displayBadge.value}</span>
+                                </div>
+                            )}
                         </div>
+
+                        {/* Descripción */}
+                        <div className={isLarge ? "flex-1" : ""}>
+                            <CardDescription className="text-sm leading-relaxed">
+                                {item.description}
+                            </CardDescription>
+                        </div>
+
+                        {/* Preview del gráfico para tarjeta grande */}
                         {isLarge && (
-                            <div className="opacity-10 group-hover:opacity-20 transition-opacity duration-300 hidden">
-                                <Icon className="h-24 w-24" />
+                            <div className="flex-1 flex items-center justify-center min-h-[200px]">
+                                {/* Gráfico aquí */}
+                            </div>
+                        )}
+
+                        {/* Lista de características (solo para tarjetas pequeñas) */}
+                        {!isLarge && (
+                            <div className="space-y-2 flex-1">
+                                {item.features.map((feature, idx) => (
+                                    <div key={idx} className="flex items-center gap-2 text-sm">
+                                        <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                                        <span className="text-foreground">{feature}</span>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>
 
-                    {/* Descripción */}
-                    <div className={isLarge ? "flex-1" : ""}>
-                        <CardDescription className="text-sm leading-relaxed">
-                            {item.description}
-                        </CardDescription>
-                    </div>
-
-                    {/* Preview del gráfico para tarjeta grande */}
+                    {/* Preview del gráfico para tarjeta grande - Responsive */}
                     {isLarge && (
-                        <div className="flex-1 flex items-center justify-center min-h-[200px]">
-                            {/* Gráfico aquí */}
-                        </div>
-                    )}
-
-                    {/* Lista de características (solo para tarjetas pequeñas) */}
-                    {!isLarge && (
-                        <div className="space-y-2 flex-1">
-                            {item.features.map((feature, idx) => (
-                                <div key={idx} className="flex items-center gap-2 text-sm">
-                                    <Check className="h-4 w-4 text-primary flex-shrink-0" />
-                                    <span className="text-foreground">{feature}</span>
-                                </div>
-                            ))}
+                        <div className="w-full md:flex-1 flex items-center justify-center py-4 md:py-0">
+                            <ChartRadialGrid />
                         </div>
                     )}
                 </CardHeader>
@@ -150,20 +171,15 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
     );
 }
 
-function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
-    const Icon = item.icon;
-    const isLarge = item.size === "large";
+export default function HomePage() {
+    const [clientsCount, setClientsCount] = useState<string | null>(null);
 
-    // Mapping de colores Tailwind a valores RGB
-    const colorRgbMap: Record<string, string> = {
-        "bg-indigo-500": "99, 102, 241",
-        "bg-orange-500": "249, 115, 22",
-        "bg-purple-500": "168, 85, 247",
-        "bg-green-500": "34, 197, 94",
-        "bg-blue-500": "59, 130, 246",
-    };
-
-    const rgbColor = colorRgbMap[item.color] || "99, 102, 241";
+    useEffect(() => {
+        const storedCount = localStorage.getItem("clientsCount");
+        if (storedCount) {
+            setClientsCount(storedCount);
+        }
+    }, []);
 
     return (
         <div className="flex max-h-max flex-col">
@@ -201,11 +217,13 @@ function BentoItem({ item }: { item: (typeof quickAccess)[0] }) {
 
                         {/* Clientes - Mediano (50%) */}
                         <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[4]} />
+                            <BentoItem item={quickAccess[4]} clientsCount={clientsCount} />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+            </div >
+        </div >
     );
 }
