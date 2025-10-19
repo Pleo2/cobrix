@@ -32,8 +32,9 @@ function MobileNav() {
 
 export function Navbar({ banner }: { banner?: React.ReactNode }) {
   return (
-    <header className="pt-12 sm:pt-16 px-0 md:px-8">
-      <div className="relative flex justify-between items-center">
+    <header className="flex justify-between pt-2 sm:pt-4 px-0 md:px-8">
+      <Logo className="w-16 h-16" />
+      <div className="relative hidden lg:flex justify-between items-center">
         <div className="relative flex gap-6">
           <div className="py-3">
             <Link href="/" title="Home" className='flex justify-center items-center px-6'>

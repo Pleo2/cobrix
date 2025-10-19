@@ -1,6 +1,6 @@
-function Logo() {
+function Logo({ className }: { className?: React.HTMLAttributes<HTMLElement>['className'] }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" data-name="Capa 2" viewBox="0 0 166.49 153.92">
+    <svg xmlns="http://www.w3.org/2000/svg" data-name="Capa 2" viewBox="0 0 166.49 153.92" className={className}>
       <defs>
         <linearGradient id="a" x1="30.06" x2="140.18" y1="46.51" y2="46.51" data-name="Degradado sin nombre 878" gradientUnits="userSpaceOnUse">
           <stop offset=".02" stopColor="#00ff1f" />

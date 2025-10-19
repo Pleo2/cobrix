@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/marketing/navbar";
 import Link from "next/link";
-import { ChevronRightIcon, BellIcon, LayoutDashboardIcon, CreditCardIcon, CheckCircle2Icon } from "lucide-react";
+import { BellIcon, LayoutDashboardIcon, CreditCardIcon, CheckCircle2Icon } from "lucide-react";
 import { GradientScene } from "@/components/marketing/gradient-scene";
 import { Container } from "@/components/container";
 
