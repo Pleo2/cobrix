@@ -50,7 +50,7 @@ interface EmpresaData {
     telefono: string;
     plan?: {
         name?: string;
-        price?: number;
+        price?: string | number;
         billingCycle?: string;
     };
     metodoPago?: unknown;
