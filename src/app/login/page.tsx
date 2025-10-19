@@ -26,7 +26,7 @@ export default function Login() {
         
         if (success) {
             console.log("Login exitoso");
-            router.push("/account/dashboard");
+            router.push("/account");
         } else {
             setError("Correo o contraseña incorrectos");
         }
@@ -58,7 +58,7 @@ export default function Login() {
                         <p className="text-muted-foreground text-sm">Inicia sesión o crea tu cuenta</p>
                     </div>
 
-                    {/* Social auth */}
+                    {/* Social auth
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <Button variant="outline" className="justify-center gap-2">
                             <Chrome className="h-4 w-4" />
@@ -68,9 +68,9 @@ export default function Login() {
                             <Github className="h-4 w-4" />
                             Sign in with Github
                         </Button>
-                    </div>
+                    </div> */}
 
-                    {/* Divider */}
+                    {/* Divider
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center" aria-hidden="true">
                             <div className="w-full border-t" />
@@ -78,20 +78,10 @@ export default function Login() {
                         <div className="relative flex justify-center text-xs uppercase">
                             <span className="bg-background px-2 text-muted-foreground">O continúa con tu email</span>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Formulario */}
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="firstName">Nombre</Label>
-                                <Input id="firstName" placeholder="John" className="h-11" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="lastName">Apellido</Label>
-                                <Input id="lastName" placeholder="Doe" className="h-11" />
-                            </div>
-                        </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="email">Correo electrónico</Label>
