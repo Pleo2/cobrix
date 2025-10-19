@@ -31,18 +31,22 @@ export const useAuthStore = create<AuthState>()(
             empresa: null,
 
             login: (correo: string, password: string) => {
-                // Obtener datos del registro desde localStorage
-                const registroEmpresa = localStorage.getItem('registroEmpresa');
+                // Obtener todas las empresas registradas
+                const registrosEmpresas = localStorage.getItem('registrosEmpresas');
                 
-                if (!registroEmpresa) {
+                if (!registrosEmpresas) {
                     return false;
                 }
 
-                const empresa: EmpresaData = JSON.parse(registroEmpresa);
+                const empresas = JSON.parse(registrosEmpresas);
+                
+                // Buscar empresa por correo y contraseña
+                const empresa = empresas.find((e: any) => 
+                    e.correo.toLowerCase() === correo.toLowerCase() && 
+                    e.password === password
+                );
 
-                // Validar correo y contraseña
-                // Por ahora, la contraseña será el RIF (puedes cambiar esto)
-                if (empresa.correo === correo && empresa.rif === password) {
+                if (empresa) {
                     set({ 
                         isAuthenticated: true, 
                         empresa: empresa 
@@ -66,12 +70,16 @@ export const useAuthStore = create<AuthState>()(
 
             initializeSession: () => {
                 const state = get();
-                // Si está autenticado pero no hay datos de empresa, cargarlos de localStorage
+                // Si está autenticado pero no hay datos de empresa, intentar cargar
                 if (state.isAuthenticated && !state.empresa) {
-                    const registroEmpresa = localStorage.getItem('registroEmpresa');
-                    if (registroEmpresa) {
-                        const empresa: EmpresaData = JSON.parse(registroEmpresa);
-                        set({ empresa });
+                    // Primero intentar del nuevo sistema
+                    const registrosEmpresas = localStorage.getItem('registrosEmpresas');
+                    if (registrosEmpresas) {
+                        const empresas = JSON.parse(registrosEmpresas);
+                        if (empresas.length > 0) {
+                            // Tomar la primera empresa (puedes mejorar esto)
+                            set({ empresa: empresas[0] });
+                        }
                     }
                 }
             },
