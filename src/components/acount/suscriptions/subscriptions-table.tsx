@@ -28,7 +28,6 @@ import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -246,10 +245,6 @@ export function SubscriptionsTable({ data }: { data: Subscription[] }) {
                                 ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button size="sm" className="h-9">
-                        <IconPlus className="mr-2 h-4 w-4" />
-                        Añadir Suscriptor
-                    </Button>
                 </div>
             </div>
 

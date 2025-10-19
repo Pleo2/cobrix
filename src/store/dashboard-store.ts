@@ -39,11 +39,23 @@ export interface Invoice {
     exchange_rate: string;
 }
 
+export interface SubscriptionPlan {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    billingCycle: "Mensual" | "Anual";
+    features: string[];
+    isActive: boolean;
+    createdAt?: string;
+}
+
 export interface Subscription {
     id: string;
     clientName: string;
     email: string;
-    plan: string;
+    planId: string; // Referencia al plan
+    plan: string; // Nombre del plan (para compatibilidad)
     price?: number;
     status: "Activo" | "En Apelación" | "Cancelado";
     billingCycle?: string;
@@ -85,6 +97,7 @@ interface DashboardState {
     transactions: Transaction[];
     invoices: Invoice[];
     subscriptions: Subscription[];
+    subscriptionPlans: SubscriptionPlan[];
     messageTemplates: MessageTemplate[];
     clientProfiles: ClientProfile[];
     screenTemplates: ScreenTemplate[];
@@ -124,6 +137,13 @@ interface DashboardState {
     addSubscription: (subscription: Omit<Subscription, "id">) => void;
     updateSubscription: (id: string, subscription: Partial<Subscription>) => void;
     deleteSubscription: (id: string) => void;
+
+    // Acciones - Planes de Suscripción
+    addSubscriptionPlan: (plan: Omit<SubscriptionPlan, "id">) => void;
+    updateSubscriptionPlan: (id: string, plan: Partial<SubscriptionPlan>) => void;
+    deleteSubscriptionPlan: (id: string) => void;
+    getActivePlans: () => SubscriptionPlan[];
+    resetPlans: () => void;
 
     // Acciones - Plantillas de Mensajes
     addMessageTemplate: (template: Omit<MessageTemplate, "id">) => void;
@@ -539,13 +559,125 @@ const initialScreenTemplates: ScreenTemplate[] = [
     },
 ];
 
+// Planes de suscripción iniciales
+const initialSubscriptionPlans: SubscriptionPlan[] = [
+    {
+        id: "PLAN001",
+        name: "Plan Básico",
+        description: "Perfecto para comenzar tu rutina de entrenamiento",
+        price: 25.0,
+        billingCycle: "Mensual",
+        features: [
+            "Acceso al área de cardio",
+            "Acceso al área de pesas",
+            "Horario de 6 AM a 10 PM",
+            "1 clase grupal por semana",
+            "Casillero compartido",
+        ],
+        isActive: true,
+        createdAt: new Date().toISOString(),
+    },
+    {
+        id: "PLAN002",
+        name: "Plan Premium",
+        description: "Para los que quieren más de su entrenamiento",
+        price: 45.0,
+        billingCycle: "Mensual",
+        features: [
+            "Acceso ilimitado 24/7",
+            "Todas las áreas del gimnasio",
+            "Clases grupales ilimitadas",
+            "2 sesiones de entrenador personal al mes",
+            "Casillero personal",
+            "Acceso a zona de spa",
+        ],
+        isActive: true,
+        createdAt: new Date().toISOString(),
+    },
+    {
+        id: "PLAN003",
+        name: "Plan Elite",
+        description: "La experiencia completa de fitness",
+        price: 75.0,
+        billingCycle: "Mensual",
+        features: [
+            "Acceso ilimitado 24/7",
+            "Todas las áreas del gimnasio",
+            "Clases grupales ilimitadas",
+            "8 sesiones de entrenador personal al mes",
+            "Plan nutricional personalizado",
+            "Casillero personal premium",
+            "Acceso a zona de spa y sauna",
+            "Masajes deportivos (2 al mes)",
+            "Estacionamiento VIP",
+        ],
+        isActive: true,
+        createdAt: new Date().toISOString(),
+    },
+    {
+        id: "PLAN004",
+        name: "Plan Estudiantil",
+        description: "Tarifa especial para estudiantes",
+        price: 20.0,
+        billingCycle: "Mensual",
+        features: [
+            "Acceso al área de cardio",
+            "Acceso al área de pesas",
+            "Horario de 6 AM a 6 PM",
+            "1 clase grupal por semana",
+            "Casillero compartido",
+            "Requiere credencial estudiantil vigente",
+        ],
+        isActive: true,
+        createdAt: new Date().toISOString(),
+    },
+    {
+        id: "PLAN005",
+        name: "Plan Anual Premium",
+        description: "Ahorra con el pago anual",
+        price: 450.0,
+        billingCycle: "Anual",
+        features: [
+            "Acceso ilimitado 24/7",
+            "Todas las áreas del gimnasio",
+            "Clases grupales ilimitadas",
+            "4 sesiones de entrenador personal al mes",
+            "Casillero personal",
+            "Acceso a zona de spa",
+            "2 meses gratis (paga 10, entrena 12)",
+            "Invita a un amigo gratis por 1 mes",
+        ],
+        isActive: true,
+        createdAt: new Date().toISOString(),
+    },
+    {
+        id: "PLAN006",
+        name: "Plan Familiar",
+        description: "Entrena en familia y ahorra",
+        price: 85.0,
+        billingCycle: "Mensual",
+        features: [
+            "Hasta 4 miembros de la familia",
+            "Acceso ilimitado 24/7",
+            "Todas las áreas del gimnasio",
+            "Clases grupales ilimitadas",
+            "2 casilleros personales",
+            "Acceso a zona infantil supervisada",
+            "Descuento en tienda deportiva",
+        ],
+        isActive: true,
+        createdAt: new Date().toISOString(),
+    },
+];
+
 const initialSubscriptions: Subscription[] = [
     {
         id: "SUB001",
         clientName: "Ana Pérez",
         email: "ana.perez@email.com",
+        planId: "PLAN002",
         plan: "Plan Premium",
-        price: 70,
+        price: 45.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-01",
@@ -554,8 +686,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB002",
         clientName: "Carlos García",
         email: "carlos.garcia@email.com",
+        planId: "PLAN001",
         plan: "Plan Básico",
-        price: 30,
+        price: 25.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-05",
@@ -564,8 +697,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB003",
         clientName: "Laura Martínez",
         email: "laura.martinez@email.com",
-        plan: "Plan Premium",
-        price: 70,
+        planId: "PLAN003",
+        plan: "Plan Elite",
+        price: 75.0,
         status: "Cancelado",
         billingCycle: "Mensual",
         nextPaymentDate: null,
@@ -574,8 +708,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB004",
         clientName: "Juan Rodríguez",
         email: "juan.rodriguez@email.com",
-        plan: "Plan Básico",
-        price: 30,
+        planId: "PLAN004",
+        plan: "Plan Estudiantil",
+        price: 20.0,
         status: "En Apelación",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-10-20",
@@ -584,8 +719,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB005",
         clientName: "Sofía López",
         email: "sofia.lopez@email.com",
+        planId: "PLAN002",
         plan: "Plan Premium",
-        price: 70,
+        price: 45.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-15",
@@ -594,8 +730,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB006",
         clientName: "Miguel Hernández",
         email: "miguel.h@email.com",
-        plan: "Plan Anual",
-        price: 100,
+        planId: "PLAN005",
+        plan: "Plan Anual Premium",
+        price: 450.0,
         status: "Activo",
         billingCycle: "Anual",
         nextPaymentDate: "2026-09-01",
@@ -604,8 +741,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB007",
         clientName: "Isabel Gómez",
         email: "isabel.gomez@email.com",
+        planId: "PLAN001",
         plan: "Plan Básico",
-        price: 30,
+        price: 25.0,
         status: "Cancelado",
         billingCycle: "Mensual",
         nextPaymentDate: null,
@@ -614,8 +752,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB008",
         clientName: "David Sánchez",
         email: "david.sanchez@email.com",
+        planId: "PLAN002",
         plan: "Plan Premium",
-        price: 70,
+        price: 45.0,
         status: "En Apelación",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-10-22",
@@ -624,8 +763,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB009",
         clientName: "Elena Torres",
         email: "elena.torres@email.com",
-        plan: "Plan Básico",
-        price: 30,
+        planId: "PLAN004",
+        plan: "Plan Estudiantil",
+        price: 20.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-25",
@@ -634,8 +774,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB010",
         clientName: "Francisco Romero",
         email: "francisco.r@email.com",
-        plan: "Plan Premium",
-        price: 70,
+        planId: "PLAN003",
+        plan: "Plan Elite",
+        price: 75.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-28",
@@ -644,8 +785,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB011",
         clientName: "Patricia Díaz",
         email: "patricia.diaz@email.com",
-        plan: "Plan Profesional",
-        price: 50,
+        planId: "PLAN002",
+        plan: "Plan Premium",
+        price: 45.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-12",
@@ -654,8 +796,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB012",
         clientName: "Roberto Vargas",
         email: "roberto.vargas@email.com",
-        plan: "Plan Premium",
-        price: 70,
+        planId: "PLAN006",
+        plan: "Plan Familiar",
+        price: 85.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-08",
@@ -664,8 +807,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB013",
         clientName: "Carmen Silva",
         email: "carmen.silva@email.com",
+        planId: "PLAN001",
         plan: "Plan Básico",
-        price: 30,
+        price: 25.0,
         status: "Cancelado",
         billingCycle: "Mensual",
         nextPaymentDate: null,
@@ -674,8 +818,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB014",
         clientName: "Jorge Castillo",
         email: "jorge.castillo@email.com",
-        plan: "Plan Profesional",
-        price: 50,
+        planId: "PLAN002",
+        plan: "Plan Premium",
+        price: 45.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-18",
@@ -684,8 +829,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB015",
         clientName: "María Fernández",
         email: "maria.fernandez@email.com",
-        plan: "Plan Premium",
-        price: 70,
+        planId: "PLAN003",
+        plan: "Plan Elite",
+        price: 75.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-22",
@@ -694,8 +840,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB016",
         clientName: "Luis Morales",
         email: "luis.morales@email.com",
-        plan: "Plan Básico",
-        price: 30,
+        planId: "PLAN004",
+        plan: "Plan Estudiantil",
+        price: 20.0,
         status: "En Apelación",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-10-25",
@@ -704,8 +851,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB017",
         clientName: "Gabriela Ruiz",
         email: "gabriela.ruiz@email.com",
-        plan: "Plan Profesional",
-        price: 50,
+        planId: "PLAN002",
+        plan: "Plan Premium",
+        price: 45.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-30",
@@ -714,8 +862,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB018",
         clientName: "Ricardo Medina",
         email: "ricardo.medina@email.com",
-        plan: "Plan Premium",
-        price: 70,
+        planId: "PLAN001",
+        plan: "Plan Básico",
+        price: 25.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-14",
@@ -724,8 +873,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB019",
         clientName: "Lucía Ortiz",
         email: "lucia.ortiz@email.com",
-        plan: "Plan Anual",
-        price: 100,
+        planId: "PLAN005",
+        plan: "Plan Anual Premium",
+        price: 450.0,
         status: "Activo",
         billingCycle: "Anual",
         nextPaymentDate: "2026-10-15",
@@ -734,8 +884,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB020",
         clientName: "Fernando Navarro",
         email: "fernando.navarro@email.com",
+        planId: "PLAN001",
         plan: "Plan Básico",
-        price: 30,
+        price: 25.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-20",
@@ -744,8 +895,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB021",
         clientName: "Valentina Cruz",
         email: "valentina.cruz@email.com",
-        plan: "Plan Profesional",
-        price: 50,
+        planId: "PLAN002",
+        plan: "Plan Premium",
+        price: 45.0,
         status: "Cancelado",
         billingCycle: "Mensual",
         nextPaymentDate: null,
@@ -754,8 +906,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB022",
         clientName: "Andrés Flores",
         email: "andres.flores@email.com",
-        plan: "Plan Premium",
-        price: 70,
+        planId: "PLAN006",
+        plan: "Plan Familiar",
+        price: 85.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-10",
@@ -764,8 +917,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB023",
         clientName: "Beatriz Ramos",
         email: "beatriz.ramos@email.com",
-        plan: "Plan Básico",
-        price: 30,
+        planId: "PLAN004",
+        plan: "Plan Estudiantil",
+        price: 20.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-16",
@@ -774,8 +928,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB024",
         clientName: "Sebastián Aguilar",
         email: "sebastian.aguilar@email.com",
-        plan: "Plan Premium",
-        price: 70,
+        planId: "PLAN003",
+        plan: "Plan Elite",
+        price: 75.0,
         status: "En Apelación",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-10-28",
@@ -784,8 +939,9 @@ const initialSubscriptions: Subscription[] = [
         id: "SUB025",
         clientName: "Daniela Mendoza",
         email: "daniela.mendoza@email.com",
-        plan: "Plan Profesional",
-        price: 50,
+        planId: "PLAN002",
+        plan: "Plan Premium",
+        price: 45.0,
         status: "Activo",
         billingCycle: "Mensual",
         nextPaymentDate: "2025-11-26",
@@ -906,6 +1062,7 @@ export const useDashboardStore = create<DashboardState>()(
             transactions: initialTransactions,
             invoices: initialInvoices,
             subscriptions: initialSubscriptions,
+            subscriptionPlans: initialSubscriptionPlans,
             messageTemplates: initialMessageTemplates,
             clientProfiles: initialClientProfiles,
             screenTemplates: initialScreenTemplates,
@@ -1050,6 +1207,39 @@ export const useDashboardStore = create<DashboardState>()(
                 set((state) => ({
                     subscriptions: state.subscriptions.filter((s) => s.id !== id),
                 }));
+            },
+
+            // ==================== PLANES DE SUSCRIPCIÓN ====================
+            addSubscriptionPlan: (plan) => {
+                const planCount = get().subscriptionPlans.length + 1;
+                const newPlan = {
+                    ...plan,
+                    id: `PLAN${String(planCount).padStart(3, "0")}`,
+                    createdAt: new Date().toISOString(),
+                };
+                set((state) => ({
+                    subscriptionPlans: [...state.subscriptionPlans, newPlan],
+                }));
+            },
+
+            updateSubscriptionPlan: (id, planUpdate) => {
+                set((state) => ({
+                    subscriptionPlans: state.subscriptionPlans.map((p) => (p.id === id ? { ...p, ...planUpdate } : p)),
+                }));
+            },
+
+            deleteSubscriptionPlan: (id) => {
+                set((state) => ({
+                    subscriptionPlans: state.subscriptionPlans.filter((p) => p.id !== id),
+                }));
+            },
+
+            getActivePlans: () => {
+                return get().subscriptionPlans.filter((p) => p.isActive);
+            },
+
+            resetPlans: () => {
+                set({ subscriptionPlans: initialSubscriptionPlans });
             },
 
             // ==================== PLANTILLAS DE MENSAJES ====================
