@@ -1,6 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { motion } from 'motion/react';
+import { generateRandomTransaction } from "@/data/mock-clients";
+import { TransactionDetailView } from "./transaction-detail-view";
 import {
     IconChevronDown,
     IconChevronLeft,
@@ -11,6 +14,9 @@ import {
     IconDotsVertical,
     IconLayoutColumns,
     IconLoader,
+    IconX,
+    IconAlertCircle,
+    IconClock,
 } from "@tabler/icons-react";
 import {
     ColumnDef,
@@ -29,20 +35,9 @@ import {
 } from "@tanstack/react-table";
 import { z } from "zod";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger
-} from "@/components/ui/drawer";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -59,7 +54,6 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import {
     Table,
     TableBody,
@@ -78,10 +72,12 @@ export const schema = z.object({
     monto: z.number(),
     metodoPago: z.string(),
     estado: z.string(),
-    fecha: z.string()
+    fecha: z.string(),
+    estadoFinal: z.string().optional(),
+    motivoRechazo: z.string().optional()
 });
 
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
+const createColumns = (): ColumnDef<z.infer<typeof schema>>[] => [
     {
         id: "select",
         header: ({ table }) => (
@@ -114,8 +110,8 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         accessorKey: "referencia",
         header: "Referencia",
         cell: ({ row }) => (
-            <div className="font-medium">
-                <TableCellViewer item={row.original} />
+            <div className="font-medium text-foreground font-mono text-xs group-hover:text-primary transition-colors">
+                {row.original.referencia}
             </div>
         ),
         enableHiding: false
@@ -156,21 +152,67 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         accessorKey: "estado",
         header: "Estado",
         cell: ({ row }) => {
-            const isCompletado = row.original.estado === "Completado";
+            const [currentStatus, setCurrentStatus] = React.useState(row.original.estado);
+            const [isLoading, setIsLoading] = React.useState(row.original.estado === "Procesando");
+
+            React.useEffect(() => {
+                if (row.original.estado === "Procesando" && row.original.estadoFinal) {
+                    const delay = Math.random() * 2000 + 1000;
+                    const timer = setTimeout(() => {
+                        setCurrentStatus(row.original.estadoFinal!);
+                        setIsLoading(false);
+                    }, delay);
+                    return () => clearTimeout(timer);
+                }
+                return undefined;
+            }, [row.original.estado, row.original.estadoFinal]);
+
+            const getStatusConfig = () => {
+                if (isLoading) {
+                    return {
+                        color: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+                        icon: <IconLoader className="mr-1 size-3 animate-spin" />,
+                        label: "Procesando"
+                    };
+                }
+                switch (currentStatus) {
+                    case "Exitosa":
+                    case "Completado":
+                        return {
+                            color: "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400",
+                            icon: <IconCircleCheckFilled className="mr-1 size-3" />,
+                            label: "Exitosa"
+                        };
+                    case "Rechazada":
+                        return {
+                            color: "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400",
+                            icon: <IconX className="mr-1 size-3" />,
+                            label: "Rechazada"
+                        };
+                    case "Conciliación Manual":
+                        return {
+                            color: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+                            icon: <IconClock className="mr-1 size-3" />,
+                            label: "Conciliación Manual"
+                        };
+                    default:
+                        return {
+                            color: "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
+                            icon: <IconAlertCircle className="mr-1 size-3" />,
+                            label: currentStatus
+                        };
+                }
+            };
+
+            const config = getStatusConfig();
+
             return (
                 <Badge
                     variant="outline"
-                    className={`px-2 ${isCompletado
-                            ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
-                            : "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
-                        }`}
+                    className={`px-2 cursor-pointer hover:opacity-80 transition-opacity ${config.color}`}
                 >
-                    {isCompletado ? (
-                        <IconCircleCheckFilled className="mr-1 size-3" />
-                    ) : (
-                        <IconLoader className="mr-1 size-3" />
-                    )}
-                    {row.original.estado}
+                    {config.icon}
+                    {config.label}
                 </Badge>
             );
         }
@@ -186,7 +228,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     },
     {
         id: "actions",
-        cell: () => ( // Usamos _row para indicar a ESLint que el argumento es intencionalmente no utilizado
+        cell: () => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
@@ -209,15 +251,28 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     }
 ];
 
-function TransactionRow({ row }: { row: Row<z.infer<typeof schema>> }) {
+function TransactionRow({ 
+    row, 
+    onSelectTransaction 
+}: { 
+    row: Row<z.infer<typeof schema>>;
+    onSelectTransaction: (transaction: z.infer<typeof schema>) => void;
+}) {
     return (
-        <TableRow data-state={row.getIsSelected() && "selected"}>
+        <motion.tr
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            data-state={row.getIsSelected() && "selected"}
+            className="border-b transition-all hover:bg-primary/5 hover:shadow-sm data-[state=selected]:bg-muted cursor-pointer group"
+            onClick={() => onSelectTransaction(row.original)}
+        >
             {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
             ))}
-        </TableRow>
+        </motion.tr>
     );
 }
 
@@ -226,6 +281,8 @@ export function DataTable({
 }: {
     data: z.infer<typeof schema>[];
 }) {
+    const [data, setData] = React.useState(initialData);
+    const [selectedTransaction, setSelectedTransaction] = React.useState<z.infer<typeof schema> | null>(null);
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
@@ -237,8 +294,38 @@ export function DataTable({
         pageSize: 10
     });
 
+    // Agregar transacciones en tiempo real cada 15-30 segundos
+    React.useEffect(() => {
+        let timeoutId: NodeJS.Timeout;
+        
+        const scheduleNextTransaction = () => {
+            const delay = Math.random() * 15000 + 15000; // 15-30 segundos
+            timeoutId = setTimeout(() => {
+                setData(prevData => {
+                    const maxId = Math.max(...prevData.map(t => t.id), 0);
+                    const newTransaction = generateRandomTransaction(maxId + 1) as z.infer<typeof schema>;
+                    return [newTransaction, ...prevData];
+                });
+                scheduleNextTransaction();
+            }, delay);
+        };
+
+        scheduleNextTransaction();
+
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+    }, []);
+
+    const columns = React.useMemo(
+        () => createColumns(),
+        []
+    );
+
     const table = useReactTable({
-        data: initialData, // Usamos directamente initialData
+        data,
         columns,
         state: {
             sorting,
@@ -261,6 +348,16 @@ export function DataTable({
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues()
     });
+
+    // Si hay una transacción seleccionada, mostrar la vista de detalles
+    if (selectedTransaction) {
+        return (
+            <TransactionDetailView
+                transaction={selectedTransaction}
+                onBack={() => setSelectedTransaction(null)}
+            />
+        );
+    }
 
     return (
         <Tabs
@@ -366,7 +463,11 @@ export function DataTable({
                         <TableBody>
                             {table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row) => (
-                                    <TransactionRow key={row.id} row={row} />
+                                    <TransactionRow 
+                                        key={row.id} 
+                                        row={row} 
+                                        onSelectTransaction={setSelectedTransaction}
+                                    />
                                 ))
                             ) : (
                                 <TableRow>
@@ -396,8 +497,7 @@ export function DataTable({
                                 Filas por página
                             </Label>
                             <Select
-                                value={`${table.getState().pagination.pageSize
-                                    }`}
+                                value={`${table.getState().pagination.pageSize}`}
                                 onValueChange={(value) => {
                                     table.setPageSize(Number(value));
                                 }}
@@ -483,100 +583,6 @@ export function DataTable({
                     </div>
                 </div>
             </TabsContent>
-            {/* Se eliminaron los otros TabsContent que no se usaban */}
         </Tabs>
-    );
-}
-
-function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
-    const isMobile = useIsMobile();
-
-    return (
-        <Drawer direction={isMobile ? "bottom" : "right"}>
-            <DrawerTrigger asChild>
-                <Button
-                    variant="link"
-                    className="text-foreground w-fit px-0 text-left font-mono text-xs"
-                >
-                    {item.referencia}
-                </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-                <DrawerHeader className="gap-1">
-                    <DrawerTitle>Detalles de Transacción</DrawerTitle>
-                    <DrawerDescription>
-                        {item.referencia}
-                    </DrawerDescription>
-                </DrawerHeader>
-                <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
-                    <div className="grid gap-4">
-                        <div className="flex flex-col gap-2 rounded-lg border p-4">
-                            <div className="text-muted-foreground text-xs font-medium">
-                                INFORMACIÓN DEL CLIENTE
-                            </div>
-                            <Separator />
-                            <div className="grid gap-2">
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Cliente:</span>
-                                    <span className="font-medium">{item.cliente}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Concepto:</span>
-                                    <span className="font-medium">{item.concepto}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col gap-2 rounded-lg border p-4">
-                            <div className="text-muted-foreground text-xs font-medium">
-                                DETALLES DEL PAGO
-                            </div>
-                            <Separator />
-                            <div className="grid gap-2">
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Monto:</span>
-                                    <span className="text-lg font-bold">
-                                        {new Intl.NumberFormat("es-VE", {
-                                            style: "currency",
-                                            currency: "USD"
-                                        }).format(item.monto)}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Método de pago:</span>
-                                    <Badge variant="outline">{item.metodoPago}</Badge>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Estado:</span>
-                                    <Badge
-                                        variant="outline"
-                                        className={`${item.estado === "Completado"
-                                                ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
-                                                : "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
-                                            }`}
-                                    >
-                                        {item.estado}
-                                    </Badge>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Fecha:</span>
-                                    <span className="font-medium">{item.fecha}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Referencia:</span>
-                                    <span className="font-mono text-xs">{item.referencia}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <DrawerFooter>
-                    <Button>Descargar Comprobante</Button>
-                    <DrawerClose asChild>
-                        <Button variant="outline">Cerrar</Button>
-                    </DrawerClose>
-                </DrawerFooter>
-            </DrawerContent>
-        </Drawer>
     );
 }
