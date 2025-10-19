@@ -20,9 +20,7 @@ import {
     IconNotification,
     IconUserCircle,
     IconArrowLeft,
-    IconHelp,
     IconMessage,
-    IconUsers,
     IconLayout,
     IconBook,
 } from "@tabler/icons-react";
@@ -172,7 +170,7 @@ export function SiteHeader() {
                                 <span className="hidden sm:inline">Creación de Plantillas</span>
                             </Button>
                         </Link>
-                       
+
                         <CurrencyToggle />
                         <ThemeToggle />
                         <Button

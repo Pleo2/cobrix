@@ -31,636 +31,636 @@ export const description = "Un gráfico de área interactivo";
 
 const chartData = [
     {
-        date: "2024-04-01",
+        date: "2025-04-01",
         pagoMovil: 1,
         zelle: 0,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-02",
+        date: "2025-04-02",
         pagoMovil: 2,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-04-03",
+        date: "2025-04-03",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-04",
+        date: "2025-04-04",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-04-05",
+        date: "2025-04-05",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-06",
+        date: "2025-04-06",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-07",
+        date: "2025-04-07",
         pagoMovil: 2,
         zelle: 0,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-04-08",
+        date: "2025-04-08",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-04-09",
+        date: "2025-04-09",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-04-10",
+        date: "2025-04-10",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 2,
         binance: 0
     },
     {
-        date: "2024-04-11",
+        date: "2025-04-11",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-04-12",
+        date: "2025-04-12",
         pagoMovil: 1,
         zelle: 0,
         transferencia: 2,
         binance: 2
     },
     {
-        date: "2024-04-13",
+        date: "2025-04-13",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-04-14",
+        date: "2025-04-14",
         pagoMovil: 0,
         zelle: 1,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-15",
+        date: "2025-04-15",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-04-16",
+        date: "2025-04-16",
         pagoMovil: 2,
         zelle: 0,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-17",
+        date: "2025-04-17",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-04-18",
+        date: "2025-04-18",
         pagoMovil: 2,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-04-19",
+        date: "2025-04-19",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-20",
+        date: "2025-04-20",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-04-21",
+        date: "2025-04-21",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 2,
         binance: 0
     },
     {
-        date: "2024-04-22",
+        date: "2025-04-22",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-04-23",
+        date: "2025-04-23",
         pagoMovil: 2,
         zelle: 0,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-24",
+        date: "2025-04-24",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-04-25",
+        date: "2025-04-25",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-04-26",
+        date: "2025-04-26",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-27",
+        date: "2025-04-27",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-04-28",
+        date: "2025-04-28",
         pagoMovil: 1,
         zelle: 0,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-04-29",
+        date: "2025-04-29",
         pagoMovil: 2,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-04-30",
+        date: "2025-04-30",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-05-01",
+        date: "2025-05-01",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-05-02",
+        date: "2025-05-02",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-03",
+        date: "2025-05-03",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-05-04",
+        date: "2025-05-04",
         pagoMovil: 2,
         zelle: 0,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-05-05",
+        date: "2025-05-05",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-05-06",
+        date: "2025-05-06",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-07",
+        date: "2025-05-07",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-05-08",
+        date: "2025-05-08",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 2,
         binance: 0
     },
     {
-        date: "2024-05-09",
+        date: "2025-05-09",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-10",
+        date: "2025-05-10",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-11",
+        date: "2025-05-11",
         pagoMovil: 2,
         zelle: 0,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-05-12",
+        date: "2025-05-12",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-05-13",
+        date: "2025-05-13",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-05-14",
+        date: "2025-05-14",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-15",
+        date: "2025-05-15",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-05-16",
+        date: "2025-05-16",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-17",
+        date: "2025-05-17",
         pagoMovil: 1,
         zelle: 0,
         transferencia: 2,
         binance: 2
     },
     {
-        date: "2024-05-18",
+        date: "2025-05-18",
         pagoMovil: 2,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-05-19",
+        date: "2025-05-19",
         pagoMovil: 0,
         zelle: 1,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-05-20",
+        date: "2025-05-20",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-05-21",
+        date: "2025-05-21",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 2,
         binance: 0
     },
     {
-        date: "2024-05-22",
+        date: "2025-05-22",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-23",
+        date: "2025-05-23",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-05-24",
+        date: "2025-05-24",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-25",
+        date: "2025-05-25",
         pagoMovil: 1,
         zelle: 0,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-05-26",
+        date: "2025-05-26",
         pagoMovil: 2,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-05-27",
+        date: "2025-05-27",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-05-28",
+        date: "2025-05-28",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-05-29",
+        date: "2025-05-29",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-05-30",
+        date: "2025-05-30",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-05-31",
+        date: "2025-05-31",
         pagoMovil: 2,
         zelle: 0,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-06-01",
+        date: "2025-06-01",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-06-02",
+        date: "2025-06-02",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-06-03",
+        date: "2025-06-03",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-06-04",
+        date: "2025-06-04",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-06-05",
+        date: "2025-06-05",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 2,
         binance: 0
     },
     {
-        date: "2024-06-06",
+        date: "2025-06-06",
         pagoMovil: 1,
         zelle: 0,
         transferencia: 2,
         binance: 2
     },
     {
-        date: "2024-06-07",
+        date: "2025-06-07",
         pagoMovil: 2,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-06-08",
+        date: "2025-06-08",
         pagoMovil: 0,
         zelle: 1,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-06-09",
+        date: "2025-06-09",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-06-10",
+        date: "2025-06-10",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 2,
         binance: 0
     },
     {
-        date: "2024-06-11",
+        date: "2025-06-11",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-06-12",
+        date: "2025-06-12",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-06-13",
+        date: "2025-06-13",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-06-14",
+        date: "2025-06-14",
         pagoMovil: 1,
         zelle: 0,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-06-15",
+        date: "2025-06-15",
         pagoMovil: 2,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-06-16",
+        date: "2025-06-16",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-06-17",
+        date: "2025-06-17",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-06-18",
+        date: "2025-06-18",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-06-19",
+        date: "2025-06-19",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-06-20",
+        date: "2025-06-20",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 2,
         binance: 0
     },
     {
-        date: "2024-06-21",
+        date: "2025-06-21",
         pagoMovil: 1,
         zelle: 0,
         transferencia: 2,
         binance: 2
     },
     {
-        date: "2024-06-22",
+        date: "2025-06-22",
         pagoMovil: 2,
         zelle: 2,
         transferencia: 1,
         binance: 0
     },
     {
-        date: "2024-06-23",
+        date: "2025-06-23",
         pagoMovil: 0,
         zelle: 1,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-06-24",
+        date: "2025-06-24",
         pagoMovil: 1,
         zelle: 1,
         transferencia: 1,
         binance: 2
     },
     {
-        date: "2024-06-25",
+        date: "2025-06-25",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 2,
         binance: 0
     },
     {
-        date: "2024-06-26",
+        date: "2025-06-26",
         pagoMovil: 1,
         zelle: 2,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-06-27",
+        date: "2025-06-27",
         pagoMovil: 0,
         zelle: 2,
         transferencia: 2,
         binance: 1
     },
     {
-        date: "2024-06-28",
+        date: "2025-06-28",
         pagoMovil: 2,
         zelle: 1,
         transferencia: 1,
         binance: 1
     },
     {
-        date: "2024-06-29",
-        pagoMovil: 1,
-        zelle: 0,
+        date: "2025-06-29",
+        pagoMovil: 3,
+        zelle: 2,
         transferencia: 2,
         binance: 1
     },
-    { date: "2024-06-30", pagoMovil: 2, zelle: 2, transferencia: 1, binance: 0 }
+    { date: "2025-06-30", pagoMovil: 2, zelle: 2, transferencia: 1, binance: 0 }
 ];
 
 const chartConfig = {
@@ -694,7 +694,7 @@ export function ChartAreaInteractive() {
 
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date);
-        const referenceDate = new Date("2024-06-30");
+        const referenceDate = new Date("2025-06-30");
         let daysToSubtract = 90;
         if (timeRange === "30d") {
             daysToSubtract = 30;

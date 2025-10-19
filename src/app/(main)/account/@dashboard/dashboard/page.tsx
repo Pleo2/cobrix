@@ -1,10 +1,13 @@
+"use client";
+
 import { ChartAreaInteractive } from "@/components/acount/dashboard/chart-area-interactive";
 import { DataTable } from "@/components/acount/dashboard/data-table";
 import { SectionCards } from "@/components/acount/dashboard/section-cards";
-
-import data from "../data.json";
+import { useDashboardStore } from "@/store/dashboard-store";
 
 export default function DashboardPage() {
+    const transactions = useDashboardStore((state) => state.transactions);
+
     return (
         <div className="flex w-full max-w-7xl mx-auto flex-col justify-center gap-4 py-4 md:gap-6 md:py-6">
             <div className="flex flex-col gap-2 px-4 lg:px-6">
@@ -17,7 +20,7 @@ export default function DashboardPage() {
             <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
             </div>
-            <DataTable data={data} />
+            <DataTable data={transactions} />
         </div>
     );
 }

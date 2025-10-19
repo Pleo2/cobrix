@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Upload, AlertCircle, CheckCircle, Loader } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { useDashboardStore } from "@/store/dashboard-store";
 
 interface ClientData {
     firstName: string;
@@ -16,6 +15,8 @@ interface ClientData {
 }
 
 export function BulkUploadDropzone() {
+    const addClient = useDashboardStore((state) => state.addClient);
+
     const [isDragging, setIsDragging] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<{
@@ -86,24 +87,14 @@ export function BulkUploadDropzone() {
                 throw new Error("No se encontraron datos válidos en el archivo");
             }
 
-            // Obtener clientes existentes
-            const existingClients = JSON.parse(localStorage.getItem("clients") || "[]");
-
-            // Agregar nuevos clientes con IDs únicos
-            const newClients = parsedData.map((client) => ({
-                id: Date.now() + Math.random(),
-                ...client,
-            }));
-
-            const allClients = [...existingClients, ...newClients];
-
-            // Guardar en localStorage
-            localStorage.setItem("clients", JSON.stringify(allClients));
-            localStorage.setItem("clientsCount", allClients.length.toString());
+            // Agregar cada cliente al store usando addClient
+            parsedData.forEach((client) => {
+                addClient(client);
+            });
 
             setMessage({
                 type: "success",
-                text: `✓ Se importaron ${newClients.length} cliente(s) exitosamente. Total: ${allClients.length}`,
+                text: `✓ Se importaron ${parsedData.length} cliente(s) exitosamente`,
             });
         } catch (error) {
             setMessage({

@@ -2,49 +2,25 @@
 
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { MessageSquare, Plus, FileText, Copy, Check } from "lucide-react";
+import { MessageSquare, Plus, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useDashboardStore } from "@/store/dashboard-store";
 
-const messageTemplates = [
-    {
-        id: 1,
-        title: "Bienvenida al Cliente",
-        description:
-            "Mensaje de bienvenida para nuevos clientes que se suscriben a nuestros servicios.",
-        category: "Bienvenida",
-        icon: MessageSquare,
-        color: "bg-blue-500",
-    },
-    {
-        id: 2,
-        title: "Renovación de Suscripción",
-        description: "Aviso para clientes sobre próxima renovación de su suscripción.",
-        category: "Renovación",
-        icon: MessageSquare,
-        color: "bg-purple-500",
-    },
-    {
-        id: 3,
-        title: "Confirmación de Pago",
-        description: "Confirmación al cliente cuando se recibe un pago exitoso.",
-        category: "Pagos",
-        icon: MessageSquare,
-        color: "bg-green-500",
-    },
-    {
-        id: 4,
-        title: "Recordatorio de Vencimiento",
-        description: "Recordatorio a cliente sobre vencimiento próximo de su servicio.",
-        category: "Recordatorios",
-        icon: MessageSquare,
-        color: "bg-orange-500",
-    },
-];
+const colorMap: Record<string, string> = {
+    Bienvenida: "bg-blue-500",
+    Renovación: "bg-purple-500",
+    Pagos: "bg-green-500",
+    Recordatorios: "bg-orange-500",
+};
 
-function TemplateCard({ template }: { template: (typeof messageTemplates)[0] }) {
-    const Icon = template.icon;
+function TemplateCard({
+    template,
+}: {
+    template: { id: number; title: string; description: string; category: string };
+}) {
+    const color = colorMap[template.category] || "bg-gray-500";
 
     return (
         <Link href={`/account/message-handler/${template.id}`}>
@@ -53,7 +29,7 @@ function TemplateCard({ template }: { template: (typeof messageTemplates)[0] }) 
                     <div className="flex items-start justify-between">
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
-                                <Icon className={`h-5 w-5 text-white ${template.color}`} />
+                                <MessageSquare className={`h-5 w-5 text-white ${color}`} />
                                 <CardTitle className="text-lg">{template.title}</CardTitle>
                             </div>
                             <span className="text-xs font-semibold text-muted-foreground">
@@ -86,6 +62,7 @@ function NewTemplateCard() {
 }
 
 export default function MessageHandlerPage() {
+    const messageTemplates = useDashboardStore((state) => state.messageTemplates);
     const [searchTerm, setSearchTerm] = useState("");
 
     const filteredTemplates = messageTemplates.filter(

@@ -9,25 +9,34 @@ import {
     CardDescription,
     CardFooter,
     CardHeader,
-    CardTitle
+    CardTitle,
 } from "@/components/ui/card";
 import { useCurrency } from "@/hooks/use-currency";
 import { convertToBS, formatCurrency } from "@/lib/utils";
+import { useDashboardStore } from "@/store/dashboard-store";
 
 export function SectionCards() {
     const { currency, mounted } = useCurrency();
+
+    // Obtener datos del store
+    const getTotalRevenue = useDashboardStore((state) => state.getTotalRevenue);
+    const getClientsCount = useDashboardStore((state) => state.getClientsCount);
+    const getActiveSubscriptionsCount = useDashboardStore(
+        (state) => state.getActiveSubscriptionsCount
+    );
+
+    const totalRevenueUSD = getTotalRevenue();
+    const clientsCount = getClientsCount();
+    const activeAccounts = getActiveSubscriptionsCount();
 
     if (!mounted) {
         return <div />;
     }
 
-    // Valores en USD
-    const totalRevenueUSD = 1250.0;
     const growthRateValue = 4.5;
 
     // Convertir a moneda seleccionada
-    const totalRevenue =
-        currency === "BS" ? convertToBS(totalRevenueUSD) : totalRevenueUSD;
+    const totalRevenue = currency === "BS" ? convertToBS(totalRevenueUSD) : totalRevenueUSD;
     const totalRevenueFormatted = formatCurrency(totalRevenue, currency);
 
     return (
@@ -47,19 +56,16 @@ export function SectionCards() {
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                        Tendencia al alza este mes{" "}
-                        <IconTrendingUp className="size-4" />
+                        Tendencia al alza este mes <IconTrendingUp className="size-4" />
                     </div>
-                    <div className="text-muted-foreground">
-                        Visitantes de los últimos 6 meses
-                    </div>
+                    <div className="text-muted-foreground">Visitantes de los últimos 6 meses</div>
                 </CardFooter>
             </Card>
             <Card className="@container/card">
                 <CardHeader>
-                    <CardDescription>Nuevos Clientes</CardDescription>
+                    <CardDescription>Total Clientes</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-2xl">
-                        25
+                        {clientsCount}
                     </CardTitle>
                     <CardAction>
                         <Badge variant="outline">
@@ -70,19 +76,16 @@ export function SectionCards() {
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                        Bajó 20% este período{" "}
-                        <IconTrendingDown className="size-4" />
+                        Bajó 20% este período <IconTrendingDown className="size-4" />
                     </div>
-                    <div className="text-muted-foreground">
-                        La adquisición necesita atención
-                    </div>
+                    <div className="text-muted-foreground">La adquisición necesita atención</div>
                 </CardFooter>
             </Card>
             <Card className="@container/card">
                 <CardHeader>
-                    <CardDescription>Cuentas Activas</CardDescription>
+                    <CardDescription>Suscripciones Activas</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-2xl">
-                        278
+                        {activeAccounts}
                     </CardTitle>
                     <CardAction>
                         <Badge variant="outline">
@@ -93,12 +96,9 @@ export function SectionCards() {
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                        Fuerte retención de usuarios{" "}
-                        <IconTrendingUp className="size-4" />
+                        Fuerte retención de usuarios <IconTrendingUp className="size-4" />
                     </div>
-                    <div className="text-muted-foreground">
-                        El compromiso supera los objetivos
-                    </div>
+                    <div className="text-muted-foreground">El compromiso supera los objetivos</div>
                 </CardFooter>
             </Card>
             <Card className="@container/card">
@@ -115,8 +115,7 @@ export function SectionCards() {
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                        Aumento de rendimiento constante{" "}
-                        <IconTrendingUp className="size-4" />
+                        Aumento de rendimiento constante <IconTrendingUp className="size-4" />
                     </div>
                     <div className="text-muted-foreground">
                         Cumple con las proyecciones de crecimiento

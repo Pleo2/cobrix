@@ -1,110 +1,96 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
-import {
-    InvoicesDataTable,
-    invoiceSchema,
-} from "@/components/acount/dashboard/invoices-data-table";
-import { z } from "zod";
-
-// Datos de ejemplo para facturas
-const invoicesData: z.infer<typeof invoiceSchema>[] = [
-    {
-        id: 1,
-        invoice_number: "INV-2024-001",
-        client: "Jack Alfredo",
-        email: "jack@shadcnstudio.com",
-        amount: "$50.00",
-        status: "Pagado",
-        date: "2025-09-15",
-        due_date: "2025-10-15",
-        plan_type: "Profesional",
-        payment_method: "Pago Móvil",
-        exchange_rate: "1.0",
-    },
-    {
-        id: 2,
-        invoice_number: "INV-2024-002",
-        client: "Maria Gonzalez",
-        email: "maria.g@shadcnstudio.com",
-        amount: "$30.00",
-        status: "Pendiente",
-        date: "2025-10-20",
-        due_date: "2025-11-20",
-        plan_type: "Básico",
-        payment_method: "Zelle",
-        exchange_rate: "1.0",
-    },
-    {
-        id: 3,
-        invoice_number: "INV-2024-003",
-        client: "John Doe",
-        email: "john.doe@shadcnstudio.com",
-        amount: "$70.00",
-        status: "Pagado",
-        date: "2025-09-10",
-        due_date: "2025-10-10",
-        plan_type: "Premium",
-        payment_method: "Transferencia",
-        exchange_rate: "1.0",
-    },
-    {
-        id: 4,
-        invoice_number: "INV-2024-004",
-        client: "Emily Carter",
-        email: "emily.carter@shadcnstudio.com",
-        amount: "$50.00",
-        status: "Fallida",
-        date: "2025-08-20",
-        due_date: "2025-09-20",
-        plan_type: "Profesional",
-        payment_method: "Binance",
-        exchange_rate: "1.0",
-    },
-    {
-        id: 5,
-        invoice_number: "INV-2024-005",
-        client: "David Lee",
-        email: "david.lee@shadcnstudio.com",
-        amount: "$70.00",
-        status: "Pagado",
-        date: "2025-09-05",
-        due_date: "2025-10-05",
-        plan_type: "Premium",
-        payment_method: "Pago Móvil",
-        exchange_rate: "1.0",
-    },
-    {
-        id: 6,
-        invoice_number: "INV-2024-006",
-        client: "Sarah Johnson",
-        email: "sarah.j@shadcnstudio.com",
-        amount: "$30.00",
-        status: "Pendiente",
-        date: "2025-10-18",
-        due_date: "2025-11-18",
-        plan_type: "Básico",
-        payment_method: "Transferencia",
-        exchange_rate: "1.0",
-    },
-];
+import { InvoicesDataTable } from "@/components/acount/dashboard/invoices-data-table";
+import { useDashboardStore } from "@/store/dashboard-store";
+import { useEffect } from "react";
 
 export default function InvoicesPage() {
+    const invoices = useDashboardStore((state) => state.invoices);
+    const hasHydrated = useDashboardStore((state) => state._hasHydrated);
+    const initializeFromLocalStorage = useDashboardStore(
+        (state) => state.initializeFromLocalStorage
+    );
+    const resetInvoices = useDashboardStore((state) => state.resetInvoices);
+    const getPaidInvoicesCount = useDashboardStore((state) => state.getPaidInvoicesCount);
+    const getPendingInvoicesCount = useDashboardStore((state) => state.getPendingInvoicesCount);
+    const getOverdueInvoicesCount = useDashboardStore((state) => state.getOverdueInvoicesCount);
+
+    useEffect(() => {
+        // Inicializar desde localStorage en el primer render
+        initializeFromLocalStorage();
+
+        // Verificar si los invoices tienen la estructura correcta
+        if (invoices.length > 0 && !invoices[0].invoice_number) {
+            // Estructura incorrecta detectada, resetear a datos iniciales
+            resetInvoices();
+        }
+    }, [initializeFromLocalStorage, invoices, resetInvoices]);
+
+    // Evitar hydration mismatch esperando a que el store se hidrate
+    if (!hasHydrated) {
+        return (
+            <div className="flex flex-col gap-6 py-6 md:py-8 max-w-7xl mx-auto w-full">
+                <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-2">
+                        <h2 className="text-3xl font-bold tracking-tight">Recibos</h2>
+                        <p className="text-muted-foreground">Cargando recibos...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const paidCount = getPaidInvoicesCount();
+    const pendingCount = getPendingInvoicesCount();
+    const overdueCount = getOverdueInvoicesCount();
+
     return (
-        <div className="flex flex-col gap-6 py-6 md:py-8  max-w-7xl mx-auto w-full">
+        <div className="flex flex-col gap-6 py-6 md:py-8 max-w-7xl mx-auto w-full">
             <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
                     <h2 className="text-3xl font-bold tracking-tight">Recibos</h2>
-                    <p className="text-muted-foreground">Gestiona todos tus recibos y facturas</p>
+                    <p className="text-muted-foreground">
+                        Gestiona todos tus recibos y facturas ({invoices.length})
+                    </p>
                 </div>
-                <Button size="sm" className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Nuevo Recibo
-                </Button>
+                <div className="flex items-center gap-2">
+                    {invoices.length === 0 && (
+                        <Button onClick={() => resetInvoices()} variant="outline" size="sm">
+                            🔄 Cargar Recibos
+                        </Button>
+                    )}
+                    <Badge
+                        variant="outline"
+                        className="px-3 py-1.5 bg-green-100 text-green-700 border-green-200"
+                    >
+                        <span className="opacity-70 text-xs">Pagados</span>
+                        <span className="ml-1.5 font-bold text-sm">{paidCount}</span>
+                    </Badge>
+                    <Badge
+                        variant="outline"
+                        className="px-3 py-1.5 bg-yellow-100 text-yellow-700 border-yellow-200"
+                    >
+                        <span className="opacity-70 text-xs">Pendientes</span>
+                        <span className="ml-1.5 font-bold text-sm">{pendingCount}</span>
+                    </Badge>
+                    <Badge
+                        variant="outline"
+                        className="px-3 py-1.5 bg-red-100 text-red-700 border-red-200"
+                    >
+                        <span className="opacity-70 text-xs">Vencidos</span>
+                        <span className="ml-1.5 font-bold text-sm">{overdueCount}</span>
+                    </Badge>
+                    <Button size="sm" className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        Nuevo Recibo
+                    </Button>
+                </div>
             </div>
 
-            <InvoicesDataTable data={invoicesData} />
+            <InvoicesDataTable data={invoices} />
         </div>
     );
 }
