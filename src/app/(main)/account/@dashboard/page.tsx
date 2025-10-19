@@ -124,7 +124,7 @@ function BentoItem({
                             {/* Badge en la esquina superior derecha del title */}
                             {displayBadge && (
                                 <div
-                                    className={`absolute -top-1 right-0 px-2.5 py-1 rounded-full text-xs font-semibold ${displayBadge.color} shadow-md ml-auto`}
+                                    className={`px-3 py-1 rounded-full text-xs font-semibold ${displayBadge.color} shadow-md`}
                                 >
                                     <span className="opacity-70">{displayBadge.label}</span>
                                     <span className="ml-1 font-bold">{displayBadge.value}</span>
@@ -185,45 +185,48 @@ export default function HomePage() {
         <div className="flex max-h-max flex-col">
             <div className="flex flex-1 flex-col ">
                 <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6">
-                    <div className="flex flex-col gap-2">
-                        <h2 className="text-3xl font-bold tracking-tight">Bienvenido a Cobrix</h2>
-                        <p className="text-muted-foreground">
-                            Gestiona tus documentos, recibos, suscripciones y clientes en un solo
-                            lugar.
-                        </p>
-                    </div>
-
-                    {/* Bento Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(200px,auto)]">
-                        {/* Panel - Grande (ocupa 2 columnas y 2 filas = 50%) */}
-                        <div className="md:col-span-2 md:row-span-2">
-                            <BentoItem item={quickAccess[0]} />
+                    <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
+                        <div className="flex flex-col gap-2 text-left w-full">
+                            <h2 className="text-3xl font-bold tracking-tight">
+                                Bienvenido a Cobrix
+                            </h2>
+                            <p className="text-muted-foreground">
+                                Gestiona tus documentos, recibos, suscripciones y clientes en un
+                                solo lugar.
+                            </p>
                         </div>
 
-                        {/* Nuevo Cliente - Pequeño (25%) */}
-                        <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[1]} />
-                        </div>
+                        {/* Bento Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(200px,auto)]">
+                            {/* Panel - Grande (ocupa 2 columnas y 2 filas = 50%) */}
+                            <div className="md:col-span-2 md:row-span-2">
+                                <BentoItem item={quickAccess[0]} />
+                            </div>
 
-                        {/* Suscripciones - Pequeño (25%) */}
-                        <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[2]} />
-                        </div>
+                            {/* Nuevo Cliente - Pequeño (25%) */}
+                            <div className="md:col-span-2">
+                                <BentoItem item={quickAccess[1]} />
+                            </div>
 
-                        {/* Recibos - Mediano (50%) */}
-                        <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[3]} />
-                        </div>
+                            {/* Suscripciones - Pequeño (25%) */}
+                            <div className="md:col-span-2">
+                                <BentoItem item={quickAccess[2]} />
+                            </div>
 
-                        {/* Clientes - Mediano (50%) */}
-                        <div className="md:col-span-2">
-                            <BentoItem item={quickAccess[4]} clientsCount={clientsCount} />
+                            {/* Recibos - Mediano (50%) */}
+                            <div className="md:col-span-2">
+                                <BentoItem item={quickAccess[3]} />
+                            </div>
+
+                            {/* Clientes - Mediano (50%) */}
+                            <div className="md:col-span-2">
+                                <BentoItem item={quickAccess[4]} clientsCount={clientsCount} />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-            </div >
+        </div >
         </div >
     );
 }

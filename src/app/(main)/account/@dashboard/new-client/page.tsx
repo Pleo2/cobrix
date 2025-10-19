@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Plus, Mail, Phone, MapPin, Building2 } from "lucide-react";
+import { BulkUploadDropzone } from "@/components/acount/dashboard/bulk-upload-dropzone";
 
 export default function CreateUserPage() {
     const [formData, setFormData] = useState({
@@ -67,17 +68,19 @@ export default function CreateUserPage() {
                     <p className="text-muted-foreground">Registra un nuevo cliente en el sistema</p>
                 </div>
 
-                <div className="flex justify-start">
-                    <div className="w-full max-w-2xl flex flex-col gap-6">
-                        {submitted && (
-                            <div className="rounded-lg bg-green-50 border border-green-200 p-4">
-                                <p className="text-sm font-medium text-green-800">
-                                    ✓ Cliente registrado exitosamente. El formulario se reiniciará
-                                    en 3 segundos.
-                                </p>
-                            </div>
-                        )}
+                {submitted && (
+                    <div className="rounded-lg bg-green-50 border border-green-200 p-4">
+                        <p className="text-sm font-medium text-green-800">
+                            ✓ Cliente registrado exitosamente. El formulario se reiniciará en 3
+                            segundos.
+                        </p>
+                    </div>
+                )}
 
+                {/* Grid: Formulario y Carga Masiva lado a lado */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Formulario Individual */}
+                    <div className="flex flex-col gap-6">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Información del Cliente</CardTitle>
@@ -212,6 +215,11 @@ export default function CreateUserPage() {
                                 </div>
                             </CardContent>
                         </Card>
+                    </div>
+
+                    {/* Carga Masiva */}
+                    <div className="flex flex-col">
+                        <BulkUploadDropzone />
                     </div>
                 </div>
             </div>
