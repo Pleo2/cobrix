@@ -9,50 +9,99 @@ import { Building2, Check } from "lucide-react";
 interface Plan {
     id: string;
     title: string;
+    price: string;
+    period: string;
     subtitle: string;
     description: string;
     features: string[];
+    badge?: string;
+    popular?: boolean;
 }
 
 const plans: Plan[] = [
     {
-        id: "basico",
-        title: "Plan Básico",
-        subtitle: "$29/mes - Ideal para empezar",
-        description: "Perfecto para gimnasios pequeños que están comenzando.",
+        id: "starter",
+        title: "Starter",
+        price: "$19.99",
+        period: "/mes",
+        subtitle: "Ideal para empezar tu gimnasio",
+        description: "Perfecto para gimnasios pequeños que están comenzando su negocio.",
         features: [
-            "Hasta 50 clientes",
-            "Gestión de pagos",
-            "Reportes básicos",
+            "Hasta 50 clientes activos",
+            "Gestión básica de membresías",
+            "100 SMS mensuales",
+            "Notificaciones por correo",
+            "Panel de control básico",
+            "Reportes de ingresos simples",
             "Soporte por email"
-        ]
+        ],
+        badge: "Económico"
     },
     {
-        id: "profesional",
-        title: "Plan Profesional",
-        subtitle: "$59/mes - Más popular",
-        description: "La mejor opción para gimnasios en crecimiento.",
+        id: "pro",
+        title: "Pro",
+        price: "$59.99",
+        period: "/mes",
+        subtitle: "La elección más popular",
+        description: "La mejor opción para gimnasios en crecimiento que buscan más funciones.",
         features: [
-            "Hasta 200 clientes",
-            "Gestión avanzada",
-            "Reportes detallados",
-            "Soporte prioritario",
-            "Integraciones"
-        ]
+            "Hasta 200 clientes activos",
+            "Gestión avanzada de membresías",
+            "500 SMS mensuales",
+            "Notificaciones SMS y Email",
+            "Dashboard con estadísticas",
+            "Reportes detallados y gráficos",
+            "Control de asistencia",
+            "Recordatorios automáticos",
+            "Soporte prioritario"
+        ],
+        badge: "Más Popular",
+        popular: true
+    },
+    {
+        id: "premium",
+        title: "Premium",
+        price: "$90",
+        period: "/mes",
+        subtitle: "Todo lo que necesitas y más",
+        description: "Para gimnasios establecidos que buscan optimización completa.",
+        features: [
+            "Hasta 500 clientes activos",
+            "Gestión completa ilimitada",
+            "2000 SMS mensuales",
+            "Notificaciones SMS, Email y Push",
+            "Dashboard avanzado con IA",
+            "Analytics y predicciones",
+            "Sistema de facturación",
+            "Múltiples usuarios/staff",
+            "Integraciones con apps",
+            "Reportes personalizados",
+            "Soporte prioritario 24/7"
+        ],
+        badge: "Avanzado"
     },
     {
         id: "enterprise",
-        title: "Plan Enterprise",
-        subtitle: "$99/mes - Sin límites",
-        description: "Para gimnasios grandes con necesidades avanzadas.",
+        title: "Enterprise",
+        price: "Custom",
+        period: "",
+        subtitle: "Solución empresarial personalizada",
+        description: "Para cadenas de gimnasios y empresas con necesidades específicas.",
         features: [
             "Clientes ilimitados",
-            "Personalización total",
-            "Analytics avanzado",
-            "Soporte 24/7",
-            "API completa",
-            "Multi-sucursales"
-        ]
+            "Multi-sucursales sin límite",
+            "SMS ilimitados",
+            "Sistema de notificaciones completo",
+            "Personalización total del sistema",
+            "API completa y webhooks",
+            "White label (marca propia)",
+            "Gerente de cuenta dedicado",
+            "Capacitación personalizada",
+            "SLA garantizado 99.9%",
+            "Backup diario automático",
+            "Soporte técnico 24/7 premium"
+        ],
+        badge: "Contactar"
     }
 ];
 
@@ -102,30 +151,34 @@ export default function PlansPage() {
     };
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-[#1e1e1e] p-6">
-            <div className="w-full max-w-6xl space-y-8">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-[#1e1e1e] p-4">
+            <div className="w-full max-w-[1600px] space-y-6">
                 {/* Header */}
-                <div className="space-y-3 text-center">
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-                        <Building2 className="h-8 w-8 text-primary" />
+                <div className="space-y-2 text-center">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+                        <Building2 className="h-7 w-7 text-primary" />
                     </div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white">
+                    <h2 className="text-2xl font-bold tracking-tight text-white">
                         Elige tu Plan
                     </h2>
-                    <p className="text-muted-foreground">
-                        Selecciona el plan que mejor se adapte a las necesidades de tu gimnasio
+                    <p className="text-sm text-muted-foreground">
+                        Selecciona el plan que mejor se adapte a tu gimnasio
                     </p>
                 </div>
 
                 {/* Cards Grid */}
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 place-items-center">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 place-items-center">
                     {plans.map((plan) => (
                         <CardFlip
                             key={plan.id}
                             title={plan.title}
+                            price={plan.price}
+                            period={plan.period}
                             subtitle={plan.subtitle}
                             description={plan.description}
                             features={plan.features}
+                            badge={plan.badge}
+                            popular={plan.popular}
                             isSelected={selectedPlan === plan.id}
                             onSelect={() => handleSelectPlan(plan.id)}
                         />
@@ -143,7 +196,7 @@ export default function PlansPage() {
                     <Button
                         onClick={handleConfirm}
                         size="lg"
-                        className="group relative h-14 px-8 text-base font-semibold shadow-xl hover:shadow-2xl"
+                        className="group relative h-12 px-8 text-base font-semibold shadow-xl hover:shadow-2xl"
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             <Check className="h-5 w-5" />
