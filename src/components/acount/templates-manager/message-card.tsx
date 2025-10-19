@@ -13,6 +13,7 @@ interface MessageCardProps {
     value: string;
     onChange: (value: string) => void;
     variant?: "primary" | "secondary";
+    isGenerating?: boolean;
 }
 
 export function MessageCard({
@@ -23,6 +24,7 @@ export function MessageCard({
     value,
     onChange,
     variant = "secondary",
+    isGenerating = false,
 }: MessageCardProps) {
     const isPrimary = variant === "primary";
 
@@ -58,17 +60,30 @@ export function MessageCard({
                 </div>
             </CardHeader>
             <CardContent className="px-4 pb-4 flex-grow">
-                <Textarea
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    className={cn(
-                        "resize-none text-sm transition-colors h-full", // <-- CORRECCIÓN: 'h-full' hace que el textarea ocupe todo el espacio
-                        "focus:border-[#22c55e]/40 dark:focus:border-[#22c55e]/30",
-                        // ELIMINADO: Se quitaron las alturas mínimas condicionales
-                        // isPrimary ? "min-h-[100px]" : "min-h-[80px]"
-                    )}
-                />
+                {isGenerating ? (
+                    <div className="space-y-2 animate-pulse h-full flex flex-col justify-center">
+                        <div className="h-3 bg-[#22c55e]/20 rounded w-full"></div>
+                        <div className="h-3 bg-[#22c55e]/20 rounded w-5/6"></div>
+                        <div className="h-3 bg-[#22c55e]/20 rounded w-4/6"></div>
+                        <div className="flex items-center justify-center mt-4">
+                            <div className="flex gap-1">
+                                <div className="w-2 h-2 bg-[#22c55e] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                <div className="w-2 h-2 bg-[#22c55e] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                <div className="w-2 h-2 bg-[#22c55e] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <Textarea
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        className={cn(
+                            "resize-none text-sm transition-colors h-full",
+                            "focus:border-[#22c55e]/40 dark:focus:border-[#22c55e]/30"
+                        )}
+                    />
+                )}
             </CardContent>
         </Card>
     );

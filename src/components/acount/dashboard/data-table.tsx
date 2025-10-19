@@ -77,6 +77,73 @@ export const schema = z.object({
     motivoRechazo: z.string().optional()
 });
 
+// Componente para el estado con animación
+function StatusCell({ row }: { row: Row<z.infer<typeof schema>> }) {
+    const [currentStatus, setCurrentStatus] = React.useState(row.original.estado);
+    const [isLoading, setIsLoading] = React.useState(row.original.estado === "Procesando");
+
+    React.useEffect(() => {
+        if (row.original.estado === "Procesando" && row.original.estadoFinal) {
+            const delay = Math.random() * 2000 + 1000;
+            const timer = setTimeout(() => {
+                setCurrentStatus(row.original.estadoFinal!);
+                setIsLoading(false);
+            }, delay);
+            return () => clearTimeout(timer);
+        }
+        return undefined;
+    }, [row.original.estado, row.original.estadoFinal]);
+
+    const getStatusConfig = () => {
+        if (isLoading) {
+            return {
+                color: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+                icon: <IconLoader className="mr-1 size-3 animate-spin" />,
+                label: "Procesando"
+            };
+        }
+        switch (currentStatus) {
+            case "Exitosa":
+            case "Completado":
+                return {
+                    color: "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400",
+                    icon: <IconCircleCheckFilled className="mr-1 size-3" />,
+                    label: "Exitosa"
+                };
+            case "Rechazada":
+                return {
+                    color: "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400",
+                    icon: <IconX className="mr-1 size-3" />,
+                    label: "Rechazada"
+                };
+            case "Conciliación Manual":
+                return {
+                    color: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+                    icon: <IconClock className="mr-1 size-3" />,
+                    label: "Conciliación Manual"
+                };
+            default:
+                return {
+                    color: "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
+                    icon: <IconAlertCircle className="mr-1 size-3" />,
+                    label: currentStatus
+                };
+        }
+    };
+
+    const config = getStatusConfig();
+
+    return (
+        <Badge
+            variant="outline"
+            className={`px-2 cursor-pointer hover:opacity-80 transition-opacity ${config.color}`}
+        >
+            {config.icon}
+            {config.label}
+        </Badge>
+    );
+}
+
 const createColumns = (): ColumnDef<z.infer<typeof schema>>[] => [
     {
         id: "select",
@@ -151,71 +218,7 @@ const createColumns = (): ColumnDef<z.infer<typeof schema>>[] => [
     {
         accessorKey: "estado",
         header: "Estado",
-        cell: ({ row }) => {
-            const [currentStatus, setCurrentStatus] = React.useState(row.original.estado);
-            const [isLoading, setIsLoading] = React.useState(row.original.estado === "Procesando");
-
-            React.useEffect(() => {
-                if (row.original.estado === "Procesando" && row.original.estadoFinal) {
-                    const delay = Math.random() * 2000 + 1000;
-                    const timer = setTimeout(() => {
-                        setCurrentStatus(row.original.estadoFinal!);
-                        setIsLoading(false);
-                    }, delay);
-                    return () => clearTimeout(timer);
-                }
-                return undefined;
-            }, [row.original.estado, row.original.estadoFinal]);
-
-            const getStatusConfig = () => {
-                if (isLoading) {
-                    return {
-                        color: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400",
-                        icon: <IconLoader className="mr-1 size-3 animate-spin" />,
-                        label: "Procesando"
-                    };
-                }
-                switch (currentStatus) {
-                    case "Exitosa":
-                    case "Completado":
-                        return {
-                            color: "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400",
-                            icon: <IconCircleCheckFilled className="mr-1 size-3" />,
-                            label: "Exitosa"
-                        };
-                    case "Rechazada":
-                        return {
-                            color: "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400",
-                            icon: <IconX className="mr-1 size-3" />,
-                            label: "Rechazada"
-                        };
-                    case "Conciliación Manual":
-                        return {
-                            color: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400",
-                            icon: <IconClock className="mr-1 size-3" />,
-                            label: "Conciliación Manual"
-                        };
-                    default:
-                        return {
-                            color: "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
-                            icon: <IconAlertCircle className="mr-1 size-3" />,
-                            label: currentStatus
-                        };
-                }
-            };
-
-            const config = getStatusConfig();
-
-            return (
-                <Badge
-                    variant="outline"
-                    className={`px-2 cursor-pointer hover:opacity-80 transition-opacity ${config.color}`}
-                >
-                    {config.icon}
-                    {config.label}
-                </Badge>
-            );
-        }
+        cell: ({ row }) => <StatusCell row={row} />
     },
     {
         accessorKey: "fecha",

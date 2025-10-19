@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Wallet, Smartphone, Check, Lock } from "lucide-react";
+import { CreditCard, Smartphone, LucideIcon, Wallet, Lock, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -47,7 +47,7 @@ const bancos = [
 interface PaymentMethod {
     id: string;
     name: string;
-    icon: any;
+    icon: LucideIcon;
     active: boolean;
     description: string;
 }
@@ -154,24 +154,20 @@ export default function PaymentPage() {
             localStorage.setItem("userPassword", datosRegistro.password);
             
             // Verificar que se guardó correctamente
-            console.log("✅ Empresa registrada:", datosCompletos);
-            console.log("✅ Total de empresas registradas:", registros.length);
-            console.log("✅ Credenciales guardadas:");
-            console.log("   - Email:", datosRegistro.correo);
-            console.log("   - Password guardado:", datosRegistro.password ? "Sí (oculto por seguridad)" : "No");
+            // Empresa registrada correctamente
 
             // Autenticar automáticamente en Zustand
             useAuthStore.setState({ 
                 isAuthenticated: true, 
                 empresa: datosCompletos 
             });
-            console.log("✅ Sesión iniciada automáticamente en Zustand");
+            // Sesión iniciada automáticamente
 
             // Limpiar sessionStorage
             sessionStorage.removeItem("registroTemporal");
             sessionStorage.removeItem("planSeleccionado");
 
-            console.log("Registro completo:", datosCompletos);
+            // Registro completo
 
             // Redirigir al dashboard
             router.push("/account");

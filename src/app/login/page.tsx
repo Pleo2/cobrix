@@ -22,16 +22,14 @@ export default function Login() {
         setError("");
         setIsLoading(true);
 
-        console.log("🔐 Intentando login con:");
-        console.log("   - Email ingresado:", email);
-        console.log("   - Password tiene contenido:", password ? "Sí" : "No");
+        // Intentando login
 
         // Intentar login con Zustand
         const loginSuccess = login(email, password);
 
         if (loginSuccess) {
             // Login exitoso
-            console.log("✅ Login exitoso - Redirigiendo al dashboard");
+            // Login exitoso - Redirigiendo al dashboard
             
             // Animación de transición
             setTimeout(() => {
@@ -41,8 +39,7 @@ export default function Login() {
             // Credenciales incorrectas
             setError("Correo o contraseña incorrectos");
             setIsLoading(false);
-            console.log("❌ Login fallido - Credenciales no coinciden");
-            console.log("💡 Verifica que hayas completado el registro correctamente");
+            // Login fallido - Credenciales no coinciden
         }
     };
 

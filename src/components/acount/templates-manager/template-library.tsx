@@ -61,7 +61,7 @@ export function TemplateLibrary({
             <div className="flex-1 relative min-h-0">
                 <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-card to-transparent pointer-events-none z-10" />
 
-                <div className="h-full overflow-y-auto px-4 pb-4 space-y-2.5">
+                <div className="h-full overflow-y-auto px-4 pb-4 space-y-2.5 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-muted/20 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#22c55e] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-[#16a34a]">
                     <AnimatePresence>
                         {filteredTemplates.length > 0 ? (
                             filteredTemplates.map((template, index) => (
