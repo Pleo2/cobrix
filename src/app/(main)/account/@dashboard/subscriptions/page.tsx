@@ -1,4 +1,4 @@
-import  data  from "./data.json";
+import suscripciones from "./data.json";
 import { SubscriptionsTable } from "@/components/acount/suscriptions/subscriptions-table";
 
 export default function SubscriptionsPage() {
@@ -16,7 +16,8 @@ export default function SubscriptionsPage() {
                     Gestiona y visualiza a todos tus clientes y sus planes.
                 </p>
             </div>
-            <SubscriptionsTable data={data} />
+                    <SubscriptionsTable data={suscripciones}
+                    />
                 </div>
             </div>
         </div>
