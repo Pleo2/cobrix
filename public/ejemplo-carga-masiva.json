@@ -1,0 +1,296 @@
+[
+  {
+    "firstName": "Juan",
+    "lastName": "Pérez",
+    "cedula": "V-12345678",
+    "email": "juan.perez@example.com",
+    "phone": "+58 212 123 4567",
+    "address": "Av. Principal 123, Caracas",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "María",
+    "lastName": "González",
+    "cedula": "V-23456789",
+    "email": "maria.gonzalez@example.com",
+    "phone": "+58 414 234 5678",
+    "address": "Calle Comercio 456, Valencia",
+    "planId": "PLAN001",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Carlos",
+    "lastName": "Rodríguez",
+    "cedula": "V-34567890",
+    "email": "carlos.rodriguez@example.com",
+    "phone": "+58 424 345 6789",
+    "address": "Av. Libertador 789, Maracaibo"
+  },
+  {
+    "firstName": "Ana",
+    "lastName": "Martínez",
+    "cedula": "V-45678901",
+    "email": "ana.martinez@example.com",
+    "phone": "+58 416 456 7890",
+    "address": "Calle Principal 321, Barquisimeto",
+    "planId": "PLAN003",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Luis",
+    "lastName": "Fernández",
+    "cedula": "V-56789012",
+    "email": "luis.fernandez@example.com",
+    "phone": "+58 412 567 8901",
+    "address": "Av. Bolívar 654, Mérida",
+    "planId": "PLAN005",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Carmen",
+    "lastName": "Silva",
+    "cedula": "V-67890123",
+    "email": "carmen.silva@example.com",
+    "phone": "+58 426 678 9012",
+    "address": "Calle Miranda 234, Maracay",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Roberto",
+    "lastName": "Torres",
+    "cedula": "V-78901234",
+    "email": "roberto.torres@example.com",
+    "phone": "+58 414 789 0123",
+    "address": "Av. Universidad 567, Barinas",
+    "planId": "PLAN001",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Patricia",
+    "lastName": "Ramos",
+    "cedula": "V-89012345",
+    "email": "patricia.ramos@example.com",
+    "phone": "+58 424 890 1234",
+    "address": "Calle Sucre 890, Cumaná",
+    "planId": "PLAN004",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Jorge",
+    "lastName": "Mendoza",
+    "cedula": "V-90123456",
+    "email": "jorge.mendoza@example.com",
+    "phone": "+58 416 901 2345",
+    "address": "Av. Fuerzas Armadas 345, Caracas",
+    "planId": "PLAN003",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Sofía",
+    "lastName": "Castro",
+    "cedula": "V-01234567",
+    "email": "sofia.castro@example.com",
+    "phone": "+58 412 012 3456",
+    "address": "Calle Carabobo 678, Valencia",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Miguel",
+    "lastName": "Herrera",
+    "cedula": "V-11234567",
+    "email": "miguel.herrera@example.com",
+    "phone": "+58 426 112 3456",
+    "address": "Av. Urdaneta 901, Maracaibo",
+    "planId": "PLAN006",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Isabella",
+    "lastName": "Morales",
+    "cedula": "V-22345678",
+    "email": "isabella.morales@example.com",
+    "phone": "+58 414 223 4567",
+    "address": "Calle Bolívar 234, San Cristóbal",
+    "planId": "PLAN001",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Diego",
+    "lastName": "Vargas",
+    "cedula": "V-33456789",
+    "email": "diego.vargas@example.com",
+    "phone": "+58 424 334 5678",
+    "address": "Av. Libertador 567, Puerto La Cruz"
+  },
+  {
+    "firstName": "Valentina",
+    "lastName": "Sánchez",
+    "cedula": "V-44567890",
+    "email": "valentina.sanchez@example.com",
+    "phone": "+58 416 445 6789",
+    "address": "Calle Comercio 890, Barquisimeto",
+    "planId": "PLAN003",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Santiago",
+    "lastName": "Romero",
+    "cedula": "V-55678901",
+    "email": "santiago.romero@example.com",
+    "phone": "+58 412 556 7890",
+    "address": "Av. Principal 123, Mérida",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Camila",
+    "lastName": "Navarro",
+    "cedula": "V-66789012",
+    "email": "camila.navarro@example.com",
+    "phone": "+58 426 667 8901",
+    "address": "Calle Miranda 456, Los Teques",
+    "planId": "PLAN004",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Andrés",
+    "lastName": "Ortiz",
+    "cedula": "V-77890123",
+    "email": "andres.ortiz@example.com",
+    "phone": "+58 414 778 9012",
+    "address": "Av. Bolívar 789, Ciudad Bolívar",
+    "planId": "PLAN005",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Gabriela",
+    "lastName": "Reyes",
+    "cedula": "V-88901234",
+    "email": "gabriela.reyes@example.com",
+    "phone": "+58 424 889 0123",
+    "address": "Calle Sucre 012, Punto Fijo",
+    "planId": "PLAN001",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Sebastián",
+    "lastName": "Flores",
+    "cedula": "V-99012345",
+    "email": "sebastian.flores@example.com",
+    "phone": "+58 416 990 1234",
+    "address": "Av. Universidad 345, Acarigua",
+    "planId": "PLAN002",
+    "subscriptionStatus": "En Apelación"
+  },
+  {
+    "firstName": "Daniela",
+    "lastName": "Gutiérrez",
+    "cedula": "V-10123456",
+    "email": "daniela.gutierrez@example.com",
+    "phone": "+58 412 101 2345",
+    "address": "Calle Principal 678, Guarenas",
+    "planId": "PLAN003",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Mateo",
+    "lastName": "Díaz",
+    "cedula": "V-21234567",
+    "email": "mateo.diaz@example.com",
+    "phone": "+58 426 212 3456",
+    "address": "Av. Intercomunal 901, Guatire",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Lucía",
+    "lastName": "Jiménez",
+    "cedula": "V-32345678",
+    "email": "lucia.jimenez@example.com",
+    "phone": "+58 414 323 4567",
+    "address": "Calle Comercio 234, Coro",
+    "planId": "PLAN006",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Nicolás",
+    "lastName": "Ruiz",
+    "cedula": "V-43456789",
+    "email": "nicolas.ruiz@example.com",
+    "phone": "+58 424 434 5678",
+    "address": "Av. Libertador 567, Carora"
+  },
+  {
+    "firstName": "Emma",
+    "lastName": "Alvarez",
+    "cedula": "V-54567890",
+    "email": "emma.alvarez@example.com",
+    "phone": "+58 416 545 6789",
+    "address": "Calle Bolívar 890, El Tigre",
+    "planId": "PLAN001",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Matías",
+    "lastName": "Moreno",
+    "cedula": "V-65678901",
+    "email": "matias.moreno@example.com",
+    "phone": "+58 412 656 7890",
+    "address": "Av. Principal 123, Calabozo",
+    "planId": "PLAN004",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Victoria",
+    "lastName": "Muñoz",
+    "cedula": "V-76789012",
+    "email": "victoria.munoz@example.com",
+    "phone": "+58 426 767 8901",
+    "address": "Calle Miranda 456, Valle de la Pascua",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Cancelado"
+  },
+  {
+    "firstName": "Benjamín",
+    "lastName": "Rojas",
+    "cedula": "V-87890123",
+    "email": "benjamin.rojas@example.com",
+    "phone": "+58 414 878 9012",
+    "address": "Av. Urdaneta 789, Tucupita",
+    "planId": "PLAN003",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Martina",
+    "lastName": "Vega",
+    "cedula": "V-98901234",
+    "email": "martina.vega@example.com",
+    "phone": "+58 424 989 0123",
+    "address": "Calle Sucre 012, La Guaira",
+    "planId": "PLAN005",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Lucas",
+    "lastName": "Méndez",
+    "cedula": "V-09012345",
+    "email": "lucas.mendez@example.com",
+    "phone": "+58 416 090 1234",
+    "address": "Av. Bolívar 345, Porlamar",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Activo"
+  },
+  {
+    "firstName": "Renata",
+    "lastName": "Castro",
+    "cedula": "V-19123456",
+    "email": "renata.castro@example.com",
+    "phone": "+58 412 191 2345",
+    "address": "Calle Principal 678, Carúpano",
+    "planId": "PLAN001",
+    "subscriptionStatus": "Activo"
+  }
+]

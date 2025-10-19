@@ -16,7 +16,8 @@ import {
     IconReport,
     IconSearch,
     IconSettings,
-    IconUsers
+    IconUsers,
+    IconShield,
 } from "@tabler/icons-react";
 
 import { NavDocuments } from "@/components/acount/dashboard/nav-documents";
@@ -30,41 +31,41 @@ import {
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem
+    SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
 const data = {
     user: {
         name: "Usuario",
         email: "usuario@ejemplo.com",
-        avatar: "/avatars/shadcn.jpg"
+        avatar: "/avatars/shadcn.jpg",
     },
     navMain: [
         {
             title: "Panel de Control",
             url: "#",
-            icon: IconDashboard
+            icon: IconDashboard,
         },
         {
             title: "Ciclo de Vida",
             url: "#",
-            icon: IconListDetails
+            icon: IconListDetails,
         },
         {
             title: "Análisis",
             url: "#",
-            icon: IconChartBar
+            icon: IconChartBar,
         },
         {
             title: "Proyectos",
             url: "#",
-            icon: IconFolder
+            icon: IconFolder,
         },
         {
             title: "Equipo",
             url: "#",
-            icon: IconUsers
-        }
+            icon: IconUsers,
+        },
     ],
     navClouds: [
         {
@@ -75,13 +76,13 @@ const data = {
             items: [
                 {
                     title: "Propuestas Activas",
-                    url: "#"
+                    url: "#",
                 },
                 {
                     title: "Archivado",
-                    url: "#"
-                }
-            ]
+                    url: "#",
+                },
+            ],
         },
         {
             title: "Propuesta",
@@ -90,13 +91,13 @@ const data = {
             items: [
                 {
                     title: "Propuestas Activas",
-                    url: "#"
+                    url: "#",
                 },
                 {
                     title: "Archivado",
-                    url: "#"
-                }
-            ]
+                    url: "#",
+                },
+            ],
         },
         {
             title: "Indicaciones",
@@ -105,49 +106,54 @@ const data = {
             items: [
                 {
                     title: "Propuestas Activas",
-                    url: "#"
+                    url: "#",
                 },
                 {
                     title: "Archivado",
-                    url: "#"
-                }
-            ]
-        }
+                    url: "#",
+                },
+            ],
+        },
     ],
     navSecondary: [
         {
+            title: "Admin",
+            url: "/account/admin",
+            icon: IconShield,
+        },
+        {
             title: "Configuración",
             url: "#",
-            icon: IconSettings
+            icon: IconSettings,
         },
         {
             title: "Obtener Ayuda",
             url: "#",
-            icon: IconHelp
+            icon: IconHelp,
         },
         {
             title: "Buscar",
             url: "#",
-            icon: IconSearch
-        }
+            icon: IconSearch,
+        },
     ],
     documents: [
         {
             name: "Biblioteca de Datos",
             url: "#",
-            icon: IconDatabase
+            icon: IconDatabase,
         },
         {
             name: "Reportes",
             url: "#",
-            icon: IconReport
+            icon: IconReport,
         },
         {
             name: "Asistente de Documentos",
             url: "#",
-            icon: IconFileWord
-        }
-    ]
+            icon: IconFileWord,
+        },
+    ],
 };
 
 function CobrixLogo() {
@@ -162,14 +168,13 @@ function CobrixLogo() {
 
         // Observar cambios en el tema
         const observer = new MutationObserver(() => {
-            const isDarkMode =
-                document.documentElement.classList.contains("dark");
+            const isDarkMode = document.documentElement.classList.contains("dark");
             setIsDark(isDarkMode);
         });
 
         observer.observe(document.documentElement, {
             attributes: true,
-            attributeFilter: ["class"]
+            attributeFilter: ["class"],
         });
 
         return () => observer.disconnect();
@@ -181,11 +186,7 @@ function CobrixLogo() {
 
     return (
         <Image
-            src={
-                isDark
-                    ? "/Cobrix_black_background.svg"
-                    : "/Cobrix_white_background.svg"
-            }
+            src={isDark ? "/Cobrix_black_background.svg" : "/Cobrix_white_background.svg"}
             alt="Cobrix Logo"
             width={32}
             height={32}

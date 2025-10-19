@@ -12,10 +12,14 @@ interface ClientData {
     email: string;
     phone: string;
     address: string;
+    planId?: string; // ID del plan de suscripción (opcional)
+    subscriptionStatus?: "Activo" | "En Apelación" | "Cancelado"; // Estado de la suscripción (opcional)
 }
 
 export function BulkUploadDropzone() {
     const addClient = useDashboardStore((state) => state.addClient);
+    const addSubscription = useDashboardStore((state) => state.addSubscription);
+    const subscriptionPlans = useDashboardStore((state) => state.subscriptionPlans);
 
     const [isDragging, setIsDragging] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +27,16 @@ export function BulkUploadDropzone() {
         type: "success" | "error" | "info";
         text: string;
     } | null>(null);
+
+    const calculateNextPayment = (billingCycle: "Mensual" | "Anual"): string => {
+        const today = new Date();
+        if (billingCycle === "Anual") {
+            today.setFullYear(today.getFullYear() + 1);
+        } else {
+            today.setMonth(today.getMonth() + 1);
+        }
+        return today.toISOString().split("T")[0];
+    };
 
     const validateClientData = (data: unknown[]): ClientData[] => {
         return data.filter((item) => {
@@ -46,10 +60,31 @@ export function BulkUploadDropzone() {
         const lines = content.split("\n");
         const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
 
+        const parseCSVLine = (line: string): string[] => {
+            const values: string[] = [];
+            let currentValue = "";
+            let insideQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    insideQuotes = !insideQuotes;
+                } else if (char === "," && !insideQuotes) {
+                    values.push(currentValue.trim());
+                    currentValue = "";
+                } else {
+                    currentValue += char;
+                }
+            }
+            values.push(currentValue.trim());
+            return values;
+        };
+
         const data = lines.slice(1).map((line) => {
             if (!line.trim()) return null;
-            const values = line.split(",").map((v) => v.trim());
-            return {
+            const values = parseCSVLine(line);
+
+            const clientData: ClientData = {
                 firstName: values[headers.indexOf("firstname")] || "",
                 lastName: values[headers.indexOf("lastname")] || "",
                 cedula: values[headers.indexOf("cedula")] || "",
@@ -57,6 +92,22 @@ export function BulkUploadDropzone() {
                 phone: values[headers.indexOf("phone")] || "",
                 address: values[headers.indexOf("address")] || "",
             };
+
+            // Campos opcionales de suscripción
+            const planIdIndex = headers.indexOf("planid");
+            if (planIdIndex !== -1 && values[planIdIndex]) {
+                clientData.planId = values[planIdIndex];
+            }
+
+            const statusIndex = headers.indexOf("subscriptionstatus") || headers.indexOf("status");
+            if (statusIndex !== -1 && values[statusIndex]) {
+                const status = values[statusIndex] as "Activo" | "En Apelación" | "Cancelado";
+                if (["Activo", "En Apelación", "Cancelado"].includes(status)) {
+                    clientData.subscriptionStatus = status;
+                }
+            }
+
+            return clientData;
         });
 
         return data.filter((item) => item !== null && item.firstName && item.email) as ClientData[];
@@ -87,14 +138,54 @@ export function BulkUploadDropzone() {
                 throw new Error("No se encontraron datos válidos en el archivo");
             }
 
+            let clientsCreated = 0;
+            let subscriptionsCreated = 0;
+            const plansNotFound: string[] = [];
+
             // Agregar cada cliente al store usando addClient
             parsedData.forEach((client) => {
-                addClient(client);
+                const { planId, subscriptionStatus, ...clientDataOnly } = client;
+
+                // Agregar cliente
+                addClient(clientDataOnly);
+                clientsCreated++;
+
+                // Si tiene planId, crear también la suscripción
+                if (planId) {
+                    const selectedPlan = subscriptionPlans.find((p) => p.id === planId);
+                    if (selectedPlan) {
+                        const nextPaymentDate = calculateNextPayment(selectedPlan.billingCycle);
+
+                        addSubscription({
+                            clientName: `${client.firstName} ${client.lastName}`,
+                            email: client.email,
+                            planId: selectedPlan.id,
+                            plan: selectedPlan.name,
+                            price: selectedPlan.price,
+                            status: subscriptionStatus || "Activo",
+                            billingCycle: selectedPlan.billingCycle,
+                            nextPaymentDate: nextPaymentDate,
+                        });
+                        subscriptionsCreated++;
+                    } else {
+                        plansNotFound.push(`${planId} (${client.firstName} ${client.lastName})`);
+                        console.warn("⚠️ Plan no encontrado:", planId);
+                    }
+                }
             });
+
+            let message =
+                subscriptionsCreated > 0
+                    ? `✓ Se importaron ${clientsCreated} cliente(s) y ${subscriptionsCreated} suscripción(es) exitosamente. Ve a la pestaña "Suscripciones" para verlas.`
+                    : `✓ Se importaron ${clientsCreated} cliente(s) exitosamente (sin suscripciones).`;
+
+            if (plansNotFound.length > 0) {
+                message += `\n⚠️ Planes no encontrados: ${plansNotFound.join(", ")}`;
+            }
 
             setMessage({
                 type: "success",
-                text: `✓ Se importaron ${parsedData.length} cliente(s) exitosamente`,
+                text: message,
             });
         } catch (error) {
             setMessage({
@@ -140,7 +231,8 @@ export function BulkUploadDropzone() {
             <CardHeader>
                 <CardTitle>Carga Masiva de Clientes</CardTitle>
                 <CardDescription>
-                    Importa múltiples clientes a través de un archivo CSV o JSON
+                    Importa múltiples clientes con sus suscripciones a través de un archivo CSV o
+                    JSON
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -219,23 +311,55 @@ export function BulkUploadDropzone() {
                     <p className="mb-2 text-sm font-semibold text-green-900 dark:text-blue-100">
                         Formato esperado:
                     </p>
-                    <div className="space-y-2 text-xs text-green-700 dark:text-blue-300">
-                        <p>
-                            <strong>CSV:</strong> firstName, lastName, cedula, email, phone, address
-                        </p>
-                        <p>
-                            <strong>JSON:</strong> Array de objetos con los mismos campos
-                        </p>
-                        <p>
-                            <strong>Excel (.xls/.xlsx):</strong> Convierte a CSV usando Excel →
-                            Guardar como → Formato CSV
-                        </p>
-                        <p className="mt-2 italic pt-2 border-t border-green-200 dark:border-blue-800">
-                            Ejemplo CSV:
-                            <br />
-                            Juan,Pérez,V-12345678,juan@example.com,+58 212 123 4567,Av. Principal
-                            123
-                        </p>
+                    <div className="space-y-3 text-xs text-green-700 dark:text-blue-300">
+                        <div>
+                            <p className="font-semibold mb-1">Campos obligatorios:</p>
+                            <p>firstName, lastName, cedula, email, phone, address</p>
+                        </div>
+                        <div>
+                            <p className="font-semibold mb-1">
+                                Campos opcionales (para suscripción):
+                            </p>
+                            <p>
+                                • <strong>planId:</strong> ID del plan (PLAN001, PLAN002, etc.)
+                                <br />• <strong>subscriptionStatus:</strong> Estado (Activo, En
+                                Apelación, Cancelado)
+                            </p>
+                        </div>
+                        <div className="pt-2 border-t border-green-200 dark:border-blue-800">
+                            <p className="font-semibold mb-1">Formatos aceptados:</p>
+                            <p>
+                                <strong>JSON:</strong> Array de objetos con los campos anteriores
+                            </p>
+                            <p>
+                                <strong>CSV:</strong> Primera fila con nombres de columnas, luego
+                                los datos
+                            </p>
+                        </div>
+                        <div className="pt-2 border-t border-green-200 dark:border-blue-800">
+                            <p className="font-semibold mb-1">Ejemplo JSON:</p>
+                            <pre className="mt-1 p-2 bg-white/50 dark:bg-black/20 rounded text-[10px] overflow-x-auto">
+                                {`[
+  {
+    "firstName": "Juan",
+    "lastName": "Pérez",
+    "cedula": "V-12345678",
+    "email": "juan@example.com",
+    "phone": "+58 212 123 4567",
+    "address": "Av. Principal 123",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Activo"
+  }
+]`}
+                            </pre>
+                        </div>
+                        <div className="pt-2 border-t border-green-200 dark:border-blue-800">
+                            <p className="font-semibold mb-1">Ejemplo CSV:</p>
+                            <pre className="mt-1 p-2 bg-white/50 dark:bg-black/20 rounded text-[10px] overflow-x-auto">
+                                {`firstName,lastName,cedula,email,phone,address,planId,subscriptionStatus
+Juan,Pérez,V-12345678,juan@example.com,+58 212 123 4567,Av. Principal 123,PLAN002,Activo`}
+                            </pre>
+                        </div>
                     </div>
                 </div>
             </CardContent>
