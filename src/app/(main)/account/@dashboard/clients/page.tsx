@@ -14,6 +14,8 @@ export default function ClientsPage() {
     const initializeFromLocalStorage = useDashboardStore(
         (state) => state.initializeFromLocalStorage
     );
+    const updateClient = useDashboardStore((state) => state.updateClient);
+    const deleteClient = useDashboardStore((state) => state.deleteClient);
 
     useEffect(() => {
         // Inicializar desde localStorage en el primer render (migrar datos antiguos si existen)
@@ -56,7 +58,11 @@ export default function ClientsPage() {
                     </Button>
                 </div>
 
-                <ClientsDataTable data={clients} />
+                <ClientsDataTable
+                    data={clients}
+                    onUpdateClient={updateClient}
+                    onDeleteClient={deleteClient}
+                />
             </div>
         </div>
     );

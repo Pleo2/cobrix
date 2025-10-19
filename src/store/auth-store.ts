@@ -1,6 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+interface Plan {
+    name: string;
+    price: string;
+    features: string[];
+}
+
+interface MetodoPago {
+    tipo: string;
+    cedula?: string;
+    telefono?: string;
+    banco?: string;
+}
+
 interface EmpresaData {
     nombreEmpresa: string;
     rif: string;
@@ -10,8 +23,9 @@ interface EmpresaData {
     nicho: string;
     correo: string;
     telefono: string;
-    plan?: any;
-    metodoPago?: any;
+    plan?: Plan;
+    metodoPago?: MetodoPago;
+    password?: string;
     fechaRegistro?: string;
 }
 
@@ -31,6 +45,8 @@ export const useAuthStore = create<AuthState>()(
             empresa: null,
 
             login: (correo: string, password: string) => {
+                // Iniciando verificación de login
+                
                 // Obtener todas las empresas registradas
                 const registrosEmpresas = localStorage.getItem('registrosEmpresas');
                 
@@ -41,10 +57,11 @@ export const useAuthStore = create<AuthState>()(
                 const empresas = JSON.parse(registrosEmpresas);
                 
                 // Buscar empresa por correo y contraseña
-                const empresa = empresas.find((e: any) => 
-                    e.correo.toLowerCase() === correo.toLowerCase() && 
-                    e.password === password
-                );
+                const empresa = empresas.find((e: EmpresaData) => {
+                    const emailMatch = e.correo.toLowerCase() === correo.toLowerCase();
+                    const passwordMatch = e.password === password;
+                    return emailMatch && passwordMatch;
+                });
 
                 if (empresa) {
                     set({ 

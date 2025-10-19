@@ -7,41 +7,73 @@ import { motion } from "framer-motion"
 import { TemplateLibrary } from "../../../../../components/acount/templates-manager/template-library"
 import { Timeline } from "../../../../../components/acount/message-manager/timeline"
 import { MessagePool } from "../../../../../components/acount/message-manager/message-pool"
-import { defaultTemplates, type Template, type MessageType } from "../templates-manager/data"
+import { type Template, type MessageType } from "../../../../../components/acount/templates-manager/data"
 import type { ScheduledMessage, MessageScheduleConfig } from "./types"
 import { Button } from "@/components/ui/button"
 import { IconDeviceFloppy, IconAlertCircle } from "@tabler/icons-react"
+import { useTemplateStore } from "../../../../../store/templates-store"
+import { Toaster, toast } from "sonner"
 
 const STORAGE_KEY = "cobrix-message-schedule"
 
 export default function MessageManagerPage() {
+    const { templates, isInitialized, initializeTemplates } = useTemplateStore()
     const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
     const [scheduledMessages, setScheduledMessages] = useState<ScheduledMessage[]>([])
     const [draggedMessage, setDraggedMessage] = useState<{ type: MessageType; content: string } | null>(null)
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
 
-    // Load from localStorage on mount
+    // Inicializar el store de plantillas
     useEffect(() => {
+        initializeTemplates()
+    }, [initializeTemplates])
+
+    // Load from localStorage on mount - cargar la última plantilla seleccionada
+    useEffect(() => {
+        if (!isInitialized || templates.length === 0) return
+
         const saved = localStorage.getItem(STORAGE_KEY)
-        if (saved) {
+        const lastTemplateId = localStorage.getItem(`${STORAGE_KEY}-last`)
+        
+        if (saved && lastTemplateId) {
             try {
-                const config: MessageScheduleConfig = JSON.parse(saved)
-                const template = defaultTemplates.find((t) => t.id === config.templateId)
-                if (template) {
+                const allConfigs = JSON.parse(saved) as Record<string, MessageScheduleConfig>
+                const template = templates.find((t) => t.id === lastTemplateId)
+                if (template && allConfigs[lastTemplateId]) {
                     setSelectedTemplate(template)
-                    setScheduledMessages(config.scheduledMessages)
+                    setScheduledMessages(allConfigs[lastTemplateId].scheduledMessages)
                 }
-            } catch (error) {
-                console.error("Error loading saved configuration:", error)
+            } catch (_error) {
+                console.error("Error loading saved configuration:", _error)
             }
         }
-    }, [])
+    }, [isInitialized, templates])
 
     const handleSelectTemplate = (template: Template) => {
         if (selectedTemplate?.id !== template.id) {
             setSelectedTemplate(template)
-            setScheduledMessages([])
-            setHasUnsavedChanges(true)
+            
+            // Cargar configuración guardada para esta plantilla específica
+            const saved = localStorage.getItem(STORAGE_KEY)
+            if (saved) {
+                try {
+                    const allConfigs = JSON.parse(saved) as Record<string, MessageScheduleConfig>
+                    const config = allConfigs[template.id]
+                    if (config && config.scheduledMessages) {
+                        setScheduledMessages(config.scheduledMessages)
+                        setHasUnsavedChanges(false)
+                    } else {
+                        setScheduledMessages([])
+                        setHasUnsavedChanges(false)
+                    }
+                } catch {
+                    setScheduledMessages([])
+                    setHasUnsavedChanges(false)
+                }
+            } else {
+                setScheduledMessages([])
+                setHasUnsavedChanges(false)
+            }
         }
     }
 
@@ -91,17 +123,40 @@ export default function MessageManagerPage() {
     const handleSave = () => {
         if (!selectedTemplate) return
 
-        const config: MessageScheduleConfig = {
+        // Cargar todas las configuraciones existentes
+        const saved = localStorage.getItem(STORAGE_KEY)
+        let allConfigs: Record<string, MessageScheduleConfig> = {}
+        
+        if (saved) {
+            try {
+                allConfigs = JSON.parse(saved)
+            } catch {
+                allConfigs = {}
+            }
+        }
+
+        // Actualizar o agregar la configuración de esta plantilla
+        allConfigs[selectedTemplate.id] = {
             templateId: selectedTemplate.id,
             scheduledMessages,
         }
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
+        // Guardar todas las configuraciones
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allConfigs))
+        // Guardar ID de última plantilla seleccionada
+        localStorage.setItem(`${STORAGE_KEY}-last`, selectedTemplate.id)
         setHasUnsavedChanges(false)
+        
+        // Mostrar toast de éxito
+        toast.success("¡Configuración guardada exitosamente!", {
+            description: `${scheduledMessages.length} mensaje(s) programado(s) para "${selectedTemplate.name}"`
+        })
     }
 
     return (
-        <div className="flex max-h-max flex-col">
+        <>
+            <Toaster position="top-right" richColors />
+            <div className="flex max-h-max flex-col">
             <div className="flex flex-1 flex-col ">
                 <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6"></div>
                 <div className="mx-auto w-full flex flex-col gap-6 max-w-7xl">
@@ -135,7 +190,7 @@ export default function MessageManagerPage() {
                             className="col-span-3 h-full"
                         >
                             <TemplateLibrary
-                                templates={defaultTemplates}
+                                templates={templates}
                                 selectedTemplateId={selectedTemplate?.id || null}
                                 onSelectTemplate={handleSelectTemplate}
                             />
@@ -183,5 +238,6 @@ export default function MessageManagerPage() {
                 </div>
             </div>
         </div>
+        </>
     )
 }

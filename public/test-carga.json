@@ -1,0 +1,13 @@
+[
+  {
+    "firstName": "Test",
+    "lastName": "Usuario",
+    "cedula": "V-99999999",
+    "email": "test@example.com",
+    "phone": "+58 212 999 9999",
+    "address": "Dirección de Prueba 123",
+    "planId": "PLAN002",
+    "subscriptionStatus": "Activo"
+  }
+]
+

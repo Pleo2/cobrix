@@ -26,6 +26,7 @@ export default function SubscriptionsPage() {
         (state) => state.initializeFromLocalStorage
     );
     const resetSubscriptions = useDashboardStore((state) => state.resetSubscriptions);
+    const updateSubscription = useDashboardStore((state) => state.updateSubscription);
     const getActiveSubscriptionsCount = useDashboardStore(
         (state) => state.getActiveSubscriptionsCount
     );
@@ -239,7 +240,11 @@ export default function SubscriptionsPage() {
                                         </Badge>
                                     </div>
                                 </div>
-                                <SubscriptionsTable data={subscriptions} />
+                                <SubscriptionsTable
+                                    data={subscriptions}
+                                    plans={subscriptionPlans}
+                                    onUpdateSubscription={updateSubscription}
+                                />
                             </TabsContent>
 
                             <TabsContent value="plans" className="space-y-4 mt-6">

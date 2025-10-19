@@ -13,7 +13,7 @@ export default function Login() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Lógica de autenticación aquí
-        console.log("Login attempt:", { email, password });
+        // TODO: Implementar autenticación
     };
 
     return (

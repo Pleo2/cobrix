@@ -14,10 +14,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-    IconCreditCard,
     IconDotsVertical,
     IconLogout,
-    IconNotification,
     IconUserCircle,
     IconArrowLeft,
     IconMessage,
@@ -54,6 +52,10 @@ export function SiteHeader() {
     const handleLogout = () => {
         logout();
         router.push("/login");
+    };
+
+    const handleAccountClick = () => {
+        router.push("/account/account");
     };
 
     const userData = {
@@ -150,17 +152,9 @@ export function SiteHeader() {
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleAccountClick}>
                                         <IconUserCircle className="mr-2 h-4 w-4" />
                                         Cuenta
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <IconCreditCard className="mr-2 h-4 w-4" />
-                                        Facturación
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <IconNotification className="mr-2 h-4 w-4" />
-                                        Notificaciones
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
@@ -241,17 +235,9 @@ export function SiteHeader() {
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuGroup>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem onClick={handleAccountClick}>
                                             <IconUserCircle className="mr-2 h-4 w-4" />
                                             Cuenta
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <IconCreditCard className="mr-2 h-4 w-4" />
-                                            Facturación
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <IconNotification className="mr-2 h-4 w-4" />
-                                            Notificaciones
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
                                     <DropdownMenuSeparator />
