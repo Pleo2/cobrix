@@ -73,7 +73,6 @@ function HummingbirdModel(props: React.ComponentProps<'group'>) {
     return loader.load('https://raw.githubusercontent.com/nidorx/matcaps/master/512/537387_75BBB9_152E5B_0E85E8-512px.png')
   }, [])
 
-  // Track mouse position
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = {
@@ -105,7 +104,7 @@ function HummingbirdModel(props: React.ComponentProps<'group'>) {
         action.setLoop(THREE.LoopRepeat, Infinity)
         action.clampWhenFinished = false
         action.reset().play()
-        action.time = 6.1  // Start at 6 seconds (AFTER reset)
+        action.time = 6.1
 
         const actionWithUserData = action as AnimationActionWithUserData
         if (!actionWithUserData.userData) {
@@ -120,41 +119,39 @@ function HummingbirdModel(props: React.ComponentProps<'group'>) {
     }
   }, [actions, names])
 
-  // Custom loop logic + mouse tracking
   useFrame(() => {
     if (group.current) {
-      // Mouse-based rotation and movement
-      const rotationInfluence = 0.15  // Increased from 0.05
-      const rotationY = mousePos.current.x * rotationInfluence  // Inverted (removed negative)
-      const rotationX = -mousePos.current.y * rotationInfluence * 0.6  // Inverted (added negative)
+      const isSmallScreen = window.innerWidth < 1024
 
-      // Apply rotation with base rotation offset
-      const baseRotationY = -Math.PI / 7  // Original rotation from props
+      const rotationInfluence = isSmallScreen ? 0 : 0.15
+      const rotationY = mousePos.current.x * rotationInfluence
+      const rotationX = -mousePos.current.y * rotationInfluence * (isSmallScreen ? 0 : 0.6)
+
+      const baseRotationY = isSmallScreen ? -Math.PI / 22 : -Math.PI / 7
       group.current.rotation.y = baseRotationY + rotationY
       group.current.rotation.x = rotationX
 
-      // Position shift based on mouse with rotation consideration
-      const baseX = 1
-      const baseY = -0.75
-      const baseZ = 1.1
+      const baseX = isSmallScreen ? 0 : 1
+      const baseY = isSmallScreen ? -0.2 : -0.75
+      const baseZ = isSmallScreen ? 0.8 : 1.1
 
-      // Calculate movement based on mouse position and current rotation
-      const moveX = mousePos.current.x * 0.15  // Increased from 0.1
-      const moveY = mousePos.current.y * 0.12  // Increased from 0.1
+      const moveX = mousePos.current.x * (isSmallScreen ? 0.1 : 0.15)
+      const moveY = mousePos.current.y * (isSmallScreen ? 0.08 : 0.12)
 
-      // Apply rotation to movement for more natural feel
       const cosY = Math.cos(rotationY)
       const sinY = Math.sin(rotationY)
 
       group.current.position.x = baseX + moveX * cosY - moveY * sinY * 0.4
       group.current.position.y = baseY + moveY * 0.9
       group.current.position.z = baseZ + moveX * sinY * 0.3
+
+      const scale = isSmallScreen ? 0.00008 : 0.000109
+      group.current.scale.setScalar(scale)
     }
 
     if (names.length > 0 && names[0]) {
       const action = actions[names[0]]
       if (action && action.isRunning()) {
-        // Custom loop: 6s to 12s
         const actionWithUserData = action as AnimationActionWithUserData
         if (actionWithUserData.userData?.loopStart !== undefined && actionWithUserData.userData?.loopEnd !== undefined) {
           if (action.time >= actionWithUserData.userData.loopEnd) {
@@ -178,7 +175,7 @@ export function GradientScene({ className, fov = 40 }: { className?: HTMLDivElem
       <Canvas ref={canvasRef} camera={{ position: [0, 0, 6], fov: fov }} className={className} frameloop="always">
         <Sketch />
         <Suspense fallback={null}>
-          <HummingbirdModel scale={0.000109} position={[1, -0.75, 1.1]} rotation={[0, - Math.PI / 7, 0]} />
+          <HummingbirdModel />
         </Suspense>
         <ambientLight intensity={0.6} />
         <directionalLight position={[0.5, 0, 0.866]} intensity={0.5} />
