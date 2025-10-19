@@ -1,6 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+interface Plan {
+    name: string;
+    price: string;
+    features: string[];
+}
+
+interface MetodoPago {
+    tipo: string;
+    cedula?: string;
+    telefono?: string;
+    banco?: string;
+}
+
 interface EmpresaData {
     nombreEmpresa: string;
     rif: string;
@@ -10,8 +23,9 @@ interface EmpresaData {
     nicho: string;
     correo: string;
     telefono: string;
-    plan?: any;
-    metodoPago?: any;
+    plan?: Plan;
+    metodoPago?: MetodoPago;
+    password?: string;
     fechaRegistro?: string;
 }
 
@@ -31,33 +45,25 @@ export const useAuthStore = create<AuthState>()(
             empresa: null,
 
             login: (correo: string, password: string) => {
-                console.log("🔍 Zustand Store - Iniciando verificación de login");
+                // Iniciando verificación de login
                 
                 // Obtener todas las empresas registradas
                 const registrosEmpresas = localStorage.getItem('registrosEmpresas');
                 
                 if (!registrosEmpresas) {
-                    console.log("❌ No hay empresas registradas en localStorage");
                     return false;
                 }
 
                 const empresas = JSON.parse(registrosEmpresas);
-                console.log("📋 Total de empresas registradas:", empresas.length);
                 
                 // Buscar empresa por correo y contraseña
-                const empresa = empresas.find((e: any) => {
+                const empresa = empresas.find((e: EmpresaData) => {
                     const emailMatch = e.correo.toLowerCase() === correo.toLowerCase();
                     const passwordMatch = e.password === password;
-                    
-                    console.log("🔎 Verificando empresa:", e.nombreEmpresa);
-                    console.log("   - Email coincide:", emailMatch, `(${e.correo} vs ${correo})`);
-                    console.log("   - Password coincide:", passwordMatch);
-                    
                     return emailMatch && passwordMatch;
                 });
 
                 if (empresa) {
-                    console.log("✅ Empresa encontrada:", empresa.nombreEmpresa);
                     set({ 
                         isAuthenticated: true, 
                         empresa: empresa 
@@ -65,7 +71,6 @@ export const useAuthStore = create<AuthState>()(
                     return true;
                 }
 
-                console.log("❌ No se encontró empresa con esas credenciales");
                 return false;
             },
 

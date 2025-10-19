@@ -8,6 +8,18 @@ import { useRouter } from "next/navigation";
 import { Building2, FileText, User, MapPin, Users, Briefcase, Mail, Phone, Lock } from "lucide-react";
 import { ValidationModal } from "@/components/ui/validation-modal";
 
+interface RegistroData {
+    nombreEmpresa: string;
+    rif: string;
+    nombreDueno: string;
+    ubicacion: string;
+    volumenClientes: string;
+    nicho: string;
+    correo: string;
+    telefono: string;
+    password: string;
+}
+
 export default function Register() {
     const router = useRouter();
     const [formData, setFormData] = useState({
@@ -79,7 +91,7 @@ export default function Register() {
             const registros = JSON.parse(registrosExistentes);
             
             // Validar RIF duplicado (primary key)
-            const rifDuplicado = registros.find((r: any) => r.rif === trimmedData.rif);
+            const rifDuplicado = registros.find((r: RegistroData) => r.rif === trimmedData.rif);
             if (rifDuplicado) {
                 setValidationError({
                     show: true,
@@ -90,7 +102,7 @@ export default function Register() {
             }
 
             // Validar nombre de empresa duplicado
-            const nombreDuplicado = registros.find((r: any) => 
+            const nombreDuplicado = registros.find((r: RegistroData) => 
                 r.nombreEmpresa.toLowerCase() === trimmedData.nombreEmpresa.toLowerCase()
             );
             if (nombreDuplicado) {
@@ -103,7 +115,7 @@ export default function Register() {
             }
 
             // Validar correo duplicado
-            const correoDuplicado = registros.find((r: any) => 
+            const correoDuplicado = registros.find((r: RegistroData) => 
                 r.correo.toLowerCase() === trimmedData.correo.toLowerCase()
             );
             if (correoDuplicado) {
@@ -119,7 +131,7 @@ export default function Register() {
         // Guardar temporalmente en sessionStorage (aún no en localStorage)
         sessionStorage.setItem("registroTemporal", JSON.stringify(trimmedData));
         
-        console.log("Datos temporales guardados:", trimmedData);
+        // Datos temporales guardados
         
         // Redirigir a selección de planes
         router.push("/register/plans");

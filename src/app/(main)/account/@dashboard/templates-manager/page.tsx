@@ -61,46 +61,68 @@ export default function TemplatesManagerPage() {
         <>
             <Toaster position="top-right" richColors />
             <div className="flex max-h-max flex-col">
-                <div className="flex flex-1 flex-col ">
-                    <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6 "></div>
-                    <div className="mx-auto w-full flex flex-col gap-6 max-w-7xl ">
-                <div className="mb-4">
-                    <h1 className="text-3xl font-bold tracking-tight">Gestor de Plantillas</h1>
-                    <p className="text-muted-foreground">
-                        Crea, edita y gestiona tus plantillas de comunicación.
-                    </p>
-                </div>
+                <div className="flex flex-1 flex-col">
+                    <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6"></div>
+                    <div className="mx-auto w-full flex flex-col gap-6 max-w-7xl">
+                        {/* Header */}
+                        <motion.div 
+                            initial={{ opacity: 0, y: -20 }} 
+                            animate={{ opacity: 1, y: 0 }} 
+                            className="flex-shrink-0"
+                        >
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h1 className="text-3xl font-bold tracking-tight">Gestor de Plantillas</h1>
+                                    <p className="text-muted-foreground mt-1">
+                                        Crea, edita y gestiona tus plantillas de comunicación.
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow min-h-0">
-                    <div className="lg:col-span-1 h-full">
-                        <TemplateLibrary
-                            templates={templates}
-                            selectedTemplateId={selectedTemplate?.id || null}
-                            onSelectTemplate={handleSelectTemplate}
-                            onAddNew={handleAddNewClick}
-                        />
-                    </div>
-
-                    <div className="lg:col-span-2 h-full">
-                        <AnimatePresence mode="wait">
+                        {/* Main Content */}
+                        <div className="flex-1 grid grid-cols-12 gap-6 min-h-0">
+                            {/* Left: Template Library */}
                             <motion.div
-                                key={mode}
-                                initial={{ opacity: 0, x: 20 }}
+                                initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                transition={{ duration: 0.3 }}
-                                className="h-full"
+                                transition={{ delay: 0.1 }}
+                                className="col-span-3 h-full"
                             >
-                                <TemplateEditor
-                                    mode={mode}
-                                    template={selectedTemplate}
-                                    onSaveChanges={handleSaveChanges}
-                                    onSaveNew={handleSaveNewTemplate}
-                                    onCancel={handleCancelCreation}
+                                <TemplateLibrary
+                                    templates={templates}
+                                    selectedTemplateId={selectedTemplate?.id || null}
+                                    onSelectTemplate={handleSelectTemplate}
+                                    onAddNew={handleAddNewClick}
                                 />
                             </motion.div>
-                        </AnimatePresence>
-                                </div>
+
+                            {/* Right: Template Editor */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="col-span-9 h-full min-h-0"
+                            >
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={mode}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -20 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="h-full"
+                                    >
+                                        <TemplateEditor
+                                            mode={mode}
+                                            template={selectedTemplate}
+                                            onSaveChanges={handleSaveChanges}
+                                            onSaveNew={handleSaveNewTemplate}
+                                            onCancel={handleCancelCreation}
+                                        />
+                                    </motion.div>
+                                </AnimatePresence>
+                            </motion.div>
                         </div>
                     </div>
                 </div>

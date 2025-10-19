@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import type { MessageType, Template } from "./data";
-import { IconCheck, IconX, IconLayout, IconSparkles, IconRobot } from "@tabler/icons-react";
+import { IconCheck, IconX, IconLayout, IconSparkles, IconRobot, IconLoader } from "@tabler/icons-react";
 import { MessageCard } from "./message-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +37,7 @@ export function TemplateEditor({ mode, template, onSaveChanges, onSaveNew, onCan
     const [formData, setFormData] = useState<Omit<Template, 'id' | 'icon'> | Template | null>(null);
     const [showAIDialog, setShowAIDialog] = useState(false);
     const [aiIntent, setAiIntent] = useState("");
+    const [isGenerating, setIsGenerating] = useState(false);
 
     useEffect(() => {
         if (mode === 'creating') {
@@ -75,23 +76,60 @@ export function TemplateEditor({ mode, template, onSaveChanges, onSaveNew, onCan
         }
     };
 
-    // --- LÓGICA DE IA REINTEGRADA ---
-    const handleGenerateWithAI = () => {
+    // --- LÓGICA DE IA REINTEGRADA CON SIMULACIÓN ---
+    const handleGenerateWithAI = async () => {
         if (!formData || !aiIntent.trim()) return;
 
-        const generatedMessages: Record<MessageType, string> = {
-            recordatorio: `Hola {nombreCliente}, te recordamos amablemente que tu pago de {monto} está por vencer. ${aiIntent}.`,
-            exito: `¡Excelente, {nombreCliente}! Tu pago ha sido procesado con éxito. ¡Gracias por tu confianza! ${aiIntent}.`,
-            error: `Hola {nombreCliente}, hemos encontrado un problema técnico al procesar tu pago. Nuestro equipo ya está trabajando en ello. ${aiIntent}.`,
-            rechazado: `Hola {nombreCliente}, tu pago fue rechazado por la entidad bancaria. Por favor, actualiza tu método de pago. ${aiIntent}.`,
-            "marketing-hooking": `¡Hola {nombreCliente}! Tenemos algo especial para ti. ${aiIntent}. ¡No te lo pierdas!`,
-        };
+        setIsGenerating(true);
+
+        // Simular delay de 3 segundos
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        // Generar mensajes inteligentes según el prompt
+        const prompt = aiIntent.toLowerCase();
+        let generatedMessages: Record<MessageType, string>;
+
+        if (prompt.includes('amigable') || prompt.includes('amable') || prompt.includes('cordial')) {
+            generatedMessages = {
+                recordatorio: `¡Hola {nombreCliente}! 😊 Te escribimos con cariño para recordarte que tu pago de {monto} está próximo a vencer. Sabemos que estás ocupado, pero queremos ayudarte a mantener tu cuenta al día. ¡Gracias por tu confianza!`,
+                exito: `¡Genial {nombreCliente}! 🎉 Tu pago ha sido procesado exitosamente. ¡Muchas gracias por tu puntualidad! Nos encanta tenerte como parte de nuestra comunidad.`,
+                error: `Hola {nombreCliente}, te escribimos para informarte que hemos tenido un pequeño inconveniente técnico al procesar tu pago. ¡No te preocupes! Nuestro equipo ya está trabajando para solucionarlo. Te mantendremos informado. 💪`,
+                rechazado: `Hola {nombreCliente}, queremos informarte que tu pago fue rechazado por tu entidad bancaria. Sabemos que esto puede ser frustrante, pero estamos aquí para ayudarte. ¿Podrías verificar tu método de pago? Estamos a tu disposición. 🤝`,
+                "marketing-hooking": `¡Hola {nombreCliente}! 🌟 Tenemos una sorpresa especial pensada para ti. Como miembro valioso de nuestra comunidad, queremos ofrecerte algo único. ¡No te lo pierdas!`
+            };
+        } else if (prompt.includes('profesional') || prompt.includes('formal') || prompt.includes('serio')) {
+            generatedMessages = {
+                recordatorio: `Estimado/a {nombreCliente}, le recordamos que su pago de {monto} está próximo a vencer. Le agradecemos mantener su cuenta al día para continuar disfrutando de nuestros servicios sin interrupciones.`,
+                exito: `Estimado/a {nombreCliente}, confirmamos que su pago ha sido procesado correctamente. Agradecemos su puntualidad y confianza en nuestros servicios.`,
+                error: `Estimado/a {nombreCliente}, le informamos que se ha presentado un inconveniente técnico al procesar su pago. Nuestro equipo técnico está trabajando en la solución. Le mantendremos informado del progreso.`,
+                rechazado: `Estimado/a {nombreCliente}, le informamos que su pago ha sido rechazado por su entidad bancaria. Le solicitamos verificar y actualizar su método de pago a la brevedad posible.`,
+                "marketing-hooking": `Estimado/a {nombreCliente}, nos complace informarle sobre una oferta especial diseñada exclusivamente para nuestros clientes distinguidos. Le invitamos a conocer los detalles.`
+            };
+        } else if (prompt.includes('motivador') || prompt.includes('motivacional') || prompt.includes('inspirador')) {
+            generatedMessages = {
+                recordatorio: `¡{nombreCliente}, sigue adelante! 💪 Tu pago de {monto} está por vencer, pero sabemos que puedes mantener el ritmo. ¡Cada paso cuenta para alcanzar tus metas!`,
+                exito: `¡Increíble {nombreCliente}! 🚀 Tu pago ha sido procesado. ¡Estás en el camino correcto! Sigue así, cada logro te acerca más a tus objetivos. ¡Eres imparable!`,
+                error: `{nombreCliente}, encontramos un obstáculo temporal con tu pago, pero ¡no te detengas! 🌟 Nuestro equipo está resolviendo esto. Los campeones siempre encuentran la manera. ¡Volveremos más fuertes!`,
+                rechazado: `{nombreCliente}, tu pago fue rechazado, pero esto es solo un pequeño tropiezo. 💪 Verifica tu método de pago y vuelve con más fuerza. ¡Los verdaderos ganadores nunca se rinden!`,
+                "marketing-hooking": `¡{nombreCliente}, es tu momento! ✨ Tenemos algo especial que te ayudará a alcanzar el siguiente nivel. ¡No dejes pasar esta oportunidad de brillar!`
+            };
+        } else {
+            // Mensajes genéricos con el tono del prompt
+            generatedMessages = {
+                recordatorio: `Hola {nombreCliente}, te recordamos que tu pago de {monto} está por vencer. ${aiIntent}`,
+                exito: `¡Excelente {nombreCliente}! Tu pago ha sido procesado con éxito. ${aiIntent}`,
+                error: `Hola {nombreCliente}, hemos encontrado un problema al procesar tu pago. Nuestro equipo está trabajando en ello. ${aiIntent}`,
+                rechazado: `Hola {nombreCliente}, tu pago fue rechazado. Por favor, actualiza tu método de pago. ${aiIntent}`,
+                "marketing-hooking": `¡Hola {nombreCliente}! Tenemos algo especial para ti. ${aiIntent}`
+            };
+        }
 
         setFormData({
             ...formData,
             messages: generatedMessages,
         });
 
+        setIsGenerating(false);
         setShowAIDialog(false);
         setAiIntent("");
     };
@@ -149,21 +187,25 @@ export function TemplateEditor({ mode, template, onSaveChanges, onSaveNew, onCan
 
                     {/* --- BOTONES DE ACCIÓN (INCLUYENDO IA) --- */}
                     <div className="flex gap-2 flex-shrink-0">
-                        {mode === 'viewing' && ( // El botón de IA solo aparece en modo edición
-                            <Button variant="outline" onClick={() => setShowAIDialog(!showAIDialog)} className="h-8 text-xs" size="sm">
-                                <IconSparkles className="mr-1 h-3.5 w-3.5" />
-                                IA
-                            </Button>
-                        )}
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setShowAIDialog(!showAIDialog)} 
+                            className="h-8 text-xs" 
+                            size="sm"
+                            disabled={isGenerating}
+                        >
+                            <IconSparkles className="mr-1 h-3.5 w-3.5" />
+                            IA
+                        </Button>
                         <Button
                             onClick={handleSave}
-                            disabled={isSaveDisabled}
+                            disabled={isSaveDisabled || isGenerating}
                             className="bg-[#22c55e] hover:bg-[#16a34a] text-black font-medium h-8 text-xs" size="sm">
                             <IconCheck className="mr-1 h-3.5 w-3.5" />
                             {mode === 'creating' ? 'Guardar Plantilla' : 'Guardar Cambios'}
                         </Button>
                         {mode === 'creating' && (
-                            <Button variant="outline" onClick={onCancel} className="h-8 text-xs" size="sm">
+                            <Button variant="outline" onClick={onCancel} className="h-8 text-xs" size="sm" disabled={isGenerating}>
                                 <IconX className="mr-1 h-3.5 w-3.5" />
                                 Cancelar
                             </Button>
@@ -183,7 +225,7 @@ export function TemplateEditor({ mode, template, onSaveChanges, onSaveNew, onCan
                             <div className="flex gap-2 items-end pt-2">
                                 <div className="flex-1">
                                     <Label htmlFor="ai-intent" className="text-xs mb-1 block text-muted-foreground">
-                                        Intención de los mensajes
+                                        ingrese su prompt para obtener los Mensajes
                                     </Label>
                                     <Input
                                         id="ai-intent"
@@ -196,12 +238,21 @@ export function TemplateEditor({ mode, template, onSaveChanges, onSaveNew, onCan
                                 </div>
                                 <Button
                                     onClick={handleGenerateWithAI}
-                                    disabled={!aiIntent.trim()}
+                                    disabled={!aiIntent.trim() || isGenerating}
                                     className="bg-[#22c55e] hover:bg-[#16a34a] text-black font-medium h-8 text-xs"
                                     size="sm"
                                 >
-                                    <IconRobot className="mr-1 h-3.5 w-3.5" />
-                                    Generar
+                                    {isGenerating ? (
+                                        <>
+                                            <IconLoader className="mr-1 h-3.5 w-3.5 animate-spin" />
+                                            Generando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <IconRobot className="mr-1 h-3.5 w-3.5" />
+                                            Generar
+                                        </>
+                                    )}
                                 </Button>
                             </div>
                         </motion.div>
@@ -222,6 +273,7 @@ export function TemplateEditor({ mode, template, onSaveChanges, onSaveNew, onCan
                                 value={formData.messages.recordatorio}
                                 onChange={(value) => handleMessageChange("recordatorio", value)}
                                 variant="primary"
+                                isGenerating={isGenerating}
                             />
                         </div>
                         {secondaryMessageOrder.map((type) => (
@@ -233,6 +285,7 @@ export function TemplateEditor({ mode, template, onSaveChanges, onSaveNew, onCan
                                 placeholder={messageConfig[type].placeholder}
                                 value={formData.messages[type]}
                                 onChange={(value) => handleMessageChange(type, value)}
+                                isGenerating={isGenerating}
                             />
                         ))}
                     </div>
