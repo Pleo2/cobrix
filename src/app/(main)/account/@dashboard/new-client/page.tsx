@@ -7,8 +7,11 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Plus, Mail, Phone, MapPin, Building2 } from "lucide-react";
 import { BulkUploadDropzone } from "@/components/acount/dashboard/bulk-upload-dropzone";
+import { useDashboardStore } from "@/store/dashboard-store";
 
 export default function CreateUserPage() {
+    const addClient = useDashboardStore((state) => state.addClient);
+
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -28,23 +31,8 @@ export default function CreateUserPage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Crear objeto del cliente
-        const newClient = {
-            id: Date.now(),
-            ...formData,
-        };
-
-        // Obtener clientes existentes de localStorage
-        const existingClients = JSON.parse(localStorage.getItem("clients") || "[]");
-
-        // Agregar nuevo cliente
-        existingClients.push(newClient);
-
-        // Guardar en localStorage
-        localStorage.setItem("clients", JSON.stringify(existingClients));
-
-        // Guardar también el conteo
-        localStorage.setItem("clientsCount", existingClients.length.toString());
+        // Agregar cliente usando el store de Zustand
+        addClient(formData);
 
         setSubmitted(true);
         setTimeout(() => {

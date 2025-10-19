@@ -6,44 +6,21 @@ import { Layout, Plus, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useDashboardStore } from "@/store/dashboard-store";
 
-const screenTemplates = [
-    {
-        id: 1,
-        title: "Dashboard Principal",
-        description: "Panel de control personalizado con widgets y gráficos en tiempo real.",
-        category: "Dashboard",
-        icon: Layout,
-        color: "bg-indigo-500",
-    },
-    {
-        id: 2,
-        title: "Gestión de Clientes",
-        description: "Pantalla para administrar y visualizar información de clientes.",
-        category: "Gestión",
-        icon: Layout,
-        color: "bg-blue-500",
-    },
-    {
-        id: 3,
-        title: "Reportes Avanzados",
-        description: "Plantilla para crear reportes personalizados con múltiples vistas.",
-        category: "Reportes",
-        icon: Layout,
-        color: "bg-green-500",
-    },
-    {
-        id: 4,
-        title: "Configuración del Sistema",
-        description: "Pantalla para configurar parámetros y preferencias del sistema.",
-        category: "Configuración",
-        icon: Layout,
-        color: "bg-orange-500",
-    },
-];
+const colorMap: Record<string, string> = {
+    Dashboard: "bg-indigo-500",
+    Gestión: "bg-blue-500",
+    Reportes: "bg-green-500",
+    Configuración: "bg-orange-500",
+};
 
-function ScreenCard({ screen }: { screen: (typeof screenTemplates)[0] }) {
-    const Icon = screen.icon;
+function ScreenCard({
+    screen,
+}: {
+    screen: { id: number; title: string; description: string; category: string };
+}) {
+    const color = colorMap[screen.category] || "bg-gray-500";
 
     return (
         <Link href={`/account/create-template/${screen.id}`}>
@@ -52,7 +29,7 @@ function ScreenCard({ screen }: { screen: (typeof screenTemplates)[0] }) {
                     <div className="flex items-start justify-between">
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
-                                <Icon className={`h-5 w-5 text-white ${screen.color}`} />
+                                <Layout className={`h-5 w-5 text-white ${color}`} />
                                 <CardTitle className="text-lg">{screen.title}</CardTitle>
                             </div>
                             <span className="text-xs font-semibold text-muted-foreground">
@@ -85,6 +62,7 @@ function NewScreenCard() {
 }
 
 export default function CreateTemplatePage() {
+    const screenTemplates = useDashboardStore((state) => state.screenTemplates);
     const [searchTerm, setSearchTerm] = useState("");
 
     const filteredScreens = screenTemplates.filter(

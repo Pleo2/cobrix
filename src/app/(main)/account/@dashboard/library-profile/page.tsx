@@ -6,44 +6,21 @@ import { Users, Plus, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useDashboardStore } from "@/store/dashboard-store";
 
-const clientProfiles = [
-    {
-        id: 1,
-        title: "Clientes Premium",
-        description: "Clientes con suscripción premium y acceso a todas las funcionalidades.",
-        category: "Premium",
-        icon: Users,
-        color: "bg-amber-500",
-    },
-    {
-        id: 2,
-        title: "Clientes Básicos",
-        description: "Clientes con plan básico con acceso limitado a funcionalidades.",
-        category: "Básico",
-        icon: Users,
-        color: "bg-blue-500",
-    },
-    {
-        id: 3,
-        title: "Clientes Profesionales",
-        description: "Clientes con plan profesional y soporte prioritario.",
-        category: "Profesional",
-        icon: Users,
-        color: "bg-purple-500",
-    },
-    {
-        id: 4,
-        title: "Clientes Inactivos",
-        description: "Clientes con suscripción expirada o cancelada.",
-        category: "Inactivo",
-        icon: Users,
-        color: "bg-gray-500",
-    },
-];
+const colorMap: Record<string, string> = {
+    Premium: "bg-amber-500",
+    Básico: "bg-blue-500",
+    Profesional: "bg-purple-500",
+    Inactivo: "bg-gray-500",
+};
 
-function ProfileCard({ profile }: { profile: (typeof clientProfiles)[0] }) {
-    const Icon = profile.icon;
+function ProfileCard({
+    profile,
+}: {
+    profile: { id: number; title: string; description: string; category: string };
+}) {
+    const color = colorMap[profile.category] || "bg-gray-500";
 
     return (
         <Link href={`/account/library-profile/${profile.id}`}>
@@ -52,7 +29,7 @@ function ProfileCard({ profile }: { profile: (typeof clientProfiles)[0] }) {
                     <div className="flex items-start justify-between">
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
-                                <Icon className={`h-5 w-5 text-white ${profile.color}`} />
+                                <Users className={`h-5 w-5 text-white ${color}`} />
                                 <CardTitle className="text-lg">{profile.title}</CardTitle>
                             </div>
                             <span className="text-xs font-semibold text-muted-foreground">
@@ -85,6 +62,7 @@ function NewProfileCard() {
 }
 
 export default function LibraryProfilePage() {
+    const clientProfiles = useDashboardStore((state) => state.clientProfiles);
     const [searchTerm, setSearchTerm] = useState("");
 
     const filteredProfiles = clientProfiles.filter(

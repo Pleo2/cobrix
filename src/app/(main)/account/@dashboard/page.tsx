@@ -4,7 +4,8 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import Link from "next/link";
 import { FileText, Users, CreditCard, BarChart3, Plus, Check } from "lucide-react";
 import { ChartRadialGrid } from "@/components/acount/dashboard/chart-radial-grid";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useDashboardStore } from "@/store/dashboard-store";
 
 const quickAccess = [
     {
@@ -38,7 +39,6 @@ const quickAccess = [
         color: "bg-purple-500",
         size: "small",
         features: ["Planes personalizados", "Control total"],
-        badge: { label: "Activas", value: "8", color: "bg-purple-100 text-purple-700" },
     },
     {
         id: "invoices",
@@ -49,7 +49,6 @@ const quickAccess = [
         color: "bg-green-500",
         size: "small",
         features: ["Generación automática", "Historial completo"],
-        badge: { label: "Pendientes", value: "3", color: "bg-green-100 text-green-700" },
     },
     {
         id: "clients",
@@ -60,16 +59,19 @@ const quickAccess = [
         color: "bg-blue-500",
         size: "small",
         features: ["Base de datos centralizada", "Búsqueda rápida"],
-        badge: { label: "Total", value: "245", color: "bg-blue-100 text-blue-700" },
     },
 ];
 
 function BentoItem({
     item,
     clientsCount,
+    subscriptionsCount,
+    invoicesCount,
 }: {
     item: (typeof quickAccess)[0];
-    clientsCount?: string | null;
+    clientsCount?: number;
+    subscriptionsCount?: number;
+    invoicesCount?: number;
 }) {
     const Icon = item.icon;
     const isLarge = item.size === "large";
@@ -85,15 +87,35 @@ function BentoItem({
 
     const rgbColor = colorRgbMap[item.color] || "99, 102, 241";
 
-    // Usar clientsCount para el badge del card de clientes
-    const displayBadge =
-        item.id === "clients" && clientsCount ? { ...item.badge, value: clientsCount } : item.badge;
+    // Valores dinámicos desde el store de Zustand
+    let displayBadge: { label: string; value: string; color: string } | undefined = undefined;
+
+    if (item.id === "clients" && clientsCount !== undefined) {
+        displayBadge = {
+            label: "Total",
+            value: clientsCount.toString(),
+            color: "bg-blue-100 text-blue-700",
+        };
+    } else if (item.id === "subscriptions" && subscriptionsCount !== undefined) {
+        displayBadge = {
+            label: "Activas",
+            value: subscriptionsCount.toString(),
+            color: "bg-purple-100 text-purple-700",
+        };
+    } else if (item.id === "invoices" && invoicesCount !== undefined) {
+        displayBadge = {
+            label: "Pendientes",
+            value: invoicesCount.toString(),
+            color: "bg-green-100 text-green-700",
+        };
+    }
 
     return (
         <Link href={item.href}>
             <Card
-                className={`h-full transition-all duration-300 cursor-pointer bg-gradient-to-t from-primary/5 to-card shadow-xs dark:bg-card overflow-hidden flex flex-col relative group hover:shadow-2xl hover:-translate-y-1 ${isLarge ? "row-span-2" : ""
-                    }`}
+                className={`h-full transition-all duration-300 cursor-pointer bg-gradient-to-t from-primary/5 to-card shadow-xs dark:bg-card overflow-hidden flex flex-col relative group hover:shadow-2xl hover:-translate-y-1 ${
+                    isLarge ? "row-span-2" : ""
+                }`}
             >
                 {/* Overlay gradiente en hover */}
                 <div
@@ -112,8 +134,9 @@ function BentoItem({
                 />
 
                 <CardHeader
-                    className={`h-full flex flex-col justify-between gap-4 relative z-10 ${isLarge ? "md:flex-row md:items-start md:gap-6" : ""
-                        }`}
+                    className={`h-full flex flex-col justify-between gap-4 relative z-10 ${
+                        isLarge ? "md:flex-row md:items-start md:gap-6" : ""
+                    }`}
                 >
                     {/* Sección izquierda - Ícono, título y descripción */}
                     <div className={`flex flex-col gap-3 ${isLarge ? "md:flex-1" : ""}`}>
@@ -165,14 +188,25 @@ function BentoItem({
 }
 
 export default function HomePage() {
-    const [clientsCount, setClientsCount] = useState<string | null>(null);
+    const hasHydrated = useDashboardStore((state) => state._hasHydrated);
+    const getClientsCount = useDashboardStore((state) => state.getClientsCount);
+    const getActiveSubscriptionsCount = useDashboardStore(
+        (state) => state.getActiveSubscriptionsCount
+    );
+    const getPendingInvoicesCount = useDashboardStore((state) => state.getPendingInvoicesCount);
+    const initializeFromLocalStorage = useDashboardStore(
+        (state) => state.initializeFromLocalStorage
+    );
+
+    // Solo usar valores del store después de la hidratación
+    const clientsCount = hasHydrated ? getClientsCount() : undefined;
+    const subscriptionsCount = hasHydrated ? getActiveSubscriptionsCount() : undefined;
+    const invoicesCount = hasHydrated ? getPendingInvoicesCount() : undefined;
 
     useEffect(() => {
-        const storedCount = localStorage.getItem("clientsCount");
-        if (storedCount) {
-            setClientsCount(storedCount);
-        }
-    }, []);
+        // Inicializar desde localStorage en el primer render (migrar datos antiguos si existen)
+        initializeFromLocalStorage();
+    }, [initializeFromLocalStorage]);
 
     return (
         <div className="flex max-h-max flex-col">
@@ -204,12 +238,18 @@ export default function HomePage() {
 
                                 {/* Suscripciones - Pequeño (25%) */}
                                 <div className="md:col-span-2">
-                                    <BentoItem item={quickAccess[2]} />
+                                    <BentoItem
+                                        item={quickAccess[2]}
+                                        subscriptionsCount={subscriptionsCount}
+                                    />
                                 </div>
 
                                 {/* Recibos - Mediano (50%) */}
                                 <div className="md:col-span-2">
-                                    <BentoItem item={quickAccess[3]} />
+                                    <BentoItem
+                                        item={quickAccess[3]}
+                                        invoicesCount={invoicesCount}
+                                    />
                                 </div>
 
                                 {/* Clientes - Mediano (50%) */}

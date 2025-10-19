@@ -2,9 +2,6 @@ import suscripciones from "./data.json";
 import { SubscriptionsTable } from "@/components/acount/suscriptions/subscriptions-table";
 
 export default function SubscriptionsPage() {
-    const suscripcionesActivas = suscripciones.filter(s => s.estado === "Activa").length;
-    const suscripcionesPendientes = suscripciones.filter(s => s.estado === "Pendiente").length;
-
     return (
         <div className="flex max-h-max flex-col">
             <div className="flex flex-1 flex-col ">
@@ -16,8 +13,7 @@ export default function SubscriptionsPage() {
                             Gestiona y visualiza a todos tus clientes y sus planes.
                         </p>
                     </div>
-                    <SubscriptionsTable data={suscripciones}
-                    />
+                    <SubscriptionsTable data={suscripciones} />
                 </div>
             </div>
         </div>
