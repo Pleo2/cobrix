@@ -134,12 +134,12 @@ function BentoItem({
                 />
 
                 <CardHeader
-                    className={`h-full flex flex-col justify-between gap-4 relative z-10 ${
-                        isLarge ? "md:flex-row md:items-start md:gap-6" : ""
+                    className={`h-full flex flex-col justify-center gap-4 relative z-10 ${
+                        isLarge ? "md:flex-row md:items-center md:gap-6" : ""
                     }`}
                 >
                     {/* Sección izquierda - Ícono, título y descripción */}
-                    <div className={`flex flex-col gap-3 ${isLarge ? "md:flex-1" : ""}`}>
+                    <div className={`flex flex-col gap-3 ${isLarge ? "md:flex-1 self-start" : ""}`}>
                         <div className="flex items-start gap-3 relative">
                             <Icon className="text-foreground h-5 w-5 mt-1" />
                             <CardTitle className={isLarge ? "text-2xl" : "text-lg"}>

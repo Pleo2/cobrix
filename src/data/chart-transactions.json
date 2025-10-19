@@ -1,0 +1,122 @@
+[
+    {
+        "date": "2024-09-01",
+        "pagoMovil": 2,
+        "zelle": 1,
+        "transferencia": 3,
+        "binance": 1
+    },
+    {
+        "date": "2024-09-05",
+        "pagoMovil": 3,
+        "zelle": 2,
+        "transferencia": 2,
+        "binance": 2
+    },
+    {
+        "date": "2024-09-10",
+        "pagoMovil": 1,
+        "zelle": 3,
+        "transferencia": 2,
+        "binance": 1
+    },
+    {
+        "date": "2024-09-15",
+        "pagoMovil": 2,
+        "zelle": 2,
+        "transferencia": 3,
+        "binance": 2
+    },
+    {
+        "date": "2024-09-20",
+        "pagoMovil": 3,
+        "zelle": 1,
+        "transferencia": 2,
+        "binance": 1
+    },
+    {
+        "date": "2024-09-25",
+        "pagoMovil": 2,
+        "zelle": 3,
+        "transferencia": 1,
+        "binance": 2
+    },
+    {
+        "date": "2024-09-30",
+        "pagoMovil": 1,
+        "zelle": 2,
+        "transferencia": 3,
+        "binance": 1
+    },
+    {
+        "date": "2024-10-01",
+        "pagoMovil": 3,
+        "zelle": 2,
+        "transferencia": 2,
+        "binance": 2
+    },
+    {
+        "date": "2024-10-05",
+        "pagoMovil": 2,
+        "zelle": 3,
+        "transferencia": 1,
+        "binance": 1
+    },
+    {
+        "date": "2024-10-10",
+        "pagoMovil": 1,
+        "zelle": 1,
+        "transferencia": 3,
+        "binance": 2
+    },
+    {
+        "date": "2024-10-12",
+        "pagoMovil": 2,
+        "zelle": 2,
+        "transferencia": 2,
+        "binance": 1
+    },
+    {
+        "date": "2024-10-14",
+        "pagoMovil": 3,
+        "zelle": 1,
+        "transferencia": 1,
+        "binance": 2
+    },
+    {
+        "date": "2024-10-15",
+        "pagoMovil": 1,
+        "zelle": 3,
+        "transferencia": 2,
+        "binance": 1
+    },
+    {
+        "date": "2024-10-16",
+        "pagoMovil": 2,
+        "zelle": 2,
+        "transferencia": 3,
+        "binance": 2
+    },
+    {
+        "date": "2024-10-17",
+        "pagoMovil": 3,
+        "zelle": 1,
+        "transferencia": 2,
+        "binance": 1
+    },
+    {
+        "date": "2024-10-18",
+        "pagoMovil": 2,
+        "zelle": 2,
+        "transferencia": 1,
+        "binance": 2
+    },
+    {
+        "date": "2024-10-19",
+        "pagoMovil": 3,
+        "zelle": 1,
+        "transferencia": 2,
+        "binance": 1
+    }
+]
+

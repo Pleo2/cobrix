@@ -31,7 +31,7 @@ export interface Invoice {
     client: string;
     email: string;
     amount: string;
-    status: string;
+    status: "Pagado" | "Pendiente" | "Vencido";
     date: string;
     due_date: string;
     plan_type: string;
@@ -40,12 +40,14 @@ export interface Invoice {
 }
 
 export interface Subscription {
-    id: number;
+    id: string;
+    clientName: string;
+    email: string;
     plan: string;
-    price: number;
-    status: string;
-    billingCycle: string;
-    nextPayment: string;
+    price?: number;
+    status: "Activo" | "En Apelación" | "Cancelado";
+    billingCycle?: string;
+    nextPaymentDate: string | null;
 }
 
 export interface MessageTemplate {
@@ -94,8 +96,14 @@ interface DashboardState {
     // Estadísticas derivadas
     getClientsCount: () => number;
     getActiveSubscriptionsCount: () => number;
+    getCancelledSubscriptionsCount: () => number;
+    getAppealSubscriptionsCount: () => number;
     getPendingInvoicesCount: () => number;
+    getPaidInvoicesCount: () => number;
+    getOverdueInvoicesCount: () => number;
     getTotalRevenue: () => number;
+    getTodayRevenue: () => number;
+    getTransactionsByPaymentMethod: () => Record<string, number>;
 
     // Acciones - Clientes
     addClient: (client: Omit<Client, "id">) => void;
@@ -114,8 +122,8 @@ interface DashboardState {
 
     // Acciones - Suscripciones
     addSubscription: (subscription: Omit<Subscription, "id">) => void;
-    updateSubscription: (id: number, subscription: Partial<Subscription>) => void;
-    deleteSubscription: (id: number) => void;
+    updateSubscription: (id: string, subscription: Partial<Subscription>) => void;
+    deleteSubscription: (id: string) => void;
 
     // Acciones - Plantillas de Mensajes
     addMessageTemplate: (template: Omit<MessageTemplate, "id">) => void;
@@ -135,6 +143,8 @@ interface DashboardState {
     // Inicialización
     initializeFromLocalStorage: () => void;
     resetStore: () => void;
+    resetSubscriptions: () => void;
+    resetInvoices: () => void;
 }
 
 // ==================== DATA INICIAL ====================
@@ -147,7 +157,7 @@ const initialTransactions: Transaction[] = [
         monto: 45.0,
         metodoPago: "Pago Móvil",
         estado: "Completado",
-        fecha: "18 Oct 2024",
+        fecha: "19 Oct 2024",
         referencia: "GYM-2024-001",
     },
     {
@@ -157,7 +167,7 @@ const initialTransactions: Transaction[] = [
         monto: 120.0,
         metodoPago: "Transferencia",
         estado: "Completado",
-        fecha: "18 Oct 2024",
+        fecha: "19 Oct 2024",
         referencia: "GYM-2024-002",
     },
     {
@@ -167,7 +177,7 @@ const initialTransactions: Transaction[] = [
         monto: 45.0,
         metodoPago: "Zelle",
         estado: "Completado",
-        fecha: "17 Oct 2024",
+        fecha: "19 Oct 2024",
         referencia: "GYM-2024-003",
     },
     {
@@ -197,7 +207,7 @@ const initialTransactions: Transaction[] = [
         monto: 50.0,
         metodoPago: "Pago Móvil",
         estado: "Completado",
-        fecha: "16 Oct 2024",
+        fecha: "19 Oct 2024",
         referencia: "GYM-2024-006",
     },
     {
@@ -205,9 +215,9 @@ const initialTransactions: Transaction[] = [
         cliente: "John Doe",
         concepto: "Plan Premium Mensual",
         monto: 70.0,
-        metodoPago: "Transferencia",
+        metodoPago: "Binance",
         estado: "Completado",
-        fecha: "15 Oct 2024",
+        fecha: "19 Oct 2024",
         referencia: "GYM-2024-007",
     },
     {
@@ -280,6 +290,162 @@ const initialInvoices: Invoice[] = [
         due_date: "2025-10-10",
         plan_type: "Premium",
         payment_method: "Transferencia",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 4,
+        invoice_number: "INV-2024-004",
+        client: "Ana Pérez",
+        email: "ana.perez@email.com",
+        amount: "$70.00",
+        status: "Pagado",
+        date: "2025-10-01",
+        due_date: "2025-11-01",
+        plan_type: "Premium",
+        payment_method: "Transferencia",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 5,
+        invoice_number: "INV-2024-005",
+        client: "Carlos García",
+        email: "carlos.garcia@email.com",
+        amount: "$30.00",
+        status: "Vencido",
+        date: "2025-09-05",
+        due_date: "2025-10-05",
+        plan_type: "Básico",
+        payment_method: "Pago Móvil",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 6,
+        invoice_number: "INV-2024-006",
+        client: "Sofía López",
+        email: "sofia.lopez@email.com",
+        amount: "$70.00",
+        status: "Pagado",
+        date: "2025-10-15",
+        due_date: "2025-11-15",
+        plan_type: "Premium",
+        payment_method: "Zelle",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 7,
+        invoice_number: "INV-2024-007",
+        client: "Miguel Hernández",
+        email: "miguel.h@email.com",
+        amount: "$100.00",
+        status: "Pagado",
+        date: "2024-09-01",
+        due_date: "2025-09-01",
+        plan_type: "Anual",
+        payment_method: "Transferencia",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 8,
+        invoice_number: "INV-2024-008",
+        client: "David Sánchez",
+        email: "david.sanchez@email.com",
+        amount: "$70.00",
+        status: "Pendiente",
+        date: "2025-10-22",
+        due_date: "2025-11-22",
+        plan_type: "Premium",
+        payment_method: "Pago Móvil",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 9,
+        invoice_number: "INV-2024-009",
+        client: "Elena Torres",
+        email: "elena.torres@email.com",
+        amount: "$30.00",
+        status: "Pagado",
+        date: "2025-10-25",
+        due_date: "2025-11-25",
+        plan_type: "Básico",
+        payment_method: "Zelle",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 10,
+        invoice_number: "INV-2024-010",
+        client: "Francisco Romero",
+        email: "francisco.r@email.com",
+        amount: "$70.00",
+        status: "Pagado",
+        date: "2025-10-28",
+        due_date: "2025-11-28",
+        plan_type: "Premium",
+        payment_method: "Transferencia",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 11,
+        invoice_number: "INV-2024-011",
+        client: "Patricia Díaz",
+        email: "patricia.diaz@email.com",
+        amount: "$50.00",
+        status: "Pendiente",
+        date: "2025-10-12",
+        due_date: "2025-11-12",
+        plan_type: "Profesional",
+        payment_method: "Pago Móvil",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 12,
+        invoice_number: "INV-2024-012",
+        client: "Roberto Vargas",
+        email: "roberto.vargas@email.com",
+        amount: "$70.00",
+        status: "Vencido",
+        date: "2025-09-08",
+        due_date: "2025-10-08",
+        plan_type: "Premium",
+        payment_method: "Zelle",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 13,
+        invoice_number: "INV-2024-013",
+        client: "Jorge Castillo",
+        email: "jorge.castillo@email.com",
+        amount: "$50.00",
+        status: "Pagado",
+        date: "2025-10-18",
+        due_date: "2025-11-18",
+        plan_type: "Profesional",
+        payment_method: "Transferencia",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 14,
+        invoice_number: "INV-2024-014",
+        client: "María Fernández",
+        email: "maria.fernandez@email.com",
+        amount: "$70.00",
+        status: "Pagado",
+        date: "2025-10-22",
+        due_date: "2025-11-22",
+        plan_type: "Premium",
+        payment_method: "Pago Móvil",
+        exchange_rate: "1.0",
+    },
+    {
+        id: 15,
+        invoice_number: "INV-2024-015",
+        client: "Luis Morales",
+        email: "luis.morales@email.com",
+        amount: "$30.00",
+        status: "Vencido",
+        date: "2025-08-25",
+        due_date: "2025-09-25",
+        plan_type: "Básico",
+        payment_method: "Pago Móvil",
         exchange_rate: "1.0",
     },
 ];
@@ -375,68 +541,254 @@ const initialScreenTemplates: ScreenTemplate[] = [
 
 const initialSubscriptions: Subscription[] = [
     {
-        id: 1,
-        plan: "Profesional",
-        price: 50,
-        status: "Activo",
-        billingCycle: "Mensual",
-        nextPayment: "2024-11-15",
-    },
-    {
-        id: 2,
-        plan: "Básico",
-        price: 30,
-        status: "Activo",
-        billingCycle: "Mensual",
-        nextPayment: "2024-11-20",
-    },
-    {
-        id: 3,
-        plan: "Premium",
+        id: "SUB001",
+        clientName: "Ana Pérez",
+        email: "ana.perez@email.com",
+        plan: "Plan Premium",
         price: 70,
         status: "Activo",
         billingCycle: "Mensual",
-        nextPayment: "2024-11-10",
+        nextPaymentDate: "2025-11-01",
     },
     {
-        id: 4,
-        plan: "Profesional",
-        price: 50,
+        id: "SUB002",
+        clientName: "Carlos García",
+        email: "carlos.garcia@email.com",
+        plan: "Plan Básico",
+        price: 30,
         status: "Activo",
         billingCycle: "Mensual",
-        nextPayment: "2024-11-20",
+        nextPaymentDate: "2025-11-05",
     },
     {
-        id: 5,
-        plan: "Premium",
+        id: "SUB003",
+        clientName: "Laura Martínez",
+        email: "laura.martinez@email.com",
+        plan: "Plan Premium",
+        price: 70,
+        status: "Cancelado",
+        billingCycle: "Mensual",
+        nextPaymentDate: null,
+    },
+    {
+        id: "SUB004",
+        clientName: "Juan Rodríguez",
+        email: "juan.rodriguez@email.com",
+        plan: "Plan Básico",
+        price: 30,
+        status: "En Apelación",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-10-20",
+    },
+    {
+        id: "SUB005",
+        clientName: "Sofía López",
+        email: "sofia.lopez@email.com",
+        plan: "Plan Premium",
         price: 70,
         status: "Activo",
         billingCycle: "Mensual",
-        nextPayment: "2024-11-05",
+        nextPaymentDate: "2025-11-15",
     },
     {
-        id: 6,
-        plan: "Básico",
+        id: "SUB006",
+        clientName: "Miguel Hernández",
+        email: "miguel.h@email.com",
+        plan: "Plan Anual",
+        price: 100,
+        status: "Activo",
+        billingCycle: "Anual",
+        nextPaymentDate: "2026-09-01",
+    },
+    {
+        id: "SUB007",
+        clientName: "Isabel Gómez",
+        email: "isabel.gomez@email.com",
+        plan: "Plan Básico",
         price: 30,
-        status: "Pendiente",
+        status: "Cancelado",
         billingCycle: "Mensual",
-        nextPayment: "2024-11-18",
+        nextPaymentDate: null,
     },
     {
-        id: 7,
-        plan: "Mensualidad",
-        price: 45,
-        status: "Activo",
+        id: "SUB008",
+        clientName: "David Sánchez",
+        email: "david.sanchez@email.com",
+        plan: "Plan Premium",
+        price: 70,
+        status: "En Apelación",
         billingCycle: "Mensual",
-        nextPayment: "2024-11-18",
+        nextPaymentDate: "2025-10-22",
     },
     {
-        id: 8,
-        plan: "Personal Training",
-        price: 85,
+        id: "SUB009",
+        clientName: "Elena Torres",
+        email: "elena.torres@email.com",
+        plan: "Plan Básico",
+        price: 30,
         status: "Activo",
         billingCycle: "Mensual",
-        nextPayment: "2024-11-17",
+        nextPaymentDate: "2025-11-25",
+    },
+    {
+        id: "SUB010",
+        clientName: "Francisco Romero",
+        email: "francisco.r@email.com",
+        plan: "Plan Premium",
+        price: 70,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-28",
+    },
+    {
+        id: "SUB011",
+        clientName: "Patricia Díaz",
+        email: "patricia.diaz@email.com",
+        plan: "Plan Profesional",
+        price: 50,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-12",
+    },
+    {
+        id: "SUB012",
+        clientName: "Roberto Vargas",
+        email: "roberto.vargas@email.com",
+        plan: "Plan Premium",
+        price: 70,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-08",
+    },
+    {
+        id: "SUB013",
+        clientName: "Carmen Silva",
+        email: "carmen.silva@email.com",
+        plan: "Plan Básico",
+        price: 30,
+        status: "Cancelado",
+        billingCycle: "Mensual",
+        nextPaymentDate: null,
+    },
+    {
+        id: "SUB014",
+        clientName: "Jorge Castillo",
+        email: "jorge.castillo@email.com",
+        plan: "Plan Profesional",
+        price: 50,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-18",
+    },
+    {
+        id: "SUB015",
+        clientName: "María Fernández",
+        email: "maria.fernandez@email.com",
+        plan: "Plan Premium",
+        price: 70,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-22",
+    },
+    {
+        id: "SUB016",
+        clientName: "Luis Morales",
+        email: "luis.morales@email.com",
+        plan: "Plan Básico",
+        price: 30,
+        status: "En Apelación",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-10-25",
+    },
+    {
+        id: "SUB017",
+        clientName: "Gabriela Ruiz",
+        email: "gabriela.ruiz@email.com",
+        plan: "Plan Profesional",
+        price: 50,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-30",
+    },
+    {
+        id: "SUB018",
+        clientName: "Ricardo Medina",
+        email: "ricardo.medina@email.com",
+        plan: "Plan Premium",
+        price: 70,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-14",
+    },
+    {
+        id: "SUB019",
+        clientName: "Lucía Ortiz",
+        email: "lucia.ortiz@email.com",
+        plan: "Plan Anual",
+        price: 100,
+        status: "Activo",
+        billingCycle: "Anual",
+        nextPaymentDate: "2026-10-15",
+    },
+    {
+        id: "SUB020",
+        clientName: "Fernando Navarro",
+        email: "fernando.navarro@email.com",
+        plan: "Plan Básico",
+        price: 30,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-20",
+    },
+    {
+        id: "SUB021",
+        clientName: "Valentina Cruz",
+        email: "valentina.cruz@email.com",
+        plan: "Plan Profesional",
+        price: 50,
+        status: "Cancelado",
+        billingCycle: "Mensual",
+        nextPaymentDate: null,
+    },
+    {
+        id: "SUB022",
+        clientName: "Andrés Flores",
+        email: "andres.flores@email.com",
+        plan: "Plan Premium",
+        price: 70,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-10",
+    },
+    {
+        id: "SUB023",
+        clientName: "Beatriz Ramos",
+        email: "beatriz.ramos@email.com",
+        plan: "Plan Básico",
+        price: 30,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-16",
+    },
+    {
+        id: "SUB024",
+        clientName: "Sebastián Aguilar",
+        email: "sebastian.aguilar@email.com",
+        plan: "Plan Premium",
+        price: 70,
+        status: "En Apelación",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-10-28",
+    },
+    {
+        id: "SUB025",
+        clientName: "Daniela Mendoza",
+        email: "daniela.mendoza@email.com",
+        plan: "Plan Profesional",
+        price: 50,
+        status: "Activo",
+        billingCycle: "Mensual",
+        nextPaymentDate: "2025-11-26",
     },
 ];
 
@@ -569,12 +921,42 @@ export const useDashboardStore = create<DashboardState>()(
 
             getActiveSubscriptionsCount: () => get().subscriptions.filter((s) => s.status === "Activo").length,
 
+            getCancelledSubscriptionsCount: () => get().subscriptions.filter((s) => s.status === "Cancelado").length,
+
+            getAppealSubscriptionsCount: () => get().subscriptions.filter((s) => s.status === "En Apelación").length,
+
             getPendingInvoicesCount: () => get().invoices.filter((i) => i.status === "Pendiente").length,
+
+            getPaidInvoicesCount: () => get().invoices.filter((i) => i.status === "Pagado").length,
+
+            getOverdueInvoicesCount: () => get().invoices.filter((i) => i.status === "Vencido").length,
 
             getTotalRevenue: () =>
                 get()
                     .transactions.filter((t) => t.estado === "Completado")
                     .reduce((sum, t) => sum + t.monto, 0),
+
+            getTodayRevenue: () => {
+                const today = new Date();
+                const todayStr = `${today.getDate()} ${today.toLocaleDateString("es-ES", {
+                    month: "short",
+                })} ${today.getFullYear()}`.replace(".", "");
+                return get()
+                    .transactions.filter((t) => t.estado === "Completado" && t.fecha === todayStr)
+                    .reduce((sum, t) => sum + t.monto, 0);
+            },
+
+            getTransactionsByPaymentMethod: () => {
+                const transactions = get().transactions.filter((t) => t.estado === "Completado");
+                const byMethod: Record<string, number> = {};
+
+                transactions.forEach((t) => {
+                    const method = t.metodoPago;
+                    byMethod[method] = (byMethod[method] || 0) + 1;
+                });
+
+                return byMethod;
+            },
 
             // ==================== CLIENTES ====================
             addClient: (client) => {
@@ -648,9 +1030,10 @@ export const useDashboardStore = create<DashboardState>()(
 
             // ==================== SUSCRIPCIONES ====================
             addSubscription: (subscription) => {
+                const subscriptionCount = get().subscriptions.length + 1;
                 const newSubscription = {
                     ...subscription,
-                    id: Date.now(),
+                    id: `SUB${String(subscriptionCount).padStart(3, "0")}`,
                 };
                 set((state) => ({
                     subscriptions: [...state.subscriptions, newSubscription],
@@ -788,6 +1171,18 @@ export const useDashboardStore = create<DashboardState>()(
                     messageTemplates: initialMessageTemplates,
                     clientProfiles: initialClientProfiles,
                     screenTemplates: initialScreenTemplates,
+                });
+            },
+
+            resetSubscriptions: () => {
+                set({
+                    subscriptions: initialSubscriptions,
+                });
+            },
+
+            resetInvoices: () => {
+                set({
+                    invoices: initialInvoices,
                 });
             },
         }),
