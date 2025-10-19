@@ -435,7 +435,7 @@ export default function AccountPage() {
                                         </Label>
                                         <p className="text-sm font-medium">
                                             ${empresa.plan.price} /{" "}
-                                            {empresa.plan.billingCycle || "mes"}
+                                            {empresa.plan?.billingCycle || "mes"}
                                         </p>
                                     </div>
                                 </>
