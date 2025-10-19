@@ -129,16 +129,6 @@ function Hero() {
               >
                 <span className="relative z-20">Empecemos juntos</span>
               </button>
-              <button
-                onClick={() => handleNavigation('/precios')}
-                className="bg-[#F7f7f7] text-center w-full sm:w-64 rounded-2xl h-16 relative text-black text-base font-bold border-2 border-gray-200 group z-80"
-                type="button"
-              >
-                <div className="bg-emerald-500 rounded-xl h-14 w-1/4 flex items-center justify-center absolute left-1 top-[3px] group-hover:w-[248px] z-10 duration-500">
-                  <ArrowRight className="w-6 h-6 text-white" />
-                </div>
-                <p className="translate-x-2 relative z-20">Ver precios</p>
-              </button>
             </div>
               </div>
             </motion.div>
