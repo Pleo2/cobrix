@@ -20,6 +20,11 @@ import {
     IconNotification,
     IconUserCircle,
     IconArrowLeft,
+    IconHelp,
+    IconMessage,
+    IconUsers,
+    IconLayout,
+    IconBook,
 } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -36,11 +41,6 @@ export function SiteHeader() {
     // Inicializar sesión al montar el componente
     useEffect(() => {
         initializeSession();
-        
-        // Debug: Verificar datos en localStorage
-        const registroEmpresa = localStorage.getItem('registroEmpresa');
-        console.log('📦 LocalStorage registroEmpresa:', registroEmpresa ? JSON.parse(registroEmpresa) : 'No existe');
-        console.log('🏢 Empresa en Zustand:', empresa);
     }, [initializeSession, empresa]);
 
     // Obtener iniciales del nombre de la empresa
@@ -89,7 +89,9 @@ export function SiteHeader() {
                                 >
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage src={userData.avatar} alt={userData.name} />
-                                        <AvatarFallback className="rounded-lg">{userData.initials}</AvatarFallback>
+                                        <AvatarFallback className="rounded-lg">
+                                            {userData.initials}
+                                        </AvatarFallback>
                                     </Avatar>
                                     <div className="hidden sm:grid text-left text-sm leading-tight">
                                         <span className="truncate font-medium">
@@ -152,6 +154,25 @@ export function SiteHeader() {
                         </DropdownMenu>
                     </div>
                     <div className="ml-auto flex items-center gap-2">
+                        <Link href="/account/message-handler">
+                            <Button variant="ghost" size="sm" className="gap-2">
+                                <IconMessage className="h-4 w-4" />
+                                <span className="hidden sm:inline">Gestor de Mensajes</span>
+                            </Button>
+                        </Link>
+                        <Link href="/account/library-profile">
+                            <Button variant="ghost" size="sm" className="gap-2">
+                                <IconBook className="h-4 w-4" />
+                                <span className="hidden sm:inline">Librería de Perfiles</span>
+                            </Button>
+                        </Link>
+                        <Link href="/account/create-template">
+                            <Button variant="ghost" size="sm" className="gap-2">
+                                <IconLayout className="h-4 w-4" />
+                                <span className="hidden sm:inline">Creación de Plantillas</span>
+                            </Button>
+                        </Link>
+                       
                         <CurrencyToggle />
                         <ThemeToggle />
                         <Button
