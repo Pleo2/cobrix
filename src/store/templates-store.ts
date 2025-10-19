@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { defaultTemplates, Template } from "@/components/acount/templates-manager/data"; // Ajusta la ruta si es necesario
-import { IconMoodSmile } from "@tabler/icons-react"; // Necesitamos un icono por defecto
 
 // Estado y Acciones del Store
 interface TemplateState {

@@ -2,7 +2,7 @@ import {
     IconMoodSmile,
     IconSparkles,
     IconTie,
-    IconTools, // Icono para las plantillas creadas por el usuario
+    IconTools,
     IconCheck,
     IconX,
     IconAlertTriangle,
@@ -11,28 +11,23 @@ import {
 } from "@tabler/icons-react";
 import type React from "react";
 
-// Tipos de mensajes que cada plantilla DEBE tener.
 export type MessageType = "exito" | "error" | "rechazado" | "recordatorio" | "marketing-hooking";
-
-// Nombres para identificar los iconos que se guardarán en el estado (string)
 export type IconName = "smile" | "sparkles" | "tie" | "tools";
 
-// La estructura de un objeto de Plantilla, ahora con 'icon' como un string.
 export interface Template {
     id: string;
     name: string;
     description: string;
-    icon: IconName; // El icono es un identificador de tipo string
+    icon: IconName;
     messages: Record<MessageType, string>;
 }
 
-// Plantillas por defecto, usando los strings como identificadores de icono.
 export const defaultTemplates: Template[] = [
     {
         id: "tpl_amistoso",
         name: "Tono Amigable y Cercano",
         description: "Ideal para gimnasios y comunidades. Comunica de forma casual y positiva.",
-        icon: "smile", // Usamos el string 'smile'
+        icon: "smile",
         messages: {
             exito: "¡Todo listo, {nombreCliente}! Tu pago ha sido procesado. ¡A entrenar con todo!",
             error: "¡Ups! Algo salió mal con tu pago, {nombreCliente}. Por favor, revisa tus datos e intenta de nuevo.",
@@ -48,7 +43,7 @@ export const defaultTemplates: Template[] = [
         id: "tpl_profesional",
         name: "Tono Directo y Profesional",
         description: "Comunicación formal y clara. Perfecta para servicios corporativos o educativos.",
-        icon: "tie", // Usamos el string 'tie'
+        icon: "tie",
         messages: {
             exito: "Estimado/a {nombreCliente}, confirmamos la recepción de su pago. Su suscripción ha sido renovada exitosamente.",
             error: "Se ha producido un error al procesar su pago. Por favor, verifique la información proporcionada.",
@@ -64,8 +59,13 @@ export const defaultTemplates: Template[] = [
         id: "tpl_moderno",
         name: "Tono Moderno y Casual",
         description: "Un estilo fresco y enérgico, ideal para startups y servicios digitales.",
-        icon: "sparkles", // Usamos el string 'sparkles'
+        icon: "sparkles",
         messages: {
+            // --- INICIO DE LA CORRECCIÓN ---
+            // Esta era la línea que faltaba
+            recordatorio:
+                "¡Solo un recordatorio! Tu pago de {monto} está a la vuelta de la esquina ({fechaVencimiento}).",
+            // --- FIN DE LA CORRECCIÓN ---
             exito: "¡Boom! ✨ Tu pago está confirmado, {nombreCliente}. ¡Gracias por ser parte de nuestra comunidad!",
             error: "¡Houston, tenemos un problema! No pudimos procesar tu pago. Échale un ojo a tus datos.",
             rechazado:
@@ -76,7 +76,6 @@ export const defaultTemplates: Template[] = [
     },
 ];
 
-// MAPA DE ICONOS: Este objeto traduce los strings a los componentes de React reales.
 export const iconMap: Record<IconName, React.ComponentType<{ className?: string }>> = {
     smile: IconMoodSmile,
     sparkles: IconSparkles,
@@ -84,7 +83,6 @@ export const iconMap: Record<IconName, React.ComponentType<{ className?: string 
     tools: IconTools,
 };
 
-// Configuración de los mensajes para el editor
 export const messageConfig: Record<
     MessageType,
     {
@@ -127,5 +125,5 @@ export const messageConfig: Record<
     },
 };
 
-// Orden de los mensajes secundarios en el editor
 export const secondaryMessageOrder: MessageType[] = ["exito", "error", "rechazado", "marketing-hooking"];
+
