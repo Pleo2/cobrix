@@ -3,13 +3,28 @@
 import { useState } from 'react';
 import { Navbar } from "@/components/marketing/navbar";
 import Link from "next/link";
-import { BellIcon, LayoutDashboardIcon, CreditCardIcon, CheckCircle2Icon, ArrowRight, Zap, TrendingUp, Clock, Heart, Twitter, Linkedin, Instagram } from "lucide-react";
+import { BellIcon, LayoutDashboardIcon, CreditCardIcon, CheckCircle2Icon, ArrowRight, Zap, TrendingUp, Clock, Heart, Twitter, Linkedin, Instagram, LucideIcon } from "lucide-react";
 import { Hummingbird } from "@/components/marketing/hummingbird";
 import { Container } from "@/components/container";
 import { useInView } from "@/hooks/use-in-view";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';
+
+interface Feature {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  gradient: string;
+}
+
+interface Benefit {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  stat: string;
+  color: string;
+}
 
 function LoadingTransition({ isVisible }: { isVisible: boolean }) {
   return (
@@ -135,7 +150,7 @@ function Hero() {
   )
 }
 
-function FeatureCard({ feature, index }: { feature: any; index: number }) {
+function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
   const { ref, isInView } = useInView()
   
   return (
@@ -230,7 +245,7 @@ function FeaturesSection() {
   )
 }
 
-function BenefitCard({ benefit, index }: { benefit: any; index: number }) {
+function BenefitCard({ benefit, index }: { benefit: Benefit; index: number }) {
   const { ref, isInView } = useInView()
   
   return (
