@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
     IconDotsVertical,
-    IconPlus,
     IconSearch,
     IconLayoutColumns,
     IconChevronDown,
@@ -114,7 +113,7 @@ export const columns: ColumnDef<Subscription>[] = [
                         <IconLoader className="animate-spin" />
                     ) : (
                         // Icono por defecto (gris) para cancelado
-                        <IconX />
+                        <IconX  className="fill-red-500 dark:fill-red-500" />
                     )}
                     {/* El texto siempre hereda el color gris del Badge */}
                     {status}
@@ -137,7 +136,7 @@ export const columns: ColumnDef<Subscription>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => (
+        cell: () => (
             <div className="text-right">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

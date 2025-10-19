@@ -31,7 +31,7 @@ export default function Login() {
                         />
                         {/* Overlay oscuro para mejor contraste */}
                         <div className="absolute inset-0 bg-black/40" />
-                        
+
                         {/* Contenido sobre la imagen */}
                         <div className="relative z-10 flex h-full flex-col items-center justify-center p-12 text-white">
                             <h1 className="mb-4 text-4xl font-bold">Cobrix</h1>

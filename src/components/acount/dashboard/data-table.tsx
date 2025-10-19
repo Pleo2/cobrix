@@ -2,25 +2,6 @@
 
 import * as React from "react";
 import {
-    closestCenter,
-    DndContext,
-    KeyboardSensor,
-    MouseSensor,
-    TouchSensor,
-    useSensor,
-    useSensors,
-    type DragEndEvent,
-    type UniqueIdentifier
-} from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import {
-    arrayMove,
-    SortableContext,
-    useSortable,
-    verticalListSortingStrategy
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import {
     IconChevronDown,
     IconChevronLeft,
     IconChevronRight,
@@ -28,11 +9,8 @@ import {
     IconChevronsRight,
     IconCircleCheckFilled,
     IconDotsVertical,
-    IconGripVertical,
     IconLayoutColumns,
     IconLoader,
-    IconPlus,
-    IconTrendingUp
 } from "@tabler/icons-react";
 import {
     ColumnDef,
@@ -49,19 +27,11 @@ import {
     useReactTable,
     VisibilityState
 } from "@tanstack/react-table";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent
-} from "@/components/ui/chart";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
     Drawer,
@@ -81,7 +51,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
     Select,
@@ -111,26 +80,6 @@ export const schema = z.object({
     estado: z.string(),
     fecha: z.string()
 });
-
-// Create a separate component for the drag handle
-function DragHandle({ id }: { id: number }) {
-    const { attributes, listeners } = useSortable({
-        id
-    });
-
-    return (
-        <Button
-            {...attributes}
-            {...listeners}
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground size-7 hover:bg-transparent"
-        >
-            <IconGripVertical className="text-muted-foreground size-3" />
-            <span className="sr-only">Arrastra para reordenar</span>
-        </Button>
-    );
-}
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
     {
@@ -211,11 +160,10 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
             return (
                 <Badge
                     variant="outline"
-                    className={`px-2 ${
-                        isCompletado
+                    className={`px-2 ${isCompletado
                             ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
                             : "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
-                    }`}
+                        }`}
                 >
                     {isCompletado ? (
                         <IconCircleCheckFilled className="mr-1 size-3" />
@@ -238,7 +186,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => (
+        cell: () => ( // Usamos _row para indicar a ESLint que el argumento es intencionalmente no utilizado
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
@@ -261,31 +209,6 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     }
 ];
 
-function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
-    const { transform, transition, setNodeRef, isDragging } = useSortable({
-        id: row.original.id
-    });
-
-    return (
-        <TableRow
-            data-state={row.getIsSelected() && "selected"}
-            data-dragging={isDragging}
-            ref={setNodeRef}
-            className="relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:opacity-80"
-            style={{
-                transform: CSS.Transform.toString(transform),
-                transition: transition
-            }}
-        >
-            {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-            ))}
-        </TableRow>
-    );
-}
-
 function TransactionRow({ row }: { row: Row<z.infer<typeof schema>> }) {
     return (
         <TableRow data-state={row.getIsSelected() && "selected"}>
@@ -303,7 +226,6 @@ export function DataTable({
 }: {
     data: z.infer<typeof schema>[];
 }) {
-    const [data, setData] = React.useState(() => initialData);
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
@@ -314,20 +236,9 @@ export function DataTable({
         pageIndex: 0,
         pageSize: 10
     });
-    const sortableId = React.useId();
-    const sensors = useSensors(
-        useSensor(MouseSensor, {}),
-        useSensor(TouchSensor, {}),
-        useSensor(KeyboardSensor, {})
-    );
-
-    const dataIds = React.useMemo<UniqueIdentifier[]>(
-        () => data?.map(({ id }) => id) || [],
-        [data]
-    );
 
     const table = useReactTable({
-        data,
+        data: initialData, // Usamos directamente initialData
         columns,
         state: {
             sorting,
@@ -350,17 +261,6 @@ export function DataTable({
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues()
     });
-
-    function handleDragEnd(event: DragEndEvent) {
-        const { active, over } = event;
-        if (active && over && active.id !== over.id) {
-            setData((data) => {
-                const oldIndex = dataIds.indexOf(active.id);
-                const newIndex = dataIds.indexOf(over.id);
-                return arrayMove(data, oldIndex, newIndex);
-            });
-        }
-    }
 
     return (
         <Tabs
@@ -414,7 +314,7 @@ export function DataTable({
                                 .filter(
                                     (column) =>
                                         typeof column.accessorFn !==
-                                            "undefined" && column.getCanHide()
+                                        "undefined" && column.getCanHide()
                                 )
                                 .map((column) => {
                                     return (
@@ -452,11 +352,11 @@ export function DataTable({
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(
-                                                          header.column
-                                                              .columnDef
-                                                              .header,
-                                                          header.getContext()
-                                                      )}
+                                                        header.column
+                                                            .columnDef
+                                                            .header,
+                                                        header.getContext()
+                                                    )}
                                             </TableHead>
                                         );
                                     })}
@@ -496,9 +396,8 @@ export function DataTable({
                                 Filas por página
                             </Label>
                             <Select
-                                value={`${
-                                    table.getState().pagination.pageSize
-                                }`}
+                                value={`${table.getState().pagination.pageSize
+                                    }`}
                                 onValueChange={(value) => {
                                     table.setPageSize(Number(value));
                                 }}
@@ -584,47 +483,10 @@ export function DataTable({
                     </div>
                 </div>
             </TabsContent>
-            <TabsContent
-                value="past-performance"
-                className="flex flex-col px-4 lg:px-6"
-            >
-                <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-            </TabsContent>
-            <TabsContent
-                value="key-personnel"
-                className="flex flex-col px-4 lg:px-6"
-            >
-                <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-            </TabsContent>
-            <TabsContent
-                value="focus-documents"
-                className="flex flex-col px-4 lg:px-6"
-            >
-                <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-            </TabsContent>
+            {/* Se eliminaron los otros TabsContent que no se usaban */}
         </Tabs>
     );
 }
-
-const chartData = [
-    { month: "Enero", desktop: 186, mobile: 80 },
-    { month: "Febrero", desktop: 305, mobile: 200 },
-    { month: "Marzo", desktop: 237, mobile: 120 },
-    { month: "Abril", desktop: 73, mobile: 190 },
-    { month: "Mayo", desktop: 209, mobile: 130 },
-    { month: "Junio", desktop: 214, mobile: 140 }
-];
-
-const chartConfig = {
-    desktop: {
-        label: "Escritorio",
-        color: "var(--primary)"
-    },
-    mobile: {
-        label: "Móvil",
-        color: "var(--primary)"
-    }
-} satisfies ChartConfig;
 
 function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
     const isMobile = useIsMobile();
@@ -688,11 +550,10 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                                     <span className="text-muted-foreground">Estado:</span>
                                     <Badge
                                         variant="outline"
-                                        className={`${
-                                            item.estado === "Completado"
+                                        className={`${item.estado === "Completado"
                                                 ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
                                                 : "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
-                                        }`}
+                                            }`}
                                     >
                                         {item.estado}
                                     </Badge>

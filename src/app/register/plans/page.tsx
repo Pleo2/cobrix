@@ -135,16 +135,16 @@ export default function PlansPage() {
     const handleConfirm = () => {
         // Obtener datos temporales del registro
         const registroTemporal = sessionStorage.getItem("registroTemporal");
-        
+
         if (registroTemporal && selectedPlan) {
-            const datosRegistro = JSON.parse(registroTemporal);
+            // ELIMINADO: const datosRegistro = JSON.parse(registroTemporal);
             const planSeleccionado = plans.find(p => p.id === selectedPlan);
-            
+
             // Guardar plan en sessionStorage (aún no en localStorage)
             sessionStorage.setItem("planSeleccionado", JSON.stringify(planSeleccionado));
-            
-            console.log("Plan seleccionado:", planSeleccionado);
-            
+
+            // ELIMINADO: console.log("Plan seleccionado:", planSeleccionado);
+
             // Redirigir a métodos de pago
             router.push("/register/payment");
         }
@@ -187,11 +187,10 @@ export default function PlansPage() {
 
                 {/* Botón Confirmar con animación */}
                 <div
-                    className={`flex justify-center transition-all duration-500 ease-out ${
-                        showButton
+                    className={`flex justify-center transition-all duration-500 ease-out ${showButton
                             ? "translate-y-0 opacity-100"
                             : "translate-y-8 opacity-0 pointer-events-none"
-                    }`}
+                        }`}
                 >
                     <Button
                         onClick={handleConfirm}

@@ -22,7 +22,7 @@ import {
     IconArrowLeft,
     IconMessage,
     IconLayout,
-    IconBook,
+    // ELIMINADO: IconBook,
 } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -152,22 +152,16 @@ export function SiteHeader() {
                         </DropdownMenu>
                     </div>
                     <div className="ml-auto flex items-center gap-2">
-                        <Link href="/account/message-handler">
+                        <Link href="/account/message-manager">
                             <Button variant="ghost" size="sm" className="gap-2">
                                 <IconMessage className="h-4 w-4" />
                                 <span className="hidden sm:inline">Gestor de Mensajes</span>
                             </Button>
                         </Link>
-                        <Link href="/account/library-profile">
-                            <Button variant="ghost" size="sm" className="gap-2">
-                                <IconBook className="h-4 w-4" />
-                                <span className="hidden sm:inline">Librería de Perfiles</span>
-                            </Button>
-                        </Link>
-                        <Link href="/account/create-template">
+                        <Link href="/account/templates-manager">
                             <Button variant="ghost" size="sm" className="gap-2">
                                 <IconLayout className="h-4 w-4" />
-                                <span className="hidden sm:inline">Creación de Plantillas</span>
+                                <span className="hidden sm:inline">Gestion de plantillas</span>
                             </Button>
                         </Link>
 
