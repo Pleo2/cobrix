@@ -304,19 +304,24 @@ export function InvoicesDataTable({
     const [rowSelection, setRowSelection] = React.useState({});
 
     // Ocultar columnas en mobile por defecto
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(() => {
+    const getInitialColumnVisibility = (): VisibilityState => {
         // Detectar si es mobile (ancho menor a 1024px)
         const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
-        return isMobile
-            ? {
-                  due_date: false,
-                  plan_type: false,
-                  payment_method: false,
-                  exchange_rate: false,
-                  date: false,
-              }
-            : {};
-    });
+        if (isMobile) {
+            return {
+                due_date: false,
+                plan_type: false,
+                payment_method: false,
+                exchange_rate: false,
+                date: false,
+            } as VisibilityState;
+        }
+        return {} as VisibilityState;
+    };
+
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(
+        getInitialColumnVisibility()
+    );
 
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = React.useState<SortingState>([]);

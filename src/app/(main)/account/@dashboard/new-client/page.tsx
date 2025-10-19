@@ -12,7 +12,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { Plus, Mail, Phone, MapPin, Building2, ArrowRight, Check, CreditCard } from "lucide-react";
+import { Mail, Phone, MapPin, Building2, ArrowRight, Check, CreditCard } from "lucide-react";
 import { BulkUploadDropzone } from "@/components/acount/dashboard/bulk-upload-dropzone";
 import { useDashboardStore } from "@/store/dashboard-store";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ export default function CreateUserPage() {
     const activePlans = subscriptionPlans.filter((p) => p.isActive);
 
     const [currentStep, setCurrentStep] = useState<Step>("client");
-    const [createdClientId, setCreatedClientId] = useState<number | null>(null);
+    const [_createdClientId, setCreatedClientId] = useState<number | null>(null);
 
     const [clientData, setClientData] = useState({
         firstName: "",
