@@ -5,10 +5,10 @@ export default async function LandingPageLayout(props: {
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="bg-background text-foreground">
       {/* <Nav /> */}
       {props.children}
       {/* <Footer /> */}
-    </>
+    </div>
   );
 }

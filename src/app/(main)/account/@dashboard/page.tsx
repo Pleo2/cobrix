@@ -92,9 +92,8 @@ function BentoItem({
     return (
         <Link href={item.href}>
             <Card
-                className={`h-full transition-all duration-300 cursor-pointer bg-gradient-to-t from-primary/5 to-card shadow-xs dark:bg-card overflow-hidden flex flex-col relative group hover:shadow-2xl hover:-translate-y-1 ${
-                    isLarge ? "row-span-2" : ""
-                }`}
+                className={`h-full transition-all duration-300 cursor-pointer bg-gradient-to-t from-primary/5 to-card shadow-xs dark:bg-card overflow-hidden flex flex-col relative group hover:shadow-2xl hover:-translate-y-1 ${isLarge ? "row-span-2" : ""
+                    }`}
             >
                 {/* Overlay gradiente en hover */}
                 <div
@@ -113,9 +112,8 @@ function BentoItem({
                 />
 
                 <CardHeader
-                    className={`h-full flex flex-col justify-between gap-4 relative z-10 ${
-                        isLarge ? "md:flex-row md:items-start md:gap-6" : ""
-                    }`}
+                    className={`h-full flex flex-col justify-between gap-4 relative z-10 ${isLarge ? "md:flex-row md:items-start md:gap-6" : ""
+                        }`}
                 >
                     {/* Sección izquierda - Ícono, título y descripción */}
                     <div className={`flex flex-col gap-3 ${isLarge ? "md:flex-1" : ""}`}>

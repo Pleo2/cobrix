@@ -10,12 +10,12 @@ export default function SubscriptionsPage() {
             <div className="flex flex-1 flex-col ">
                 <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6"></div>
                 <div className="mx-auto w-full flex flex-col gap-6 max-w-7xl">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-bold tracking-tight">Suscripciones</h2>
-                <p className="text-muted-foreground">
-                    Gestiona y visualiza a todos tus clientes y sus planes.
-                </p>
-            </div>
+                    <div className="flex flex-col gap-2">
+                        <h2 className="text-3xl font-bold tracking-tight">Suscripciones</h2>
+                        <p className="text-muted-foreground">
+                            Gestiona y visualiza a todos tus clientes y sus planes.
+                        </p>
+                    </div>
                     <SubscriptionsTable data={suscripciones}
                     />
                 </div>

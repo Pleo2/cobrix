@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e6a3a4f17ab43d14fa46149f215de859
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 199904
+  packageName: 'Low Poly Bird: Hummingbird'
+  packageVersion: 1.0
+  assetPath: Assets/Low Poly Bird Hummingbird/Character/Player.cs
+  uploadId: 444798
