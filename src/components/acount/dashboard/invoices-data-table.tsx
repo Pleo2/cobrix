@@ -27,7 +27,6 @@ import {
     IconChevronsLeft,
     IconChevronsRight,
     IconCircleCheckFilled,
-    IconDotsVertical,
     IconGripVertical,
     IconLayoutColumns,
     IconLoader,
@@ -57,8 +56,6 @@ import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
@@ -242,30 +239,6 @@ const columns: ColumnDef<z.infer<typeof invoiceSchema>>[] = [
         header: "Tipo de Cambio",
         cell: ({ row }) => (
             <span className="text-sm text-muted-foreground">{row.original.exchange_rate}</span>
-        ),
-    },
-    {
-        id: "actions",
-        cell: () => (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button
-                        variant="ghost"
-                        className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-                        size="icon"
-                    >
-                        <IconDotsVertical />
-                        <span className="sr-only">Abrir menú</span>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem>Ver detalles</DropdownMenuItem>
-                    <DropdownMenuItem>Editar</DropdownMenuItem>
-                    <DropdownMenuItem>Descargar PDF</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive">Eliminar</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
         ),
     },
 ];

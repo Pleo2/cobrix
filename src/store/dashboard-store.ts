@@ -1117,9 +1117,15 @@ export const useDashboardStore = create<DashboardState>()(
 
             // ==================== CLIENTES ====================
             addClient: (client) => {
+                const state = get();
+                // Generar ID único basado en el último ID más alto + un número aleatorio para evitar colisiones
+                const existingIds = state.clients.map((c) => c.id);
+                const maxId = existingIds.length > 0 ? Math.max(...existingIds) : Date.now();
+                const uniqueId = Math.max(maxId + 1, Date.now() + Math.floor(Math.random() * 1000));
+
                 const newClient = {
                     ...client,
-                    id: Date.now(),
+                    id: uniqueId,
                     createdAt: new Date().toISOString(),
                 };
                 set((state) => ({
@@ -1141,9 +1147,14 @@ export const useDashboardStore = create<DashboardState>()(
 
             // ==================== TRANSACCIONES ====================
             addTransaction: (transaction) => {
+                const state = get();
+                const existingIds = state.transactions.map((t) => t.id);
+                const maxId = existingIds.length > 0 ? Math.max(...existingIds) : Date.now();
+                const uniqueId = Math.max(maxId + 1, Date.now() + Math.floor(Math.random() * 1000));
+
                 const newTransaction = {
                     ...transaction,
-                    id: Date.now(),
+                    id: uniqueId,
                 };
                 set((state) => ({
                     transactions: [...state.transactions, newTransaction],
@@ -1164,9 +1175,14 @@ export const useDashboardStore = create<DashboardState>()(
 
             // ==================== FACTURAS ====================
             addInvoice: (invoice) => {
+                const state = get();
+                const existingIds = state.invoices.map((i) => i.id);
+                const maxId = existingIds.length > 0 ? Math.max(...existingIds) : Date.now();
+                const uniqueId = Math.max(maxId + 1, Date.now() + Math.floor(Math.random() * 1000));
+
                 const newInvoice = {
                     ...invoice,
-                    id: Date.now(),
+                    id: uniqueId,
                 };
                 set((state) => ({
                     invoices: [...state.invoices, newInvoice],
@@ -1244,9 +1260,14 @@ export const useDashboardStore = create<DashboardState>()(
 
             // ==================== PLANTILLAS DE MENSAJES ====================
             addMessageTemplate: (template) => {
+                const state = get();
+                const existingIds = state.messageTemplates.map((t) => t.id);
+                const maxId = existingIds.length > 0 ? Math.max(...existingIds) : Date.now();
+                const uniqueId = Math.max(maxId + 1, Date.now() + Math.floor(Math.random() * 1000));
+
                 const newTemplate = {
                     ...template,
-                    id: Date.now(),
+                    id: uniqueId,
                     createdAt: new Date().toISOString(),
                 };
                 set((state) => ({
@@ -1270,9 +1291,14 @@ export const useDashboardStore = create<DashboardState>()(
 
             // ==================== PERFILES DE CLIENTES ====================
             addClientProfile: (profile) => {
+                const state = get();
+                const existingIds = state.clientProfiles.map((p) => p.id);
+                const maxId = existingIds.length > 0 ? Math.max(...existingIds) : Date.now();
+                const uniqueId = Math.max(maxId + 1, Date.now() + Math.floor(Math.random() * 1000));
+
                 const newProfile = {
                     ...profile,
-                    id: Date.now(),
+                    id: uniqueId,
                     createdAt: new Date().toISOString(),
                 };
                 set((state) => ({
@@ -1294,9 +1320,14 @@ export const useDashboardStore = create<DashboardState>()(
 
             // ==================== PLANTILLAS DE PANTALLAS ====================
             addScreenTemplate: (template) => {
+                const state = get();
+                const existingIds = state.screenTemplates.map((t) => t.id);
+                const maxId = existingIds.length > 0 ? Math.max(...existingIds) : Date.now();
+                const uniqueId = Math.max(maxId + 1, Date.now() + Math.floor(Math.random() * 1000));
+
                 const newTemplate = {
                     ...template,
-                    id: Date.now(),
+                    id: uniqueId,
                     createdAt: new Date().toISOString(),
                 };
                 set((state) => ({

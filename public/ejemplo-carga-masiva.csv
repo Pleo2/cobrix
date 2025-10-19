@@ -1,0 +1,31 @@
+firstName,lastName,cedula,email,phone,address,planId,subscriptionStatus
+Juan,Pérez,V-12345678,juan.perez@example.com,+58 212 123 4567,"Av. Principal 123, Caracas",PLAN002,Activo
+María,González,V-23456789,maria.gonzalez@example.com,+58 414 234 5678,"Calle Comercio 456, Valencia",PLAN001,Activo
+Carlos,Rodríguez,V-34567890,carlos.rodriguez@example.com,+58 424 345 6789,"Av. Libertador 789, Maracaibo",,
+Ana,Martínez,V-45678901,ana.martinez@example.com,+58 416 456 7890,"Calle Principal 321, Barquisimeto",PLAN003,Activo
+Luis,Fernández,V-56789012,luis.fernandez@example.com,+58 412 567 8901,"Av. Bolívar 654, Mérida",PLAN005,Activo
+Carmen,Silva,V-67890123,carmen.silva@example.com,+58 426 678 9012,"Calle Miranda 234, Maracay",PLAN002,Activo
+Roberto,Torres,V-78901234,roberto.torres@example.com,+58 414 789 0123,"Av. Universidad 567, Barinas",PLAN001,Activo
+Patricia,Ramos,V-89012345,patricia.ramos@example.com,+58 424 890 1234,"Calle Sucre 890, Cumaná",PLAN004,Activo
+Jorge,Mendoza,V-90123456,jorge.mendoza@example.com,+58 416 901 2345,"Av. Fuerzas Armadas 345, Caracas",PLAN003,Activo
+Sofía,Castro,V-01234567,sofia.castro@example.com,+58 412 012 3456,"Calle Carabobo 678, Valencia",PLAN002,Activo
+Miguel,Herrera,V-11234567,miguel.herrera@example.com,+58 426 112 3456,"Av. Urdaneta 901, Maracaibo",PLAN006,Activo
+Isabella,Morales,V-22345678,isabella.morales@example.com,+58 414 223 4567,"Calle Bolívar 234, San Cristóbal",PLAN001,Activo
+Diego,Vargas,V-33456789,diego.vargas@example.com,+58 424 334 5678,"Av. Libertador 567, Puerto La Cruz",,
+Valentina,Sánchez,V-44567890,valentina.sanchez@example.com,+58 416 445 6789,"Calle Comercio 890, Barquisimeto",PLAN003,Activo
+Santiago,Romero,V-55678901,santiago.romero@example.com,+58 412 556 7890,"Av. Principal 123, Mérida",PLAN002,Activo
+Camila,Navarro,V-66789012,camila.navarro@example.com,+58 426 667 8901,"Calle Miranda 456, Los Teques",PLAN004,Activo
+Andrés,Ortiz,V-77890123,andres.ortiz@example.com,+58 414 778 9012,"Av. Bolívar 789, Ciudad Bolívar",PLAN005,Activo
+Gabriela,Reyes,V-88901234,gabriela.reyes@example.com,+58 424 889 0123,"Calle Sucre 012, Punto Fijo",PLAN001,Activo
+Sebastián,Flores,V-99012345,sebastian.flores@example.com,+58 416 990 1234,"Av. Universidad 345, Acarigua",PLAN002,En Apelación
+Daniela,Gutiérrez,V-10123456,daniela.gutierrez@example.com,+58 412 101 2345,"Calle Principal 678, Guarenas",PLAN003,Activo
+Mateo,Díaz,V-21234567,mateo.diaz@example.com,+58 426 212 3456,"Av. Intercomunal 901, Guatire",PLAN002,Activo
+Lucía,Jiménez,V-32345678,lucia.jimenez@example.com,+58 414 323 4567,"Calle Comercio 234, Coro",PLAN006,Activo
+Nicolás,Ruiz,V-43456789,nicolas.ruiz@example.com,+58 424 434 5678,"Av. Libertador 567, Carora",,
+Emma,Alvarez,V-54567890,emma.alvarez@example.com,+58 416 545 6789,"Calle Bolívar 890, El Tigre",PLAN001,Activo
+Matías,Moreno,V-65678901,matias.moreno@example.com,+58 412 656 7890,"Av. Principal 123, Calabozo",PLAN004,Activo
+Victoria,Muñoz,V-76789012,victoria.munoz@example.com,+58 426 767 8901,"Calle Miranda 456, Valle de la Pascua",PLAN002,Cancelado
+Benjamín,Rojas,V-87890123,benjamin.rojas@example.com,+58 414 878 9012,"Av. Urdaneta 789, Tucupita",PLAN003,Activo
+Martina,Vega,V-98901234,martina.vega@example.com,+58 424 989 0123,"Calle Sucre 012, La Guaira",PLAN005,Activo
+Lucas,Méndez,V-09012345,lucas.mendez@example.com,+58 416 090 1234,"Av. Bolívar 345, Porlamar",PLAN002,Activo
+Renata,Castro,V-19123456,renata.castro@example.com,+58 412 191 2345,"Calle Principal 678, Carúpano",PLAN001,Activo

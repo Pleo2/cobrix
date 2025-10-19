@@ -22,12 +22,12 @@ const plans: Plan[] = [
     {
         id: "starter",
         title: "Starter",
-        price: "$19.99",
+        price: "$29.99",
         period: "/mes",
         subtitle: "Ideal para empezar tu gimnasio",
         description: "Perfecto para gimnasios pequeños que están comenzando su negocio.",
         features: [
-            "Hasta 50 clientes activos",
+            "Hasta 100 clientes activos",
             "Gestión básica de membresías",
             "100 SMS mensuales",
             "Notificaciones por correo",
@@ -45,7 +45,7 @@ const plans: Plan[] = [
         subtitle: "La elección más popular",
         description: "La mejor opción para gimnasios en crecimiento que buscan más funciones.",
         features: [
-            "Hasta 200 clientes activos",
+            "Hasta 500 clientes activos",
             "Gestión avanzada de membresías",
             "500 SMS mensuales",
             "Notificaciones SMS y Email",
@@ -61,12 +61,12 @@ const plans: Plan[] = [
     {
         id: "premium",
         title: "Premium",
-        price: "$90",
+        price: "$99.99",
         period: "/mes",
         subtitle: "Todo lo que necesitas y más",
         description: "Para gimnasios establecidos que buscan optimización completa.",
         features: [
-            "Hasta 500 clientes activos",
+            "Hasta 1500 clientes activos",
             "Gestión completa ilimitada",
             "2000 SMS mensuales",
             "Notificaciones SMS, Email y Push",
