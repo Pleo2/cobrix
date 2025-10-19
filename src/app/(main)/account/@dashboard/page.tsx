@@ -128,7 +128,7 @@ function BentoItem({
                             {/* Badge en la esquina superior derecha del title */}
                             {displayBadge && (
                                 <div
-                                    className={`absolute -top-1 right-0 px-2.5 py-1 rounded-full text-xs font-semibold ${displayBadge.color} shadow-md ml-auto`}
+                                    className={`px-3 py-1 rounded-full text-xs font-semibold ${displayBadge.color} shadow-md`}
                                 >
                                     <span className="opacity-70">{displayBadge.label}</span>
                                     <span className="ml-1 font-bold">{displayBadge.value}</span>
@@ -181,7 +181,7 @@ export default function HomePage() {
             <div className="flex flex-1 flex-col ">
                 <div className="flex flex-col gap-6 py-6 md:py-8 px-4 lg:px-6">
                     <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
-                        <div className="flex flex-col gap-2 text-center w-full">
+                        <div className="flex flex-col gap-2 text-left w-full">
                             <h2 className="text-3xl font-bold tracking-tight">
                                 Bienvenido a Cobrix
                             </h2>
