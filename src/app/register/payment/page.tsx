@@ -139,12 +139,19 @@ export default function PaymentPage() {
                 fechaRegistro: new Date().toISOString(),
             };
 
+            // Obtener registros existentes o crear array vacío
+            const registrosExistentes = localStorage.getItem("registrosEmpresas");
+            const registros = registrosExistentes ? JSON.parse(registrosExistentes) : [];
+            
+            // Agregar nuevo registro
+            registros.push(datosCompletos);
+            
             // Guardar en localStorage
-            localStorage.setItem("registroEmpresa", JSON.stringify(datosCompletos));
+            localStorage.setItem("registrosEmpresas", JSON.stringify(registros));
             
             // Verificar que se guardó correctamente
-            const verificacion = localStorage.getItem("registroEmpresa");
-            console.log("✅ Datos guardados en localStorage:", JSON.parse(verificacion || "{}"));
+            console.log("✅ Empresa registrada:", datosCompletos);
+            console.log("✅ Total de empresas registradas:", registros.length);
 
             // Autenticar automáticamente en Zustand
             useAuthStore.setState({ 
@@ -160,7 +167,7 @@ export default function PaymentPage() {
             console.log("Registro completo:", datosCompletos);
 
             // Redirigir al dashboard
-            router.push("/account/dashboard");
+            router.push("/account");
         }
     };
 
