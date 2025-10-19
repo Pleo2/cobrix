@@ -4,7 +4,7 @@ import type React from "react"
 
 import { motion } from "framer-motion"
 import { DraggableMessage } from "./draggable-message"
-import type { MessageType } from "../../../app/(main)/account/@dashboard/templates-manager/data"
+import type { MessageType } from "../templates-manager/data"
 import type { ScheduledMessage } from "../../../app/(main)/account/@dashboard/message-manager/types"
 
 interface MessagePoolProps {

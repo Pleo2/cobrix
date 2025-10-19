@@ -1,24 +1,38 @@
-import { IconMoodSmile, IconSparkles, IconTie } from "@tabler/icons-react";
+import {
+    IconMoodSmile,
+    IconSparkles,
+    IconTie,
+    IconTools, // Icono para las plantillas creadas por el usuario
+    IconCheck,
+    IconX,
+    IconAlertTriangle,
+    IconBell,
+    IconDiscount2,
+} from "@tabler/icons-react";
+import type React from "react";
 
 // Tipos de mensajes que cada plantilla DEBE tener.
 export type MessageType = "exito" | "error" | "rechazado" | "recordatorio" | "marketing-hooking";
 
-// La estructura de un objeto de Plantilla.
+// Nombres para identificar los iconos que se guardarán en el estado (string)
+export type IconName = "smile" | "sparkles" | "tie" | "tools";
+
+// La estructura de un objeto de Plantilla, ahora con 'icon' como un string.
 export interface Template {
     id: string;
     name: string;
     description: string;
-    icon: React.ComponentType<{ className?: string }>;
+    icon: IconName; // El icono es un identificador de tipo string
     messages: Record<MessageType, string>;
 }
 
-// Nuestras 3 plantillas por defecto.
+// Plantillas por defecto, usando los strings como identificadores de icono.
 export const defaultTemplates: Template[] = [
     {
         id: "tpl_amistoso",
         name: "Tono Amigable y Cercano",
         description: "Ideal para gimnasios y comunidades. Comunica de forma casual y positiva.",
-        icon: IconMoodSmile,
+        icon: "smile", // Usamos el string 'smile'
         messages: {
             exito: "¡Todo listo, {nombreCliente}! Tu pago ha sido procesado. ¡A entrenar con todo!",
             error: "¡Ups! Algo salió mal con tu pago, {nombreCliente}. Por favor, revisa tus datos e intenta de nuevo.",
@@ -34,7 +48,7 @@ export const defaultTemplates: Template[] = [
         id: "tpl_profesional",
         name: "Tono Directo y Profesional",
         description: "Comunicación formal y clara. Perfecta para servicios corporativos o educativos.",
-        icon: IconTie,
+        icon: "tie", // Usamos el string 'tie'
         messages: {
             exito: "Estimado/a {nombreCliente}, confirmamos la recepción de su pago. Su suscripción ha sido renovada exitosamente.",
             error: "Se ha producido un error al procesar su pago. Por favor, verifique la información proporcionada.",
@@ -50,16 +64,68 @@ export const defaultTemplates: Template[] = [
         id: "tpl_moderno",
         name: "Tono Moderno y Casual",
         description: "Un estilo fresco y enérgico, ideal para startups y servicios digitales.",
-        icon: IconSparkles,
+        icon: "sparkles", // Usamos el string 'sparkles'
         messages: {
             exito: "¡Boom! ✨ Tu pago está confirmado, {nombreCliente}. ¡Gracias por ser parte de nuestra comunidad!",
             error: "¡Houston, tenemos un problema! No pudimos procesar tu pago. Échale un ojo a tus datos.",
             rechazado:
                 "Tu pago no pasó esta vez. ¡No te preocupes! Actualiza tus datos de pago para seguir disfrutando del servicio.",
-            recordatorio:
-                "¡Solo un recordatorio! Tu pago de {monto} está a la vuelta de la esquina ({fechaVencimiento}).",
             "marketing-hooking":
                 "¿Quieres un mes gratis? ¡Invita a 3 amigos a unirse y el próximo mes va por nuestra cuenta!",
         },
     },
 ];
+
+// MAPA DE ICONOS: Este objeto traduce los strings a los componentes de React reales.
+export const iconMap: Record<IconName, React.ComponentType<{ className?: string }>> = {
+    smile: IconMoodSmile,
+    sparkles: IconSparkles,
+    tie: IconTie,
+    tools: IconTools,
+};
+
+// Configuración de los mensajes para el editor
+export const messageConfig: Record<
+    MessageType,
+    {
+        label: string;
+        icon: React.ComponentType<{ className?: string }>;
+        placeholder: string;
+        description: string;
+    }
+> = {
+    recordatorio: {
+        label: "Recordatorio de Pago",
+        icon: IconBell,
+        placeholder: "Ej: ¡Hola {nombreCliente}! Tu pago de {monto} vence pronto...",
+        description:
+            "Este es el mensaje principal. Se envía antes de la fecha de vencimiento para notificar al cliente.",
+    },
+    exito: {
+        label: "Pago Exitoso",
+        icon: IconCheck,
+        placeholder: "Ej: ¡Recibimos tu pago! Gracias por tu confianza.",
+        description: "Se envía automáticamente cuando un pago se procesa correctamente.",
+    },
+    error: {
+        label: "Error en el Pago",
+        icon: IconAlertTriangle,
+        placeholder: "Ej: Hubo un error inesperado al procesar tu pago.",
+        description: "Para notificar al cliente de un fallo técnico o problema inesperado durante el cobro.",
+    },
+    rechazado: {
+        label: "Pago Rechazado",
+        icon: IconX,
+        placeholder: "Ej: Tu pago fue rechazado. Actualiza tu método de pago.",
+        description: "Informa al cliente que su método de pago fue rechazado por el banco o la pasarela.",
+    },
+    "marketing-hooking": {
+        label: "Marketing y Ofertas",
+        icon: IconDiscount2,
+        placeholder: "Ej: ¡Refiere a un amigo y ambos obtienen un descuento!",
+        description: "Un mensaje opcional para promociones, ofertas o para incentivar la retención del cliente.",
+    },
+};
+
+// Orden de los mensajes secundarios en el editor
+export const secondaryMessageOrder: MessageType[] = ["exito", "error", "rechazado", "marketing-hooking"];
