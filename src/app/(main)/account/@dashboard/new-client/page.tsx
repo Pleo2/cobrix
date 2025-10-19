@@ -12,7 +12,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { Mail, Phone, MapPin, Building2, ArrowRight, Check, CreditCard } from "lucide-react";
+import { Plus, Mail, Phone, MapPin, Building2, ArrowRight, Check, CreditCard } from "lucide-react";
 import { BulkUploadDropzone } from "@/components/acount/dashboard/bulk-upload-dropzone";
 import { useDashboardStore } from "@/store/dashboard-store";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ export default function CreateUserPage() {
     const activePlans = subscriptionPlans.filter((p) => p.isActive);
 
     const [currentStep, setCurrentStep] = useState<Step>("client");
-    // ELIMINADO: const [createdClientId, setCreatedClientId] = useState<number | null>(null);
+    const [createdClientId, setCreatedClientId] = useState<number | null>(null);
 
     const [clientData, setClientData] = useState({
         firstName: "",
@@ -53,9 +53,9 @@ export default function CreateUserPage() {
         // Agregar cliente usando el store de Zustand
         addClient(clientData);
 
-        // ELIMINADO: Generar ID temporal y guardarlo en el estado
-        // const tempId = Date.now();
-        // setCreatedClientId(tempId);
+        // Generar ID temporal (en un caso real, el backend devolvería el ID)
+        const tempId = Date.now();
+        setCreatedClientId(tempId);
 
         // Pasar al siguiente paso
         setCurrentStep("subscription");
@@ -124,7 +124,7 @@ export default function CreateUserPage() {
         });
         setSelectedPlanId("");
         setCurrentStep("client");
-        // ELIMINADO: setCreatedClientId(null);
+        setCreatedClientId(null);
     };
 
     return (
@@ -143,8 +143,9 @@ export default function CreateUserPage() {
                     {/* Indicador de pasos */}
                     <div className="flex items-center gap-2">
                         <div
-                            className={`flex items-center gap-2 ${currentStep === "client" ? "text-primary" : "text-green-600"
-                                }`}
+                            className={`flex items-center gap-2 ${
+                                currentStep === "client" ? "text-primary" : "text-green-600"
+                            }`}
                         >
                             {currentStep === "client" ? (
                                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -159,12 +160,13 @@ export default function CreateUserPage() {
                         </div>
                         <ArrowRight className="h-4 w-4 text-muted-foreground" />
                         <div
-                            className={`flex items-center gap-2 ${currentStep === "subscription"
+                            className={`flex items-center gap-2 ${
+                                currentStep === "subscription"
                                     ? "text-primary"
                                     : currentStep === "success"
-                                        ? "text-green-600"
-                                        : "text-muted-foreground"
-                                }`}
+                                    ? "text-green-600"
+                                    : "text-muted-foreground"
+                            }`}
                         >
                             {currentStep === "success" ? (
                                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-600 text-white">
@@ -172,10 +174,11 @@ export default function CreateUserPage() {
                                 </div>
                             ) : (
                                 <div
-                                    className={`flex h-8 w-8 items-center justify-center rounded-full ${currentStep === "subscription"
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                                        currentStep === "subscription"
                                             ? "bg-primary text-primary-foreground"
                                             : "bg-muted text-muted-foreground"
-                                        }`}
+                                    }`}
                                 >
                                     2
                                 </div>
