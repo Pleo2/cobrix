@@ -31,22 +31,33 @@ export const useAuthStore = create<AuthState>()(
             empresa: null,
 
             login: (correo: string, password: string) => {
+                console.log("🔍 Zustand Store - Iniciando verificación de login");
+                
                 // Obtener todas las empresas registradas
                 const registrosEmpresas = localStorage.getItem('registrosEmpresas');
                 
                 if (!registrosEmpresas) {
+                    console.log("❌ No hay empresas registradas en localStorage");
                     return false;
                 }
 
                 const empresas = JSON.parse(registrosEmpresas);
+                console.log("📋 Total de empresas registradas:", empresas.length);
                 
                 // Buscar empresa por correo y contraseña
-                const empresa = empresas.find((e: any) => 
-                    e.correo.toLowerCase() === correo.toLowerCase() && 
-                    e.password === password
-                );
+                const empresa = empresas.find((e: any) => {
+                    const emailMatch = e.correo.toLowerCase() === correo.toLowerCase();
+                    const passwordMatch = e.password === password;
+                    
+                    console.log("🔎 Verificando empresa:", e.nombreEmpresa);
+                    console.log("   - Email coincide:", emailMatch, `(${e.correo} vs ${correo})`);
+                    console.log("   - Password coincide:", passwordMatch);
+                    
+                    return emailMatch && passwordMatch;
+                });
 
                 if (empresa) {
+                    console.log("✅ Empresa encontrada:", empresa.nombreEmpresa);
                     set({ 
                         isAuthenticated: true, 
                         empresa: empresa 
@@ -54,6 +65,7 @@ export const useAuthStore = create<AuthState>()(
                     return true;
                 }
 
+                console.log("❌ No se encontró empresa con esas credenciales");
                 return false;
             },
 

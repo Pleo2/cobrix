@@ -149,9 +149,16 @@ export default function PaymentPage() {
             // Guardar en localStorage
             localStorage.setItem("registrosEmpresas", JSON.stringify(registros));
             
+            // Guardar credenciales para login
+            localStorage.setItem("userEmail", datosRegistro.correo);
+            localStorage.setItem("userPassword", datosRegistro.password);
+            
             // Verificar que se guardó correctamente
             console.log("✅ Empresa registrada:", datosCompletos);
             console.log("✅ Total de empresas registradas:", registros.length);
+            console.log("✅ Credenciales guardadas:");
+            console.log("   - Email:", datosRegistro.correo);
+            console.log("   - Password guardado:", datosRegistro.password ? "Sí (oculto por seguridad)" : "No");
 
             // Autenticar automáticamente en Zustand
             useAuthStore.setState({ 
