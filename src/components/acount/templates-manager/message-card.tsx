@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 interface MessageCardProps {
-    // AQUÍ ESTÁ LA CORRECCIÓN: Un tipo más específico para el icono
     icon: React.ComponentType<{ className?: string }>;
     label: string;
     description: string;
@@ -64,9 +63,10 @@ export function MessageCard({
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     className={cn(
-                        "resize-none text-sm transition-colors h-full",
+                        "resize-none text-sm transition-colors h-full", // <-- CORRECCIÓN: 'h-full' hace que el textarea ocupe todo el espacio
                         "focus:border-[#22c55e]/40 dark:focus:border-[#22c55e]/30",
-                        isPrimary ? "min-h-[100px]" : "min-h-[80px]"
+                        // ELIMINADO: Se quitaron las alturas mínimas condicionales
+                        // isPrimary ? "min-h-[100px]" : "min-h-[80px]"
                     )}
                 />
             </CardContent>

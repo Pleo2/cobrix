@@ -4,7 +4,7 @@ import type React from "react"
 
 import { motion } from "framer-motion"
 import { IconBell, IconSparkles, IconGripVertical } from "@tabler/icons-react"
-import type { MessageType } from "../../../app/(main)/account/@dashboard/templates-manager/data"
+import type { MessageType } from "../templates-manager/data"
 
 interface DraggableMessageProps {
     type: "recordatorio" | "marketing-hooking"

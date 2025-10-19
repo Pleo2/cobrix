@@ -2,13 +2,12 @@
 
 import Link from 'next/link'
 import Logo from './logo'
-import { Button } from '../ui/button'
 
 function DesktopNav() {
   return (
     <nav className="relative hidden lg:flex">
-     
-    
+
+
     </nav>
   )
 }
@@ -16,7 +15,7 @@ function DesktopNav() {
 function MobileNav() {
   return (
     <header className="lg:hidden">
-      
+
     </header>
   )
 }
