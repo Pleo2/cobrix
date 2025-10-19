@@ -7,11 +7,8 @@ import { Button } from '../ui/button'
 function DesktopNav() {
   return (
     <nav className="relative hidden lg:flex">
-      <Button variant="outline" size="lg" asChild>
-        <Link href="/account">
-          Ir a la app
-        </Link>
-      </Button>
+     
+    
     </nav>
   )
 }
@@ -19,13 +16,7 @@ function DesktopNav() {
 function MobileNav() {
   return (
     <header className="lg:hidden">
-      <div className="flex flex-col gap-6 py-4">
-        <Button variant="outline" asChild>
-          <Link href="/account">
-            Ir a la app
-          </Link>
-        </Button>
-      </div>
+      
     </header>
   )
 }

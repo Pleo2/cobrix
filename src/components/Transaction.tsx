@@ -21,7 +21,7 @@ export default function Transaction() {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto border-2 border-gray-200 bg-white">
+    <Card className="w-full max-w-md mx-auto border-2 border-gray-200 bg-[#F7f7f7]">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
