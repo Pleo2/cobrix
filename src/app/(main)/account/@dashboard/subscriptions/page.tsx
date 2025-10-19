@@ -266,7 +266,7 @@ export default function SubscriptionsPage() {
                                         )}
                                     </div>
                                     <div className="flex gap-2">
-                                        {/* <Button
+                                        <Button
                                             onClick={() => {
                                                 if (
                                                     confirm(
@@ -280,7 +280,7 @@ export default function SubscriptionsPage() {
                                             size="sm"
                                         >
                                             🔄 Resetear a Planes de Gimnasio
-                                        </Button> */}
+                                        </Button>
                                         <Button onClick={() => setShowNewPlanForm(true)}>
                                             <Plus className="h-4 w-4 mr-2" />
                                             Nuevo Plan

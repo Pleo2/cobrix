@@ -302,7 +302,27 @@ export function InvoicesDataTable({
 }) {
     const [data, setData] = React.useState(() => initialData);
     const [rowSelection, setRowSelection] = React.useState({});
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+
+    // Ocultar columnas en mobile por defecto
+    const getInitialColumnVisibility = (): VisibilityState => {
+        // Detectar si es mobile (ancho menor a 1024px)
+        const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
+        if (isMobile) {
+            return {
+                due_date: false,
+                plan_type: false,
+                payment_method: false,
+                exchange_rate: false,
+                date: false,
+            } as VisibilityState;
+        }
+        return {} as VisibilityState;
+    };
+
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(
+        getInitialColumnVisibility()
+    );
+
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [pagination, setPagination] = React.useState({
@@ -401,7 +421,7 @@ export function InvoicesDataTable({
                 </div>
             </div>
 
-            <div className="relative flex flex-col gap-4 overflow-auto rounded-lg border">
+            <div className="relative w-full overflow-auto rounded-lg border">
                 <DndContext
                     collisionDetection={closestCenter}
                     modifiers={[restrictToVerticalAxis]}
@@ -409,7 +429,7 @@ export function InvoicesDataTable({
                     sensors={sensors}
                     id={sortableId}
                 >
-                    <Table>
+                    <Table className="min-w-[800px] lg:min-w-full">
                         <TableHeader className="bg-muted sticky top-0 z-10">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
